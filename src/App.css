@@ -1,0 +1,103 @@
+/* .App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+} */
+
+:root {
+--mainRed : rgb(235, 123, 123);
+--mainBlue:blue;
+--lightBlue:rgb(50, 110, 221);
+--csBlue:#205081;
+--bsGreen:#28a745;
+--bsLightGreen:#49ac60;
+--bsDark:#343a40;
+--bsLightDark:rgb(52,58,64,0.8);
+--bsRed:#dc3545;
+--bsLightRed:#cf525e;
+--bsYellow: #ffc107;
+--bsLightYellow: #f8c734;
+--darkWhite:rgba(0, 0, 0, 0.03);
+--amzonChime:#212f3e;
+--amzonChimeLight:#0a0e13;
+}
+
+body{
+  background-color:#212f3e !important;
+}
+
+.btn-sized-normal {
+  width:12rem !important;
+  background:linear-gradient(to bottom);
+  font-weight:bold;
+}
+
+.btn-sized-md {
+  width:8rem;
+  font-weight:bold;
+  border-radius:1rem;
+}
+
+.btn-sized-sm {
+  width:6rem;
+  font-weight:bold;
+}
+
+.text-amozonChime{
+  color: var(--amzonChime);
+}
+
+/* form */
+
+.label{
+  color: var(--amxonChine); 
+  font-weight:bold;
+}
+.form-group {
+  text-align:center;
+}
+.form-control{
+  margin:auto;
+  border:none;
+  border-bottom:1px solid;
+  border-radius:0;
+  text-align:center;
+  margin:auto;
+}
+
+/* @media (max-width:798px){
+  width:20rem;
+  .form-control{
+      width:15rem;;
+  } 
+} */
+
+/* body {
+  background-image: url("./images/mango.svg");
+  background-color: #cccccc;
+  height: 10px;
+  background-position: center;
+  background-repeat: repeat;
+  background-size: cover;
+  position: relative;
+} */
+
+
+/* Uses vh and vm with calc
+@media screen and (min-width: 25rem){
+  html { font-size: calc( 16px + (24 - 16) * (100vw - 400px) / (800 - 400) ); }
+}
+
+/* Safari <8 and IE <11 */
+/* @media screen and (min-width: 25rem){
+  html { font-size: calc( 16px + (24 - 16) * (100vw - 400px) / (800 - 400) ); }
+} */
+
+/* @media screen and (min-width: 50rem){
+html { font-size: calc( 16px + (24 - 16) * (100vw - 400px) / (800 - 400) ); }
+} */ 
