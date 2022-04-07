@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4cc2a427.chunk.css",
+    "main.js": "/static/js/main.cf3b6c35.chunk.js",
+    "main.js.map": "/static/js/main.cf3b6c35.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.d9f24768.js",
+    "runtime-main.js.map": "/static/js/runtime-main.d9f24768.js.map",
+    "static/css/2.dfa55854.chunk.css": "/static/css/2.dfa55854.chunk.css",
+    "static/js/2.0b004eff.chunk.js": "/static/js/2.0b004eff.chunk.js",
+    "static/js/2.0b004eff.chunk.js.map": "/static/js/2.0b004eff.chunk.js.map",
+    "static/js/3.5007f7fc.chunk.js": "/static/js/3.5007f7fc.chunk.js",
+    "static/js/3.5007f7fc.chunk.js.map": "/static/js/3.5007f7fc.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.dfa55854.chunk.css.map": "/static/css/2.dfa55854.chunk.css.map",
+    "static/css/main.4cc2a427.chunk.css.map": "/static/css/main.4cc2a427.chunk.css.map",
+    "static/js/2.0b004eff.chunk.js.LICENSE.txt": "/static/js/2.0b004eff.chunk.js.LICENSE.txt",
+    "static/media/Venky_QRCODE.cdc21c27.jpg": "/static/media/Venky_QRCODE.cdc21c27.jpg",
+    "static/media/all_prod.b744984e.png": "/static/media/all_prod.b744984e.png",
+    "static/media/mallika-about.88020cf7.jpeg": "/static/media/mallika-about.88020cf7.jpeg",
+    "static/media/mango.6455e176.svg": "/static/media/mango.6455e176.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d9f24768.js",
+    "static/css/2.dfa55854.chunk.css",
+    "static/js/2.0b004eff.chunk.js",
+    "static/css/main.4cc2a427.chunk.css",
+    "static/js/main.cf3b6c35.chunk.js"
+  ]
+}
