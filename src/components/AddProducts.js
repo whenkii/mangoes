@@ -1,24 +1,19 @@
 import React,{useState} from 'react'
-import {Link,useHistory} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import styled from 'styled-components'
 // import mango from '../images/mango.svg'
 import axios from 'axios'
-// import {config} from './reactConfig'
-// import { GetApiData } from './ApiCalls';
-// import {AllSpinners} from './Spinners'
 import { ToastContainer, toast } from 'react-toastify';
 
-export default function SignUp() {
+export default function Addproducts() {
 
-    const history = useHistory();
-    // const  [submitForm,setSubmitForm] = useState(false);
 
-    const [formFields,setFormFields] = useState([{name:"FirstName",type:"text",value:"",required:"Y"},
-                                                 {name:"LastName",type:"text",value:"",required:"Y"},
-                                                 {name:"Email",type:"text",value:"",required:"Y"},
-                                                 {name:"Password",type:"text",value:"",required:"Y"},
-                                                 {name:"Confirm Password",type:"text",value:"",required:"Y"}
-                                                ]);
+    const [formFields,setFormFields] = useState([{name:"name",type:"text",placeholder:"Name of Product",value:"",required:"Y"},
+                                                {name:"units",type:"text",placeholder:"Ex: 3-3.2 kg",value:"",required:"Y"},
+                                                {name:"price",type:"text",placeholder:"$39",value:"",required:"Y"},
+                                                {name:"offerprice",type:"text",placeholder:"Ex: $36",value:"",required:"Y"},
+                                                {name:"instock",type:"text",placeholder:"Y/N",value:"",required:"Y"}]);
+
 
     const funOnChange = (e) =>
 {
@@ -27,10 +22,10 @@ export default function SignUp() {
     const attrName = attr[0];
     const idx = tempformAttributes.findIndex( a => a.name === attrName);
     tempformAttributes[idx] = {...tempformAttributes[idx],value: e.target.value,errors:""};
-    setFormFields([...tempformAttributes]);
+        setFormFields([...tempformAttributes]);
     }
 
-    const submitSignUpForm = (e) => {
+    const submitForm = (e) => {
         e.preventDefault();
         var tempFormFields = [...formFields];
         tempFormFields.forEach  ( a => {
@@ -39,37 +34,33 @@ export default function SignUp() {
         })
 
         setFormFields([...tempFormFields]);
+        console.log(tempFormFields[tempFormFields.findIndex( a => a.name === "name")].value)
+        const name = tempFormFields[tempFormFields.findIndex( a => a.name === "name")].value;
+        const units  = tempFormFields[tempFormFields.findIndex( a => a.name === "units")].value;
+        const price  = tempFormFields[tempFormFields.findIndex( a => a.name === "price")].value;
+        const offerprice  = tempFormFields[tempFormFields.findIndex( a => a.name === "offerprice")].value;
+        const instock  = tempFormFields[tempFormFields.findIndex( a => a.name === "instock")].value;
 
-    if (formFields.filter ( a => a.errors !== "").length === 0 )
+    if (tempFormFields.filter ( a => a.errors !== "").length === 0 )
     {
-
-        const firstname = formFields[formFields.findIndex( a => a.name === "FirstName")].value;
-        const lastname  = formFields[formFields.findIndex( a => a.name === "LastName")].value;
-        const email  = formFields[formFields.findIndex( a => a.name === "Email")].value;
-        const password  = formFields[formFields.findIndex( a => a.name === "Password")].value;
-
-       axios.post(`http://localhost:7001/api/createAccount`,{fileName:"SignUP form",vars:{p_firstname:firstname,p_lastname:lastname,p_email:email,p_password:password}})
+        
+       axios.post(`http://localhost:7001/api/addproduct`,
+            {fileName:"addproduct",vars:{p_name:name,p_units:units,p_price:price,p_offerprice:offerprice,p_inStock:instock}})
             .then (({data}) => {
                 // console.log(data)
                 
                 if ( data === "OK" ) {
                     // alert("Account created successfully");
-                    toast.success("Account created successfully")  
+                    toast.success("Product added successfully");
                     // history.push("/");
                 }
                 else  {
-                    if ( data === "User already exists") {
-                        alert(data + ". SignIn");
-                        history.push("/account");
-                    }
-                    else {
-                    alert(data);
-                    }
+                    // alert(data);
+                    toast.warning(data);
                 }
             })
             .catch((e) => {
-            console.log("SQL in GetApiData"+e);
-            alert("Couldn't get data from Database")
+            toast.error("Couldn't do the DB action");
             // if error, return 0 rows
             return [];
             });
@@ -81,10 +72,10 @@ export default function SignUp() {
                 <SigninContainer className="container">
                     <ToastContainer />
                     <div className="d-flex">
-                        <Link to="/account" className="login">Signup</Link>
+                        <Link to="/account" className="login">ADD PRODUCT</Link>
                         {/* <Link to="/Signup" className="m-auto text-dark font-weight-bold">SIGNUP</Link> */}
                     </div>
-                    <form onSubmit={submitSignUpForm}>    
+                    <form onSubmit={submitForm}>    
                         <div className="d-flex flex-column" >
                             {formFields.map ((item,i) =>
                                 <div className="form-group" key={i}>
@@ -98,7 +89,7 @@ export default function SignUp() {
                         </div>
     
                         <div className="d-flex flex-column justify-content-center mb-3">
-                            <button className="btn btn-warning btn-inline-block m-auto" type="submit" >SignUp</button>
+                            <button className="btn btn-warning btn-inline-block m-auto" type="submit" >ADD</button>
                         </div>
                     <Link className="m-auto pt-2" to="/account"><div className="text-center mt-2 mb-0 text-success font-weight-bold small" >Already have an account?</div></Link>
                     </form>

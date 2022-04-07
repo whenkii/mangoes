@@ -138,6 +138,48 @@ async function adhocSqlsViaBody(req, res, next) {
   
   module.exports.createAccount = createAccount;
 
+
+  async function addProduct(req, res, next) {
+    console.log("START","createAccount");
+    const {p_name,p_units,p_price,p_offerprice,p_inStock} = req.body.vars;
+    console.log(req.body.vars);
+    try {
+    let query = `begin addProduct(:p_name,:p_units,:p_price,:p_offerprice,:p_inStock,:p_out); end;`;
+    
+    // console.log("STATE",req.body);
+  
+    const options = {bindDefs: { p_name          : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
+                                 p_units         : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
+                                 p_price         : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
+                                 p_offerprice    : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
+                                 p_inStock       : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
+                                p_out            : {type: oracledb.STRING,dir: oracledb.BIND_OUT,maxSize: 500 }
+                    }}
+    // const options = {};
+    const binds = [{p_name:p_name,
+                    p_units:p_units,
+                    p_price:p_price,
+                    p_offerprice:p_offerprice,
+                    p_inStock:p_inStock
+                  }];
+
+    // console.log(binds)
+  
+    const result = await database.ExecuteMany_proc(query, binds,options);
+    // console.log(result.outBinds[0].p_out)
+                  res.status(200).json(result.outBinds[0].p_out);
+    } 
+    catch (err) {
+      next(err);
+      res.status(400).end();
+    }
+    finally {
+      console.log("Successfully executed - createAccount");
+    }
+  }
+  
+  module.exports.addProduct = addProduct;
+
 async function adhocSqlsViaPost(req, res, next) {
   console.log("START","adhocSqlsViaPost");
   let query;

@@ -3,6 +3,7 @@ import {Link,useHistory} from 'react-router-dom'
 import styled from 'styled-components'
 import { GetApiData } from './ApiCalls';
 import {accountsContext} from '../contexts/accountsContext'
+import * as fiIcons from 'react-icons/fi'
 
 export default function SignIn() {
     const history = useHistory();
@@ -48,7 +49,7 @@ const funOnChange = (e) =>
 
         GetApiData(sql)
         .then((res) => {
-            console.log(res)
+            // console.log(res)
             if (res[0] === "ERROR"){
                 // alert("Couldn't do the user athentication. Please try again after sometime");  
                 // toast.error("Login failed")  
@@ -84,39 +85,41 @@ const funOnChange = (e) =>
     return (
         <SigninContainer className="container">
             {!accountInfo.isLoggedIn ?
-                <div>
-                    <div className="d-flex">
-                        <Link to="/login" className="login">Login</Link>
-                    </div>
-                    
-                    <form onSubmit={submitSignInForm}>
-                        
-                        <div className="d-flex justify-content-center">
-                            
-                            <div className="d-flex flex-column" >
-                                {formFields.map ((item,i) =>
-                                    <div className="form-group" key={i}>
-                                        <label className="label" htmlFor={item.name}>{item.name}</label>
-                                        <input type={item.type} className="form-control" name={item.name}  placeholder={item.name} value={item.value} onChange={funOnChange}/>
-                                        {item.errors &&
-                                        <small className="text-danger">{item.errors}</small>
-                                        }
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="text-right mb-3 text-danger font-weight-bold small" >Forgot password?</div>
-                        <div className="d-flex flex-column justify-content-center">
-                            <button className="btn btn-signin btn-inline-block m-auto" type="submit">Signin</button>
-                            <div className="text-center mt-4 mb-0 text-secondary font-weight-bold small" >Don't have an account yet?</div>
-                            <Link className="m-auto pt-2" to="/signup"><div className="text-center btn btn-danger btn-inline-block" type="submit">SignUp</div></Link>
-                        </div>
-                    </form>
+            <div>
+                <div className="d-flex">
+                    <Link to="/login" className="login">Login</Link>
                 </div>
+                
+                <form onSubmit={submitSignInForm}>
+                    
+                    <div className="d-flex justify-content-center">
+                        
+                        <div className="d-flex flex-column" >
+                            {formFields.map ((item,i) =>
+                                <div className="form-group" key={i}>
+                                    <label className="label" htmlFor={item.name}>{item.name}</label>
+                                    <input type={item.type} className="form-control" name={item.name}  placeholder={item.name} value={item.value} onChange={funOnChange}/>
+                                    {item.errors &&
+                                    <small className="text-danger">{item.errors}</small>
+                                    }
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="text-right mb-3 text-danger font-weight-bold small" >Forgot password?</div>
+                    <div className="d-flex flex-column justify-content-center">
+                        <button className="btn btn-signin btn-inline-block m-auto" type="submit">Signin</button>
+                        <div className="text-center mt-4 mb-0 text-secondary font-weight-bold small" >Don't have an account yet?</div>
+                        <Link className="m-auto pt-2" to="/signup"><div className="text-center btn btn-danger btn-inline-block" type="submit">SignUp</div></Link>
+                    </div>
+                </form>
+            </div>
             :
             <div>
-                    <p className="text-center font-weight-bold text-danger">{`${accountInfo.firstname} ${accountInfo.lastname}`}</p>
+                    <p className="text-center font-weight-bold text-danger">{`${accountInfo.firstname} ${accountInfo.lastname}`} 
+                        <Link to="/admin" className="settings"><fiIcons.FiSettings className="settings-icon"/></Link>
+                    </p>
                     <div className="d-flex justify-content-center mb-4">
                         <div className="btn btn-signout text-weight font-weight-bold" onClick={handleSignout}> Signout </div>
                     </div>
@@ -141,6 +144,14 @@ border-radius:5%;
 font-style:italic;
 margin-top:6rem;
 padding:2rem;
+.settings{
+    font-size:2rem;
+    margin-left:2rem;
+}
+.settings-icon{
+    color:var(--amzonChime);
+    font-weight:bold;
+}
 .btn  {width:10rem;}
 .form-group {
     text-align:center;

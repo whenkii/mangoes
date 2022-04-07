@@ -23,6 +23,10 @@ router
   .route("/executeProc_log_order")
   .post(executeSqls.executeProc_log_order);
 
+  router
+  .route("/addproduct")
+  .post(executeSqls.addProduct);
+
 // router
 //   .route("/insert_issue/:email?/:issue?")
 //   // .get(logissue.funInsert)

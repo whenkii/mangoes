@@ -18,6 +18,8 @@ import ProductInfo from './components/ProductInfo'
 import {Orders,OrderDetails} from './components/Orders'
 import Checkout from './components/Checkout'
 import Payment from './components/Payment'
+import Admin from './components/Admin.js'
+import AddProducts from './components/AddProducts'
 
 
 function App() {
@@ -39,6 +41,8 @@ function App() {
             <Route exact path="/checkout" component={Checkout} />
             <Route exact path="/checkout" component={Checkout} />
             <Route exact path="/payment" component={Payment} />
+            <Route exact path="/admin" component={Admin} />
+            <Route exact path="/addProduct" component={AddProducts} />
             <Route exact path="/" component={ProductList} />
             <Route component={NotFound} />
           </Switch>

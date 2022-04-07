@@ -14,7 +14,6 @@ export default function Nav() {
 // const [accountInfo] = useContext(accountsContext);
 const [productsState] = useContext(productContext);
 const cartReducer = productsState.reduce((prev,curr) => prev + curr.QTY,0) ;
-// const menuItems = [{name:"Home",path="/"},{name:"Products",path="/"},{name:"ORDERS",path="/orders"},{name:"My account",path="/admin"},{name:"Home",path="/"},{name:"Home",path="/"}]
     return (
         <>
         <MainContainer >
