@@ -54,7 +54,9 @@ const cartReduce = inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0);
                 <div key={ID}className="card-body text-center">
                     <div className="row ">
                         <div className="cart-values col-4 font-weight-bold">{NAME}</div>
-                        <div className="cart-values col-lg-2 col-md-2 col-2"><FontAwesomeIcon className="" icon={faRupeeSign}/>{`${PRICE}`}</div>
+                        <div className="cart-values col-lg-2 col-md-2 col-2 text-danger font-weight-bold">
+                            {/* <FontAwesomeIcon className="icon"={faRupeeSign}/>{`${PRICE}`}</div> */}
+                            {`$${PRICE}`}</div>
                         <div className="cart-values col-1">{QTY}</div>
                         <div className="cart-values col-2 text-danger font-weight-bold">
                             {/* <FontAwesomeIcon className="p-0 m-0" icon={faRupeeSign}/> */}
@@ -73,15 +75,15 @@ const cartReduce = inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0);
                 <h2 className="text-danger text-center my-4 headers"> Cart is empty</h2> :
                 <div>
                     <div className="cartTotal text-center text-danger font-weight-bold m-2">
-                        <span className="ml-auto">Total:</span> 
-                        <span><FontAwesomeIcon className="mx-1" icon={faRupeeSign}/>{inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0)}</span>
+                        <span className="ml-auto" style={{color:"var(--amzonChime)"}}>Total:</span> 
+                        <span>{` $ ${inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0)}`}</span>
                     </div>
 
                     <div className="d-flex justify-content-around m-4">
                         <div className="btn btn-danger cart-nav-btns" onClick={() => productAction({type:"CLEAR"})}>Clear Cart</div>
                         <Link to="/"><div className="btn btn-warning cart-nav-btns">Continue Shopping</div></Link>
                         <Link to="/checkout">
-                        <div className="btn btn-success cart-nav-btns"><FontAwesomeIcon className="mx-2" icon={faRupeeSign}/>Checkout</div>
+                        <div className="btn btn-success cart-nav-btns">Checkout</div>
                         </Link>
                     </div>
                 </div>
@@ -118,8 +120,8 @@ border-radius:1rem;
     margin:0.2rem;
 }
 .cart-heading{
-    background-color:var(--amzonChime);
-    color:white;
+    // background-color:var(--amzonChime);
+    color:var(--amzonChime);
     width:13rem;
     border-radius:1rem; 
 }

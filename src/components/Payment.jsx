@@ -3,14 +3,15 @@ import {useHistory} from 'react-router-dom'
 import {productContext} from '../contexts/mangoesContext'
 // import {accountsContext} from '../contexts/accountsContext'
 import styled from 'styled-components'
-import qrcode from '../images/Venky_QRCODE.jpg'
-import { ToastContainer, toast } from 'react-toastify';
+// import qrcode from '../images/Venky_QRCODE.jpg'
+import qrcode from '../images/Venkat_Paynow.jpeg'
+// import { ToastContainer, toast } from 'react-toastify';
 
 export default function Payment() {
 var history = useHistory();
 const [,productAction]=useContext(productContext);
 // const [accountInfo] = useContext(accountsContext);
-const bankDetails = ["DBS Bank","Account# 0746022818","Suntech City"];
+const bankDetails = ["GardenRoots Pte Ltd","OCBC Account# : 712177963001"];
 const [orderForm,setOrderForm] = useState({address1:"",address2:"",postalcode:"",mobile:"",paymentMode:""});
 
 const funOnChange = (e) => {
@@ -60,22 +61,31 @@ const createOrder = (e) => {
 
        
             <div className="text-center">
-            {orderForm.paymentMode === "qrcode" ?
-                <img className="navImage m-auto" src={qrcode} alt="Logo" /> 
-             :
-             <>
+            {orderForm.paymentMode === "qrcode" &&
+                <>
+                    <p className="text-danger font-weight-bold"> UEN <span>: 201713208M</span><span className="form-check-label"> (GARDEN ROOTS PTE. LTD)</span></p>
+                    <img className="navImage m-auto" src={qrcode} alt="Logo" /> 
+                    
+                </>
+            }
+             
               { orderForm.paymentMode === "bank" &&
                 <div className="card-body">
                     {bankDetails.map((item,i) => 
-                    <p className="addressLines" key={i}>{item}</p>
+
+                        <p className="addressLines" key={i}>{item}</p>
                     )}
+                    <p className="form-check-label"> SWIFT CODE <span className="text-danger" >: 201713208M </span></p>
                 </div> 
                }
-             </>
-            }
+
+                { orderForm.paymentMode === "later" &&
+                    <p className="form-check-label"> Please send WhatsApp <span className="text-danger" >: 81601289 </span> </p>
+               }
+
             </div>
 
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-center mt-4">
             <div className="btn btn-sized-md back-btn" onClick={() => history.goBack()}>BACK</div>
             <div className="btn proceed-btn" onClick={createOrder}>COMPLETE ORDER</div>
             {/* <div className="btn btn-warning cart-nav-btns m-1" onClick={createOrder}>PAY LATER </div> */}
@@ -98,7 +108,8 @@ color:white;
     border-radius:1rem;
 }
 .form-check-label{
-    color:var(--bsRed);
+    color:var(--amzonChime);
+    font-weight:bold;
 }
 .form-check{
     margin:0.5rem;
@@ -106,6 +117,7 @@ color:white;
 .addressLines{
     color:var(--amzonChime);
     margin:0;
+    font-weight:bold;
 }
 .btn{
     margin:0 0 1rem 0;

@@ -3,10 +3,10 @@ import { ToastContainer,toast } from 'react-toastify';
 
 export const accountsContext = createContext(); 
 
-const userInfo = {firstname:"",lastname:"",email:"",isLoggedIn:false};
+const userInfo = {firstname:"",lastname:"",email:"",type:"",isLoggedIn:false};
 
 const accountReducer = (state,action) => {
-    var {type,value} = action;
+    var {type,value,mess} = action;
     switch (type) {
         case "SIGNIN" :
             toast.success("Login Successful")  
@@ -26,6 +26,9 @@ const accountReducer = (state,action) => {
         case "ERROR" :
             toast.error("Login Error!")  
             return {accountInfo:userInfo};
+        case "OTHER" :
+        toast.error(mess)  
+        return {accountInfo:userInfo};
         default :
             return {accountInfo:userInfo};
     }

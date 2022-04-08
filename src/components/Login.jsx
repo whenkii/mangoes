@@ -39,7 +39,7 @@ const funOnChange = (e) =>
 
         const username = formFields[formFields.findIndex( a => a.name === "Email")].value;
         const password = formFields[formFields.findIndex( a => a.name === "Password")].value;
-        const sql = `select case when password = '${password}' then 1 else 0 end sqlResult,firstname,lastname,email from users where email='${username}'`;
+        const sql = `select case when password = '${password}' then 1 else 0 end sqlResult,firstname,lastname,email,type from users where email='${username}'`;
 
         if ( formFields.filter ( a => a.errors !== "").length !== 0 ) {
             accountAction({type:"FAILED",value:accountInfo.name});
@@ -61,9 +61,9 @@ const funOnChange = (e) =>
             }
             else {
                 if ( res[0].SQLRESULT === 1 ) {
-            accountAction({type:"SIGNIN",value:{firstname:res[0].FIRSTNAME,lastname:res[0].LASTNAME,email:res[0].EMAIL,isLoggedIn:true}})
+                     accountAction({type:"SIGNIN",value:{firstname:res[0].FIRSTNAME,lastname:res[0].LASTNAME,email:res[0].EMAIL,type:res[0].TYPE,isLoggedIn:true}})
             // toast.success("Loggin Successful");
-            history.push("/") 
+                    history.push("/") 
                 }
                 else {
                     accountAction({type:"MISMATCH",value:accountInfo.name});
@@ -72,7 +72,7 @@ const funOnChange = (e) =>
         }
         )
         .catch ( (e) => {
-            alert(e)
+            accountAction({type:"OTHER",mess:e});
         }
         )
         // This case is already handled in error check. If fields are null then it doesnt reach this point
@@ -117,16 +117,20 @@ const funOnChange = (e) =>
             </div>
             :
             <div>
-                    <p className="text-center font-weight-bold text-danger">{`${accountInfo.firstname} ${accountInfo.lastname}`} 
-                        <Link to="/admin" className="settings"><fiIcons.FiSettings className="settings-icon"/></Link>
+                  
+                        <p className="text-center font-weight-bold text-danger">{`${accountInfo.firstname} ${accountInfo.lastname}`} 
+                        {accountInfo.type === "admin" &&
+                            <Link to="/admin" className="settings"><fiIcons.FiSettings className="settings-icon"/></Link>
+                        }
                     </p>
+                    
                     <div className="d-flex justify-content-center mb-4">
                         <div className="btn btn-signout text-weight font-weight-bold" onClick={handleSignout}> Signout </div>
                     </div>
                 <div className="d-flex justify-content-center">
 
-                    <Link to="/address" className="btn btn-secondary"> Address </Link>
-                    <Link to="/orders" className="btn btn-warning text-dark"> My Orders </Link>
+                    <Link to="/address" className="btn" style={{background:"var(--amzonChime)"}}> Address </Link>
+                    <Link to="/orders" className="btn" style={{background:"var(--amzonChime)"}}> My Orders </Link>
                     {/* <Link to="/feedback" className="btn btn-info"> Feedback </Link> */}
 
                 </div>

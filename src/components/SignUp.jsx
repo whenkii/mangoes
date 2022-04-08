@@ -7,6 +7,7 @@ import axios from 'axios'
 // import { GetApiData } from './ApiCalls';
 // import {AllSpinners} from './Spinners'
 import { ToastContainer, toast } from 'react-toastify';
+import {config} from '../components/reactConfig'
 
 export default function SignUp() {
 
@@ -48,7 +49,7 @@ export default function SignUp() {
         const email  = formFields[formFields.findIndex( a => a.name === "Email")].value;
         const password  = formFields[formFields.findIndex( a => a.name === "Password")].value;
 
-       axios.post(`http://localhost:7001/api/createAccount`,{fileName:"SignUP form",vars:{p_firstname:firstname,p_lastname:lastname,p_email:email,p_password:password}})
+       axios.post(`${config.restAPIserver}:${config.restAPIHost}/api/createAccount`,{fileName:"SignUP form",vars:{p_firstname:firstname,p_lastname:lastname,p_email:email,p_password:password}})
             .then (({data}) => {
                 // console.log(data)
                 

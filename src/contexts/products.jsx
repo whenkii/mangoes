@@ -1,6 +1,7 @@
 import React,{createContext,useReducer,useEffect} from 'react'
 import axios from 'axios'
 import {accountsContext} from './accountsContext'
+import {config} from '../components/reactConfig'
 // import {GetProducts} from '../components/ApiCalls'
 
 export const productContext = createContext();
@@ -54,7 +55,7 @@ const cartReducer = (state,action) => {
             newState = newState.filter(a => a.QTY > 0);
 
             //Call Proc to save the order details in DB
-            axios.post("http://localhost:7000/api/executeProc_log_order",newState)
+            axios.post(`${config.restAPIserver}:${config.restAPIHost}/api/executeProc_log_order`,newState)
                 .then(({data,status}) => {
                     if ( status && status !== 200 ) {
                         alert("Order creation failed error code - " + status);
@@ -84,7 +85,7 @@ const [cart,productAction] = useReducer(cartReducer,products);
 const [productsLoading,isLoadingActions] = useReducer(isLoadingReducer,true);
 let isCartEmpty = cart.filter(a => a.QTY > 0).reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0) === 0 ? true : false;
 useEffect(() => {
-    axios.get("http://localhost:7000/api/products")
+    axios.get("http://localhost:7001/api/products")
     .then(({data}) => {
             let {rows} = data;
             productAction({type:'INITIALIZE',rows:rows});

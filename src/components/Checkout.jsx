@@ -5,7 +5,7 @@ import {accountsContext} from '../contexts/accountsContext'
 import styled from 'styled-components'
 import { ToastContainer,toast } from 'react-toastify';
 
-const address = ["#13-443, Blk 929","Tampines Street 91","520929"]
+const address = ["Venkat Vona", "Blk - 679A","Punggol","S-821679","Mobile: 81601289"]
 
 
 export default function Checkout() {
@@ -15,8 +15,8 @@ var history = useHistory();
 const [orderForm,setOrderForm] = useState({address1:"",address2:"",postalcode:"",mobile:"",shipMode:"self"});
 // const [orderFormErrors,setOrderFormErrors] = useState({address1:"",address2:"",postalcode:"",mobile:"",shipMode:""});
 
-const [formFields,setFormFields] = useState([{name:"Unit",type:"text",placeholder:"Unit No",value:"",required:"Y"},
-                                             {name:"Blk/Building Name",type:"text",placeholder:"Ex:929",value:"",required:"Y"},
+const [formFields,setFormFields] = useState([{name:"Blk",type:"text",placeholder:"Ex:929",value:"",required:"Y"},
+                                             {name:"Unit",type:"text",placeholder:"Unit No",value:"",required:"Y"},
                                              {name:"Street ",type:"text",placeholder:"Ex: Tampines Street 91",value:"",required:"Y"},
                                              {name:"PostalCode",type:"text",placeholder:"Ex: 520202",value:"",required:"Y"},
                                              {name:"Mobile",type:"text",placeholder:"Mobile",value:"",required:"Y"}]);
@@ -93,7 +93,7 @@ const handleClick = (e) => {
 
   return (
     <Maincontainer className="container">
-        <ToastContainer position="top-center" autoClose="1000"/>
+        <ToastContainer position="bottom-center" autoClose="1000"/>
         <div className="card-header">Delivery</div>
         <div className="d-flex justify-content-center form-check"> 
                 <div className="form-check">               
@@ -133,9 +133,9 @@ const handleClick = (e) => {
         }
 
         { orderForm.shipMode === "self" &&
-            <div className="card-body">
+            <div className="card-body text-center">
                 {address.map((item,i) => 
-                <p className="addressLines" key={i}>{item}</p>
+                <p className={`addressLines ${item === "Mobile" ? "text-danger" :null}`} key={i}>{item}</p>
                 )}
             </div> 
         }
@@ -170,10 +170,11 @@ color:white;
 .addressLines{
     color:var(--amzonChime);
     margin:0;
+    font-weight:bold;
 }
 .back-btn{
-    background:var(--bsYellow);
-    color:black;
+    background:var(--bsRed);
+    color:white;
     text-align:center;
     margin-right:2rem;
 }

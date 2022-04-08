@@ -1,13 +1,15 @@
-import React,{useState} from 'react'
-import {Link} from 'react-router-dom'
+import React,{useState,useContext} from 'react'
+import {Link,useHistory} from 'react-router-dom'
 import styled from 'styled-components'
 // import mango from '../images/mango.svg'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
+import {accountsContext} from '../contexts/accountsContext'
 
 export default function Addproducts() {
 
-
+    const history = useHistory();
+    const [accountInfo] = useContext(accountsContext);
     const [formFields,setFormFields] = useState([{name:"name",type:"text",placeholder:"Name of Product",value:"",required:"Y"},
                                                 {name:"units",type:"text",placeholder:"Ex: 3-3.2 kg",value:"",required:"Y"},
                                                 {name:"price",type:"text",placeholder:"$39",value:"",required:"Y"},
@@ -52,7 +54,7 @@ export default function Addproducts() {
                 if ( data === "OK" ) {
                     // alert("Account created successfully");
                     toast.success("Product added successfully");
-                    // history.push("/");
+                    history.push("/account");
                 }
                 else  {
                     // alert(data);
@@ -69,8 +71,12 @@ export default function Addproducts() {
     }
             
             return (
+               
+                <>
+                 {accountInfo.isLoggedIn &&
                 <SigninContainer className="container">
-                    <ToastContainer />
+              
+                    <ToastContainer />     
                     <div className="d-flex">
                         <Link to="/account" className="login">ADD PRODUCT</Link>
                         {/* <Link to="/Signup" className="m-auto text-dark font-weight-bold">SIGNUP</Link> */}
@@ -91,9 +97,11 @@ export default function Addproducts() {
                         <div className="d-flex flex-column justify-content-center mb-3">
                             <button className="btn btn-warning btn-inline-block m-auto" type="submit" >ADD</button>
                         </div>
-                    <Link className="m-auto pt-2" to="/account"><div className="text-center mt-2 mb-0 text-success font-weight-bold small" >Already have an account?</div></Link>
+                      <Link className="m-auto pt-2" to="/account"><div className="text-center mt-2 mb-0 text-success font-weight-bold small" >Already have an account?</div></Link>
                     </form>
                 </SigninContainer>
+            }
+             </> 
             )
         }
         

@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/static/css/main.02b5a9bf.chunk.css",
+    "main.js": "/static/js/main.85a286ed.chunk.js",
+    "main.js.map": "/static/js/main.85a286ed.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.9005a8d7.js",
+    "runtime-main.js.map": "/static/js/runtime-main.9005a8d7.js.map",
+    "static/css/2.acf4148f.chunk.css": "/static/css/2.acf4148f.chunk.css",
+    "static/js/2.1ea72de6.chunk.js": "/static/js/2.1ea72de6.chunk.js",
+    "static/js/2.1ea72de6.chunk.js.map": "/static/js/2.1ea72de6.chunk.js.map",
+    "static/js/3.1e29807b.chunk.js": "/static/js/3.1e29807b.chunk.js",
+    "static/js/3.1e29807b.chunk.js.map": "/static/js/3.1e29807b.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.acf4148f.chunk.css.map": "/static/css/2.acf4148f.chunk.css.map",
+    "static/css/main.02b5a9bf.chunk.css.map": "/static/css/main.02b5a9bf.chunk.css.map",
+    "static/js/2.1ea72de6.chunk.js.LICENSE.txt": "/static/js/2.1ea72de6.chunk.js.LICENSE.txt",
+    "static/media/Venkat_Paynow.3f2ae230.jpeg": "/static/media/Venkat_Paynow.3f2ae230.jpeg",
+    "static/media/all_prod.b744984e.png": "/static/media/all_prod.b744984e.png",
+    "static/media/mallika-about.88020cf7.jpeg": "/static/media/mallika-about.88020cf7.jpeg",
+    "static/media/mango.6455e176.svg": "/static/media/mango.6455e176.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.9005a8d7.js",
+    "static/css/2.acf4148f.chunk.css",
+    "static/js/2.1ea72de6.chunk.js",
+    "static/css/main.02b5a9bf.chunk.css",
+    "static/js/main.85a286ed.chunk.js"
+  ]
+}
