@@ -2,6 +2,9 @@ import React,{createContext,useReducer,useEffect} from 'react'
 import axios from 'axios'
 import {accountsContext} from './accountsContext'
 import {config} from '../components/reactConfig'
+import { ToastContainer,toast } from 'react-toastify';
+import {config} from '../components/reactConfig'
+import {accountsContext} from '../contexts/accountsContext'
 // import {GetProducts} from '../components/ApiCalls'
 
 export const productContext = createContext();
@@ -26,6 +29,8 @@ let products = [];
 const isLoadingReducer = (state,action) => {
     return action;
 }
+
+const [accountInfo] = useContext(accountsContext);
 
 const cartReducer = (state,action) => {
     var tempState     = [...state];
@@ -58,19 +63,23 @@ const cartReducer = (state,action) => {
             axios.post(`${config.restAPIserver}:${config.restAPIHost}/api/executeProc_log_order`,newState)
                 .then(({data,status}) => {
                     if ( status && status !== 200 ) {
-                        alert("Order creation failed error code - " + status);
+                        // alert("Order creation failed error code - " + status);
+
+                        toast.error("Order creation failed error code - " + status)
                     }
                     else {
-                        alert("Order has been successfully created");
+                        // alert("Order has been successfully created");
+                        toast.success("Order has been successfully created")
                     }
                             })
                 .catch((e) => {
                         // console.log(e);
-                        alert(`API call failed \n` + e); 
+                        toast.error(`Failed to create Order. Contact Support`); 
                     })
             return products; 
 
         case "CLEAR":
+            toast.error(`Cart Cleared`); 
             return [...products];
         // case "ORDER":
         //    tempState.sort(propComparator(action.attr));
@@ -85,7 +94,7 @@ const [cart,productAction] = useReducer(cartReducer,products);
 const [productsLoading,isLoadingActions] = useReducer(isLoadingReducer,true);
 let isCartEmpty = cart.filter(a => a.QTY > 0).reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0) === 0 ? true : false;
 useEffect(() => {
-    axios.get("http://localhost:7001/api/products")
+    axios.get(`${config.restAPIserver}:${config.restAPIHost}/api/products`)
     .then(({data}) => {
             let {rows} = data;
             productAction({type:'INITIALIZE',rows:rows});
@@ -96,8 +105,11 @@ useEffect(() => {
                     })
 }, [])
     return (
+        <>
+        <ToastContainer position="top-center" autoClose="1000"/>
         <productContext.Provider value={[cart,productAction,productsLoading,isCartEmpty,isLoadingActions]}>
             {props.children}
         </productContext.Provider>
+        </>
     )
 }

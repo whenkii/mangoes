@@ -1,23 +1,28 @@
 import React,{useContext} from 'react'
-import {Link} from 'react-router-dom'
 import styled from 'styled-components'
-import {RiShoppingBasketLine,RiInformationLine} from 'react-icons/ri'
+import {RiShoppingBasketLine
+    // ,RiInformationLine
+} from 'react-icons/ri'
 import {productContext} from '../contexts/mangoesContext'
 import banginapalli_prod from '../images/banginapalli_prod.jpeg';
 import mallika_prod from '../images/mallika_prod.jpeg';
 import neelam_prod from '../images/neelam_prod.jpeg';
+import Kesar_prod from '../images/Kesar_prod.jpeg';
+import Alphanso_prod from '../images/Alphanso_prod.jpeg';
 import all_prod from '../images/all_prod.png';
 // import { ToastContainer } from 'react-toastify';
 
 export default function ProductList() {
 const [productsState,productAction,,productCountReducer] = useContext(productContext);
 const productNames = {Alphanso:["ఆల్పాన్సా/ఖాదర్","अल्फांसो","அல்பான்சோ","ಅಲ್ಫ್ನಸೋ"],
+                      AlphansoJumbo:["ఆల్పాన్సా/ఖాదర్","अल्फांसो Jumbo","அல்பான்சோ Jumbo","ಅಲ್ಫ್ನಸೋ Jumbo"],
+                      Kesar:["Kesar"],
                       Banginapalli:["బంగినపల్లి/బేనీషా","बादाम","பங்கினப்பள்ளி","ಬಂಗಿನಾಂಪಲ್ಲಿ"],
                       Mallika:["మల్లికా","मल्लिका","மல்லிகா","ಮಲ್ಲಿಕಾ"],
                       Neelam:["నీలం","नीलम","நீலம்","ನೀಲಂ"],
                       Kalepadu:["కాలేపాడు","कालेपाडु","காலேபாடு","ನೀಲಂ"],
                       ImamPasand:["ఇమామ్ పసంద్","इमाम पसंद","இமாம் பஸ்சந்த்","ಇಮಾಮ ಪಸಂದ್"]};
-const productColors = ["danger","warning","info","dark"];
+const productColors = ["secondary","warning","info","dark"];
 // const imageName = require('../images/banginapalli_prod.jpeg');
 const isProductExistsInCart = (props) => productsState.filter(a => a.ID === props && a.QTY > 0);
     return (
@@ -28,15 +33,22 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
             <div className="d-flex justify-content-center mt-2">
                 <div className="d-flex align-items-center justify-content-center flex-wrap">
                     {productsState.length > 0 &&
-                    productsState.filter(a => ["Banginapalli","Neelam","Mallika","Alphanso"].includes(a.NAME)).map((item,i) => 
+                    productsState.filter(a => ["Banginapalli","Neelam","Mallika","Alphanso","AlphansoJumbo","Kesar"].includes(a.NAME)).map((item,i) => 
                     <div className="d-flex" key={i}>
                     <div className="d-flex flex-column text-center">
                             {/* <div className="prodName">{item.NAME}</div> */}
                         <ProdContainer className="d-flex flex-column bg-white mt-0">
-                                <Link to={`/aboutProduct/${item.NAME}`} className="text-decoration-none" >
+                                {/* <Link to={`/aboutProduct/${item.NAME}`} className="text-decoration-none" >
                                     <RiInformationLine className="about"/> 
-                                </Link>
-                                <div className="price">S${item.PRICE}</div>
+                                </Link> */}
+                                {item.INSTOCK === "Y" ?
+                                 <div className="price"> 
+                                    <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:item.OFFERPRICE ? "line-through":"none"}}>S${item.PRICE}</span> 
+                                    <div className="priceValue"> ${item.OFFERPRICE}</div>
+                                </div> 
+                                 :
+                                 <div className="price text-muted"> ${item.OFFERPRICE}</div> 
+                                }
                                 <div className="d-flex ">
                                     {item.NAME === 'Banginapalli' &&
                                     <div className="d-flex card-image m-auto">
@@ -53,26 +65,45 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
                                             <img className="align-self-center prod-image" src={neelam_prod} alt="Logo" /> 
                                         </div>
                                     }
-                                    { (item.NAME !== 'Banginapalli' && item.NAME !== 'Mallika' && item.NAME !== 'Neelam') &&
+                                     {item.NAME === 'Kesar' &&
+                                        <div className="d-flex card-image m-auto">
+                                            <img className="align-self-center prod-image" src={Kesar_prod} alt="Logo" /> 
+                                        </div>
+                                    }
+                                    { (item.NAME === 'Alphanso' || item.NAME === 'AlphansoJumbo')  &&
+                                        <div className="d-flex card-image m-auto">
+                                            <img className="align-self-center prod-image" src={Alphanso_prod} alt="Logo" /> 
+                                        </div>
+                                    }
+                                    {  ['Banginapalli','Mallika','Kesar',"Alphanso","AlphansoJumbo"].indexOf(item.NAME) < 0  &&
                                         <div className="d-flex card-image m-auto">
                                             <img className="align-self-center prod-image" src={all_prod} alt="Logo" /> 
                                         </div>
                                     }
+                                    
+                                {/* Prod Name */}
+                                    <div className="mainProdName">{item.NAME}
+                                    <p className="prodWeight">({item.UNITS}/Box)</p>
+                                    </div>
                                 <div className="d-flex flex-column justify-content-center border-left m-auto">
-                                        {[item.NAME].concat(productNames[item.NAME].sort(() => (Math.random() > .5) ? 1 : -1)).map((item,i) => 
-                                        <div key={i} className={`prod-name-list ml-3 mt-1 text-${productColors[i]}`}>{item}</div>
+                                        {productNames[item.NAME].sort(() => (Math.random() > .5) ? 1 : -1).map((item,i) => 
+                                        <div key={i} className={`prod-name-list ml-3 text-${productColors[i]}`}>{item}</div>
                                         )
                                         }
                                 </div>
 
                                 </div>
                                 <div className="mt-1">
-                                {/* <div className="price text-right mr-1 mb-1">S${item.PRICE}</div> */}
-                                <div className="CartAddtions">
-                                    <button className="btn text-success" onClick={() => productAction({type:"ADD",prodid:item.ID})}>+</button>
-                                    <button className="btn text-danger"onClick={() => productAction({type:"REMOVE",prodid:item.ID})}>-</button>
-                                </div>
-                                {/* <div className="text-white"> */}
+                                {item.INSTOCK === "Y" ?
+                                    <div className="CartAddtions">
+                                        <button className="btn text-success" onClick={() => productAction({type:"ADD",prodid:item.ID})}>+</button>
+                                        <button className="btn text-danger"onClick={() => productAction({type:"REMOVE",prodid:item.ID})}>-</button>
+                                    </div>
+                                    :
+                                    <div className="CartAddtions">
+                                        <p className="text-danger">Out Of Stock</p>
+                                    </div>
+                                }
                                     {isProductExistsInCart(item.ID).length > 0 &&
                                         <div className="cartValues" style={{backgroundColor:"var(--bsRed)",color:"white"}}>{productCountReducer(item.ID)}</div> }
                                         <div className="innerBasket">
@@ -80,7 +111,6 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
                                                 <RiShoppingBasketLine className="basketSize" style={{transform: isProductExistsInCart(item.ID).length > 0 ? "rotate(0deg) scaleX(1)":null}}/>
                                             </div>
                                         </div>
-                                {/* </div> */}
                                 </div>
                         </ProdContainer>
                     </div>
@@ -106,15 +136,25 @@ margin-bottom:7rem;
 }
 .price{
     position:absolute;
-    top:5%;
-    left:10%;
+    right:2rem;
+    top:0.5rem;
     color:var(--bsRed);
+}
+.prodWeight{
+    font-size:0.6rem;
+    color:var(--amzonChime);
 }
 .heading{
     font-size:3rem;
     font-family: 'Brush Script MT', cursive;
     color:white;
     // background:linear-gradient(to left,orange,orange);
+}
+.mainProdName {
+    position:absolute;
+    top:5%;
+    left:10%;
+    color:var(--bsRed);
 }
 .prodName{
     font-weight:bold;
@@ -130,6 +170,9 @@ margin-bottom:7rem;
     margin-top:6rem;
     .heading{
         font-size:2rem;
+    }
+    .mainProdName {
+        font-size:0.8rem;
     }
     .prodName{
         font-size:0.9rem;
@@ -172,7 +215,7 @@ margin: 1rem 1rem 1.1rem 1.5rem;
 .cartValues {
     position:absolute;
     right:6%;
-    bottom:16%;
+    bottom:15%;
     width:1.4rem;
     height:1.4rem;
     border-radius:50%;
@@ -187,7 +230,6 @@ margin: 1rem 1rem 1.1rem 1.5rem;
     position:absolute;
     bottom:1%;
     left:10%;
-    font-size:4rem;
 }
 .btn{
     border-radius:1rem;
@@ -211,21 +253,19 @@ transition:0.7s all;
 :hover{
     padding-bottom:2rem;
 }
-@media (max-width: 798px ) and (max-width: 820px ) {
+@media (max-width: 798px ) {
     width:14rem;
     height:12rem;
     border-radius:2rem;
+    .priceValue{
+        font-size:0.8rem;
+    }
     .prod-image{
         height: 5rem;
         width: 4rem;
     }
     .prod-name-list {
         font-size:0.8rem;
-    }
-    .innerBasket{
-        bottom:0;
-        right:5%;
-        font-size:2.3rem;
     }
     .basketSize{
         font-size:2rem;
@@ -235,9 +275,14 @@ transition:0.7s all;
         left:8%;
         font-size:2rem;
     }
+    .innerBasket{
+        bottom:0;
+        right:5%;
+        font-size:2.3rem;
+    }
     .cartValues{
-        bottom:11.5%;
-        right:4%;
+        bottom:12%;
+        right:5%;
         width:1.1rem;
         height:1.1rem;
         font-size:0.7rem;

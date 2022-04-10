@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
 import {accountsContext} from '../contexts/accountsContext'
+import {config} from '../components/reactConfig'
 
 export default function Addproducts() {
 
@@ -46,7 +47,7 @@ export default function Addproducts() {
     if (tempFormFields.filter ( a => a.errors !== "").length === 0 )
     {
         
-       axios.post(`http://localhost:7001/api/addproduct`,
+       axios.post(`${config.restAPIserver}:${config.restAPIHost}/api/addproduct`,
             {fileName:"addproduct",vars:{p_name:name,p_units:units,p_price:price,p_offerprice:offerprice,p_inStock:instock}})
             .then (({data}) => {
                 // console.log(data)

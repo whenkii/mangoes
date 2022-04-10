@@ -14,6 +14,8 @@ export default function Nav() {
 // const [accountInfo] = useContext(accountsContext);
 const [productsState] = useContext(productContext);
 const cartReducer = productsState.reduce((prev,curr) => prev + curr.QTY,0) ;
+// const cartReducer = useState()
+// console.log(cartReducer)
     return (
         <>
         <MainContainer >
@@ -21,12 +23,12 @@ const cartReducer = productsState.reduce((prev,curr) => prev + curr.QTY,0) ;
             <div className="header d-flex align-items-center  justify-content-around mb-2">
                     <Link to="/" className="menu-items"> <fasIcons.FaHome className="menu-icons"/></Link>
                     {/* <Link to="/products"  className="menu-items"><GiIcons.GiPlantWatering/></Link> */}
-                    <Link to="/orders"  className="menu-items"><fasIcons.FaDollarSign className="menu-icons"/></Link>
+                    {/* <Link to="/orders"  className="menu-items"><fasIcons.FaDollarSign className="menu-icons"/></Link> */}
                     <Link to="/contactus"  className="menu-items"><fasIcons.FaPhone className="menu-icons"/></Link>
                     <Link to="/account" className="menu-items"><fasIcons.FaUser className="menu-icons"/> 
                     {/* {accountInfo.isLoggedIn ? "My Account" : "Signin"} */}
                     </Link>
-                    <Link to="/graphs"  className="menu-items"><fasIcons.FaInfo className="menu-icons"/></Link> 
+                    {/* <Link to="/graphs"  className="menu-items"><fasIcons.FaInfo className="menu-icons"/></Link>  */}
                     <Link to="/cart"> 
                      <div className="basket">
                     <div className="cartValues " style={{backgroundColor:cartReducer > 0 ? null:"var(--bsRed)"}}>{cartReducer}</div>
@@ -109,7 +111,7 @@ box-shadow: 0 0 0.5rem 0.15rem rgba(0,0,0,0.25);
     background:white;
     color:var(--amazonChime);
     .menu-icons{
-         font-size:2.1rem;
+         font-size:1.8rem;
        }
     }
 }
@@ -183,7 +185,7 @@ box-shadow: 0 0 0.5rem 0.15rem rgba(0,0,0,0.25);
         font-size:2.2rem;
     }
     .cartValues{
-        bottom:2.3rem;
+        bottom:2.2rem;
         right:0.5rem;;
         width:1.2rem;
         height:1.2rem;

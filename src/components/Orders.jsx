@@ -16,7 +16,7 @@ export function Orders() {
 
     //Mount - Get Orders details
     useEffect(() => {
-        axios.get(`http://${config.restAPIserver}:${config.restAPIHost}/api/getSqlresult/${query}`)
+        axios.get(`${config.restAPIserver}:${config.restAPIHost}/api/getSqlresult/${query}`)
         .then((result) => {
             let {data} = result;
             let {rows} = data;
@@ -57,7 +57,7 @@ export function OrderDetails(props) {
 
     //Mount - Get Orders details
     useEffect(() => {
-        axios.get(`http://${config.restAPIserver}:${config.restAPIHost}/api/getSqlresult/${query}`)
+        axios.get(`${config.restAPIserver}:${config.restAPIHost}/api/getSqlresult/${query}`)
         .then((result) => {
             let {data} = result;
             let {rows} = data;

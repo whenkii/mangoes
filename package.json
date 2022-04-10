@@ -1,7 +1,7 @@
 {
   "name": "dailycart",
   "version": "0.1.0",
-  "homepage": "http://localhost:3000",
+   "homepage":".",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.34",

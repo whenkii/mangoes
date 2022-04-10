@@ -3,7 +3,7 @@ import { ToastContainer,toast } from 'react-toastify';
 
 export const accountsContext = createContext(); 
 
-const userInfo = {firstname:"",lastname:"",email:"",type:"",isLoggedIn:false};
+const userInfo = {firstname:"",lastname:"",email:"",type:"",isLoggedIn:false,loginType:""};
 
 const accountReducer = (state,action) => {
     var {type,value,mess} = action;
@@ -11,6 +11,9 @@ const accountReducer = (state,action) => {
         case "SIGNIN" :
             toast.success("Login Successful")  
             return {...value};
+        case "GUEST" :
+            toast.success("Logged in as a Guest")  
+            return {...value,loginType:"GUEST",isLoggedIn:true};
         case "SIGNOUT" :
             toast.success("Logout Successful")  
             return {accountInfo:userInfo};

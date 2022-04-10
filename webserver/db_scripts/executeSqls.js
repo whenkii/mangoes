@@ -329,7 +329,7 @@ async function executeProc_log_order(req, res, next) {
   }
   finally {
     console.log("END","executeProc_log_order");
-    await conn.close();
+    // await conn.close();
   }
 }
 

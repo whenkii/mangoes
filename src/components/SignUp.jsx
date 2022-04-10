@@ -111,7 +111,7 @@ export default function SignUp() {
 const SigninContainer= styled.div`
 width:30rem;
 background-color:white;
-border-radius:5%;
+border-radius:1rem;
 padding:2rem;
 font-style:italic;
 margin-top:6rem;
@@ -137,6 +137,8 @@ margin-bottom:10rem;
     color: var(--amzonChime);
     // font-weight:bold;
     border-bottom: 3px solid var(--amzonChime); 
+    padding:0 1rem 0 1rem;
+    border-radius:1rem; 
     margin:auto;
     margin-bottom:2rem;
 }

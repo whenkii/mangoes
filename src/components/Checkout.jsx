@@ -1,38 +1,52 @@
 import React,{useState,useContext} from 'react'
 import {useHistory} from 'react-router-dom'
 import {productContext} from '../contexts/mangoesContext'
-import {accountsContext} from '../contexts/accountsContext'
+// import {accountsContext} from '../contexts/accountsContext'
 import styled from 'styled-components'
-import { ToastContainer,toast } from 'react-toastify';
+import { ToastContainer,toast} from 'react-toastify';
 
-const address = ["Venkat Vona", "Blk - 679A","Punggol","S-821679","Mobile: 81601289"]
-
+const selfAddress = {Punggol:["Venkat Vona", "Blk - 679A","Punggol","S-821679","Mobile: 81601289"],
+                     Tampines:["Venky", "Blk - 929","Tampines","S-520929","Mobile: 98346177"],
+                     Sengkang:["Mohan Reddy", "Blk - 313","Sengkang","S-528313","Mobile: 98346177"]}
+const areas = ["Tampines", "Sengkang","Punggol"]
 
 export default function Checkout() {
 var history = useHistory();
-// const [productAction]=useContext(productContext);
-// const [accountInfo] = useContext(accountsContext);
-const [orderForm,setOrderForm] = useState({address1:"",address2:"",postalcode:"",mobile:"",shipMode:"self"});
-// const [orderFormErrors,setOrderFormErrors] = useState({address1:"",address2:"",postalcode:"",mobile:"",shipMode:""});
+const [,,,,,deliveryState,deliveryAction]=useContext(productContext);
+const {shipMode,location,address} = deliveryState[0];
 
-const [formFields,setFormFields] = useState([{name:"Blk",type:"text",placeholder:"Ex:929",value:"",required:"Y"},
-                                             {name:"Unit",type:"text",placeholder:"Unit No",value:"",required:"Y"},
-                                             {name:"Street ",type:"text",placeholder:"Ex: Tampines Street 91",value:"",required:"Y"},
-                                             {name:"PostalCode",type:"text",placeholder:"Ex: 520202",value:"",required:"Y"},
-                                             {name:"Mobile",type:"text",placeholder:"Mobile",value:"",required:"Y"}]);
+const initFormFields = [{name:"Blk",type:"text",placeholder:"Ex:929",value:"",required:"Y"},
+                        {name:"Unit",type:"text",placeholder:"Ex: #13-234",value:"",required:"Y"},
+                        {name:"Street ",type:"text",placeholder:"Ex: Tampines Street 22",value:"",required:"Y"},
+                        {name:"PostalCode",type:"text",placeholder:"Ex: 520202",value:"",required:"Y"},
+                        {name:"Mobile",type:"text",placeholder:"Mobile",value:"",required:"Y"},
+                        {name:"Location",type:"list",placeholder:"Location",value:"",listValues:["","Tampines", "Sengkang","Punggol","Bedok","Simei","Other"],required:"Y"}];
 
-const funOnChange = (e) => {
-    setOrderForm({...orderForm,[e.target.name]:e.target.value})
+
+const [formFields,setFormFields] = useState(initFormFields);
+const funOnChange = (props) => {
+    deliveryAction({type:"SHIPMENT_MODE",shipMode:props});
+}
+
+// const [location, setlocation] = useState("Punggol");
+const onClickLocation = (props) => {
+    deliveryAction({type:"ADDRESS",location: (location === props ? "":props),address:selfAddress[props]})
 }
 
 const funOnChangeForm = (e) =>
 {
-    const tempformAttributes = [...formFields];
-    const attr= [e.target.name];
-    const attrName = attr[0];
-    const idx = tempformAttributes.findIndex( a => a.name === attrName);
-    tempformAttributes[idx] = {...tempformAttributes[idx],value: e.target.value,errors:""};
-    setFormFields([...tempformAttributes]);
+    if ( shipMode !== "self") {
+        const tempformAttributes = [...formFields];
+        const attr= [e.target.name];
+        const attrName = attr[0];
+        var idx = tempformAttributes.findIndex( a => a.name === attrName);
+        tempformAttributes[idx] = {...tempformAttributes[idx],value: e.target.value,errors:""};
+        setFormFields([...tempformAttributes]);
+        if ( attrName === "Location") {
+            var addressDetails = tempformAttributes.map( a => a.value)
+        deliveryAction({type:"ADDRESS",location:tempformAttributes[idx].value,address:addressDetails})
+        }
+        }
     }
 
 const handleClick = (e) => {
@@ -44,104 +58,104 @@ const handleClick = (e) => {
     })
 
     setFormFields([...tempFormFields]);
+    // console.log(formFields.filter ( a => a.errors !== ""),formFields.filter ( a => a.errors !== "").length)
+    // console.log(deliveryState)
+    if ( shipMode === "self" ) {
 
-    if ( formFields.filter ( a => a.errors !== "").length === 0 || orderForm.shipMode === "self") {
-        // if ( orderForm.shipMode ) {
-        //     toast.warning("Choose Delivery mode")
-        // }
-        // else {
-        history.push("/payment") 
-            // }
+        if ( !location || !address) {
+            toast.error ("Choose Location");
         }
- }
-
-// const createOrder = () => { 
-    
-//     const temporderFormErrors = orderFormErrors;
-
-//         Object.keys(orderForm).forEach (e => 
-//             {
-//                 temporderFormErrors[e] = orderForm[e].length > 0 ? "": e + " is Mandatory attribute";
-//                 setOrderFormErrors(temporderFormErrors);
-//             })
-
-//             var errors = Object.keys(orderFormErrors).filter(a => a !== "shipMode")
-//             .map(function(key) {
-//                 return orderFormErrors[key];
-//             });
-//     console.log( errors.filter( a => a))
-                    
-//     if  ( errors.filter( a => a).length === 0 || orderForm.shipMode === "self") 
-//     {
-
-//             if ( accountInfo.email && accountInfo.isLoggedIn ) {
-//                         productAction({type:"CREATE_ORDER",accountInfo:accountInfo})
-//                         productAction({type:"CLEAR"})
-//                         // if ( isCartEmpty ) { 
-//                             history.push("/orderconfirmation") 
-//                         // }
-//                         }
-//             else {
-//                 alert("User not logged in. Pls login/Signup")
-//                 history.push("/Signin")
-//             }
-//     }
-//     else {
-//         alert("Please fill mandatory attributes")
-//        }
-// }
-
+        else {
+            history.push("/payment");
+        }
+    }
+    else {
+        if ( formFields.filter ( a => a.errors !== "").length === 0) {
+             history.push("/payment") 
+        }
+        else {
+            toast.error ("Errors in the form");
+        }
+     }
+    }  
   return (
     <Maincontainer className="container">
         <ToastContainer position="bottom-center" autoClose="1000"/>
-        <div className="card-header">Delivery</div>
-        <div className="d-flex justify-content-center form-check"> 
-                <div className="form-check">               
-                    <input className="form-check-input" type="radio" value="self" name="shipMode" 
-                        checked={orderForm.shipMode === "self"} onChange={funOnChange} />
-                    <label className="form-check-label" htmlFor="self">Self-Pickup</label>
-                </div>
+            <div className="card-header">Delivery</div>
+            <div className="d-flex justify-content-center form-check"> 
+                    <div className="form-check">               
+                        <input className="form-check-input" type="radio" value="self" name="shipMode" 
+                            checked={shipMode === "self"} onChange={ () => funOnChange("self")} />
+                        <label className="form-check-label" htmlFor="self">Self-Pickup</label>
+                    </div>
 
-                <div className="form-check">               
-                    <input className="form-check-input" type="radio" value="delivery" name="shipMode" 
-                        checked={orderForm.shipMode === "delivery"} onChange={funOnChange} />
-                    <label className="form-check-label" htmlFor="delivery">Delivery</label>
-                </div>
-        </div>
+                    <div className="form-check">               
+                        <input className="form-check-input" type="radio" value="delivery" name="shipMode" 
+                            checked={shipMode === "delivery"} onChange={ () => funOnChange("delivery")} />
+                        <label className="form-check-label" htmlFor="delivery">Delivery</label>
+                    </div>
+            </div>
 
-        {orderForm.shipMode === "delivery" &&
+        {shipMode === "delivery" &&
         <div>
             <div className="card-header">Address</div>
-            <div className="card-body text-dark">
+            <div className="card-body">
                 <form>
                     <div className="d-flex justify-content-center">         
-                        <div className="d-flex flex-column" >
+                        <div>
                             {formFields.map ((item,i) =>
                                 <div className="form-group" key={i}>
-                                    <label className="label" htmlFor={item.name}>{item.name}</label>
-                                    <input type={item.type} className="form-control" name={item.name}  placeholder={item.placeholder} value={item.value} onChange={funOnChangeForm}/>
-                                    {item.errors &&
-                                    <small className="text-danger">{item.errors}</small>
-                                    }
-                                </div>
-                            )}
+                                 {item.type === 'list' ?
+                                    <div className="d-flex row">
+                                        <label className="col label align-self-center mr-1 text-left" htmlFor="Location">Location</label>
+                                        <div className="d-flex row flex-column">       
+                                            <select className="col form-control" name="Location" onChange={funOnChangeForm}>
+                                                {item.listValues.map ((item,i) =>
+                                                    <option className="list" key={i} value={item}>{item}</option>
+                                                )}
+                                            </select>
+                                            <small className="col text-danger align-self-center">{item.errors}</small>
+                                        </div>
+                                    </div>
+                                :
+                                    <div className="row">
+                                        <label className="col label align-self-center mr-1 text-left" htmlFor={item.name}>{item.name}</label>
+                                        <div className="d-flex row flex-column">
+                                            <input type={item.type} className="col form-control w-75" name={item.name}  placeholder={item.placeholder} value={item.value} onChange={funOnChangeForm}/>
+                                            <small className="col text-danger align-self-center">{item.errors}</small>
+                                        </div>
+                                    </div>
+                                 }
+                               </div>  
+                            )
+                            }
+                             </div>
                         </div>
-                    </div>
                 </form>
             </div>
         </div>
         }
 
-        { orderForm.shipMode === "self" &&
-            <div className="card-body text-center">
-                {address.map((item,i) => 
-                <p className={`addressLines ${item === "Mobile" ? "text-danger" :null}`} key={i}>{item}</p>
-                )}
-            </div> 
+        { shipMode === "self" &&
+            <div className="d-flex flex-wrap flex-row">
+            {areas.map((item,i) =>
+                <button className="btn btn-sized-sm m-1 p-1 btn-secondary text-white" style={{background: (deliveryState[0].location === item ? "var(--amzonChime)":null)}} key={i} onClick={() => onClickLocation(item)}>{item}</button>
+            )}
+              <div className="card">
+                 {/* <div className="card-header">{location}</div> */}
+                 {/* {console.log(location)} */}
+                 <div className="card-body text-center">
+                     {/* {console.log("location",location)} */}
+                     {location && location !== "Other" && selfAddress[location]  && selfAddress[location].map((item,i) =>  
+                    <p className={`addressLines ${item === "Mobile" ? "text-danger" :null}`} key={i}>{item}</p>
+                     )}
+                 </div>     
+             </div>
+            </div>
         }
 
-        <div className="d-flex justify-content-center">
-            <div className="btn btn-sized-md back-btn" onClick={() => history.goBack()}>BACK</div>
+        <div className="d-flex justify-content-center mt-4">
+            {/* <div className="btn btn-sized-md back-btn" onClick={() => history.goBack()}>BACK</div> */}
             <div className="btn btn-sized-md proceed-btn" onClick={handleClick}>PAYMENT</div>
         </div>
     </Maincontainer>
@@ -150,22 +164,46 @@ const handleClick = (e) => {
 
 const Maincontainer = styled.div`
 background:white;
-margin-top:7rem;
-padding:2rem;
-border-radius:1rem;
+margin-top:1rem;
+// padding-bottom:2rem;
+// border-radius:1rem;
+width:22rem;
 color:white;
-.card-header{
+.heading{
+    padding:0.5rem;
     background:var(--amzonChime);
     text-align:center;
     color:white;
     font-weight:bold;
     border-radius:1rem;
 }
+.card{
+    width:75%;
+    margin:auto;
+    margin-top:0 !important;
+    border-radius:1rem;
+}
+.card-header{
+    padding:0.5rem;
+    background:var(--amzonChime);
+    text-align:center;
+    font-weight:bold;
+    border-radius:1rem;
+}
+.card-body{
+    font-size:0.8rem;
+}
 .form-check-label{
     color:var(--bsRed);
 }
+.label{
+    color:var(--amzonChime);
+}
 .form-check{
     margin:0.5rem;
+}
+.form-check-input{
+    font-size:3rem;
 }
 .addressLines{
     color:var(--amzonChime);
@@ -183,5 +221,18 @@ color:white;
     color:white;
     text-align:center;
     margin-left:2rem;
+}
+// .list{
+//     width:20rem;;
+// }
+@media (max-width:798px){
+    .card-header{
+        padding:0.4rem;
+        font-size:0.8rem;
+    }
+    .form-check-label{
+        font-size:0.7rem;
+    }
+
 }
 `

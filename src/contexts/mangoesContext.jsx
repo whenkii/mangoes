@@ -4,10 +4,12 @@ import { GetApiData } from '../components/ApiCalls';
 import {config} from '../components/reactConfig'
 import { ToastContainer,toast } from 'react-toastify';
 
+
 let products = []
 
-export const productContext = createContext();
+var productsInit; 
 
+export const productContext = createContext();
 
 const CartReducerFun = (state,action) => {
     var tempState     = [...state];
@@ -18,6 +20,7 @@ const CartReducerFun = (state,action) => {
             tempState = [...action.state];
             tempState = tempState.map( a => ({...a,QTY:0,inCart:false}))
             products = [...tempState];
+            productsInit = [...tempState]
             return [...tempState];
         case "ADD" :
             tempState[idx] = {...tempState[idx],QTY:parseInt(tempState[idx].QTY ? tempState[idx].QTY : 0,10)+1,INCART:"Y"};
@@ -30,8 +33,13 @@ const CartReducerFun = (state,action) => {
                 QTYVar = parseInt(tempState[idx].QTY,10)-1;
                 tempState[idx] = {...tempState[idx],QTY:QTYVar,INCART: QTYVar > 0 ? "Y":"N"};
                 toast.warning("Item removed from Cart")
-                }
                 return [...tempState];
+                }
+                else if (QTYVar === 0) {
+                    toast.warning(`This item is not in the Cart`)
+                    return state;
+                }
+                break;
         case "DELETE":  
                 tempState[idx] = {...tempState[idx],QTY:0,INCART:"N"};
                 return [...tempState];
@@ -49,33 +57,52 @@ const CartReducerFun = (state,action) => {
             axios.post(`${config.restAPIserver}:${config.restAPIHost}/api/executeProc_log_order`,newState)
                 .then(({data,status}) => {
                     if ( status && status !== 200 ) {
-                        alert("Order creation failed error code - " + status);
+                        // alert("Order creation failed error code - " + status);
+                        toast.error("Order creation failed")
                     }
                     else {
-                        alert("Order has been successfully created");
-                        tempState = [...products]
+                        toast.success("Order has been successfully created");
+                        // console.log(tempState);
+                        tempState = [...productsInit]
+                         console.log(tempState);
                     }
                             })
                 .catch((e) => {
                         // console.log(e);
-                        alert(`API call failed \n` + e); 
+                        toast.error(`Order creation failed`); 
                         tempState = [...state]
                     })
             // console.log(tempState)
             return [...tempState]; 
         case "CLEAR":
-            toast.success("Order created. Success!!!")
+            toast.success("Cart has been cleared")
             return [...products];
         default :
             return state;
     }
 } 
 
+const deliveryReducer = (state,action) => {
+    var tempState     = [...state];
+    var {shipMode,location,address} = action;
+
+    if (action.type === "SHIPMENT_MODE") {
+    tempState[0].shipMode = shipMode;
+    }
+    else if (action.type === "ADDRESS") {
+        tempState[0].location = location;
+        tempState[0].address = address;
+    }
+    return [...tempState]
+} 
+
 export function ProductsProvider(props) {
 // const [accountInfo] = useContext(accountsContext);
-const [productsState,productAction] = useReducer(CartReducerFun,[{ID:1,NAME:"Banginapalli",PRICE:"34",UNIT:"5Kg",BGCLR:"orange",PRICECLR:"var(--bsRed)",INCART:false,QTY:0,CARTBGCLR:"white",CARTCLR:"var(--bsRed)"}]);
+const [productsState,productAction] = useReducer(CartReducerFun,[{ID:1,NAME:"Banginapalli",PRICE:"34",UNIT:"5Kg",INSTOCK:"Y",INCART:false,QTY:0,}]);
+const [deliveryState,deliveryAction] = useReducer(deliveryReducer,[{shipMode:"",address:"",location:""}]);
 const cartReducer = 1;
 const productCountReducer = (props) => productsState.filter(a => a.ID === props && a.QTY > 0).reduce((prev,curr) => prev + curr.QTY,0);
+const productCountAll = productsState.reduce((prev,curr) => prev + curr.QTY,0);
 
 useEffect( () => {
     GetApiData("select * from products")
@@ -101,10 +128,10 @@ useEffect( () => {
     },[])
     return (
         <>
-        <productContext.Provider value={[productsState,productAction,cartReducer,productCountReducer]}>
+        <ToastContainer position="top-center" autoClose="1000"/>
+        <productContext.Provider value={[productsState,productAction,cartReducer,productCountReducer,productCountAll,deliveryState,deliveryAction]}>
             {props.children}
         </productContext.Provider>
-        <ToastContainer position="top-center" autoClose="1000"/>
         </>
     )
 }

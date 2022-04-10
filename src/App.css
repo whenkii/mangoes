@@ -31,6 +31,9 @@ body{
   background-color:#212f3e !important;
 }
 
+.btn{
+  width:12rem;
+}
 .btn-sized-normal {
   width:12rem !important;
   background:linear-gradient(to bottom);
@@ -69,7 +72,14 @@ body{
   text-align:center;
   margin:auto;
 }
-
+@media  (max-width: 798px) {
+  p {
+    font-size:0.8rem;
+  }
+  .label{
+    font-size:0.8rem;
+  }
+}
 /* @media (max-width:798px){
   width:20rem;
   .form-control{

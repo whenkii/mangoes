@@ -22,8 +22,8 @@ module.exports = {
     // user: "admin",
     // password: "tnrstore123",
     // connectString: "tnr-datastore-v1.cusb9jdjhyrr.us-east-1.rds.amazonaws.com:1521/TNRSTORE",
-    poolMin: 10,
-    poolMax: 10,
+    poolMin: 20,
+    poolMax: 20,
     poolIncrement: 0,
   },
 };

@@ -1,16 +1,19 @@
 import React,{useState,useContext} from 'react'
 import {useHistory} from 'react-router-dom'
 import {productContext} from '../contexts/mangoesContext'
-// import {accountsContext} from '../contexts/accountsContext'
+import {accountsContext} from '../contexts/accountsContext'
 import styled from 'styled-components'
-// import qrcode from '../images/Venky_QRCODE.jpg'
 import qrcode from '../images/Venkat_Paynow.jpeg'
-// import { ToastContainer, toast } from 'react-toastify';
+import * as fasIcons from 'react-icons/fa'
+import { toast } from 'react-toastify';
 
 export default function Payment() {
 var history = useHistory();
-const [,productAction]=useContext(productContext);
-// const [accountInfo] = useContext(accountsContext);
+// const [productsState,productAction]=useContext(productContext);
+const [productsState,productAction,,,productCountAll,deliveryState]=useContext(productContext);
+const {shipMode,location} = deliveryState[0];
+const inCartItems = productsState.filter(a => a.QTY > 0);
+const [accountInfo] = useContext(accountsContext);
 const bankDetails = ["GardenRoots Pte Ltd","OCBC Account# : 712177963001"];
 const [orderForm,setOrderForm] = useState({address1:"",address2:"",postalcode:"",mobile:"",paymentMode:""});
 
@@ -21,23 +24,27 @@ const funOnChange = (e) => {
 const createOrder = (e) => {
     e.preventDefault();
 
-    if (orderForm.paymentMode) {
-    productAction({type:"CLEAR"});
-    history.push("/")
-    }
+    if (!accountInfo.isLoggedIn) {
+        toast.error(`Login to complete the Order`); 
+        history.push("/account")
+     }
     else {
-        productAction({type:"BLANK_PAYEMENT_MODE"});
+        if (orderForm.paymentMode) {
+        productAction({type:"CREATE_ORDER",accountInfo:accountInfo});
+        history.push("/")
+        }
+        else {
+            productAction({type:"BLANK_PAYEMENT_MODE"});
+        }
     }
-    // history.push("/orderconfirmation");
-    // var tempFormFields = [...formFields];
-    // tempFormFields.forEach  ( a => {
-    //     const idx = formFields.findIndex( b => a.name === b.name);
-    //     tempFormFields[idx] = {...tempFormFields[idx],errors:tempFormFields[idx].required === "Y" && !tempFormFields[idx].value ? `${tempFormFields[idx].name} is Required` :"" }
-    // })
   }
 
   return (
     <Maincontainer className="container">
+        <div className="cartTotal text-center text-danger font-weight-bold mt-2">
+            <span className="ml-auto" style={{color:"var(--amzonChime)"}}>Total:</span> 
+            <span>{` $${inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0) + (productCountAll < 5 && shipMode === "delivery" ? (location === "Other" ? 6 : 4) : 0)}`}</span>
+        </div>
         <div className="card-header">PAYEMNT</div>
         <div className="d-flex justify-content-center form-check"> 
                 <div className="form-check">               
@@ -61,13 +68,15 @@ const createOrder = (e) => {
 
        
             <div className="text-center">
-            {orderForm.paymentMode === "qrcode" &&
-                <>
-                    <p className="text-danger font-weight-bold"> UEN <span>: 201713208M</span><span className="form-check-label"> (GARDEN ROOTS PTE. LTD)</span></p>
-                    <img className="navImage m-auto" src={qrcode} alt="Logo" /> 
-                    
-                </>
-            }
+                {orderForm.paymentMode === "qrcode" &&
+                    <>
+                        <p className="text-danger font-weight-bold mb-0"> UEN : 201713208M </p>
+                        <p className="text-danger font-weight-bold m-0"> PayNow <span>: 81601289</span></p>
+                        <p className="font-weight-bold m-0 mb-2" style={{color:"var(--amzonChime)"}}> GARDEN ROOTS PTE. LTD</p>
+                        <img className="navImage m-auto" src={qrcode} alt="Logo" /> 
+                        
+                    </>
+                }
              
               { orderForm.paymentMode === "bank" &&
                 <div className="card-body">
@@ -79,17 +88,19 @@ const createOrder = (e) => {
                 </div> 
                }
 
-                { orderForm.paymentMode === "later" &&
-                    <p className="form-check-label"> Please send WhatsApp <span className="text-danger" >: 81601289 </span> </p>
+               { orderForm.paymentMode === "later" &&
+                    <p className="form-check-label"> 
+                        <span className="text-success"> WhatsApp </span>
+                        <fasIcons.FaWhatsapp className="whatsapp" /> Payment confirmation to <span className="text-danger" > (+65) 81601289 </span> 
+                    </p>
                }
 
             </div>
 
-            <div className="d-flex justify-content-center mt-4">
-            <div className="btn btn-sized-md back-btn" onClick={() => history.goBack()}>BACK</div>
-            <div className="btn proceed-btn" onClick={createOrder}>COMPLETE ORDER</div>
-            {/* <div className="btn btn-warning cart-nav-btns m-1" onClick={createOrder}>PAY LATER </div> */}
-        </div>
+            <div className="d-flex justify-content-center mt-2">
+                <div className="btn btn-sm back-btn" onClick={() => history.goBack()}>BACK</div>
+                <div className="btn proceed-btn btn-sm" onClick={createOrder}>COMPLETE</div>
+           </div>
     </Maincontainer>
   )
 }
@@ -97,10 +108,11 @@ const createOrder = (e) => {
 const Maincontainer = styled.div`
 background:white;
 margin-top:7rem;
-padding:2rem;
+padding:3rem;
 border-radius:1rem;
 color:white;
 .card-header{
+    padding:0.4rem;
     background:var(--amzonChime);
     text-align:center;
     color:white;
@@ -126,6 +138,7 @@ color:white;
 .navImage{
     height: 14rem;
     width:  16rem;
+    margin:1rem;
 }
 .back-btn{
     background:var(--bsYellow);
@@ -138,6 +151,10 @@ color:white;
     color:white;
     text-align:center;
     margin-left:2rem;
+}
+.whatsapp{
+    color:var(--bsGreen);
+    font-size:2rem;
 }
 @media (max-width:798px){
     .form-check-label{

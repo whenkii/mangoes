@@ -24,6 +24,11 @@ const funOnChange = (e) =>
 
     const handleSignout = () => {
         accountAction({type:"SIGNOUT",value:accountInfo.name});
+        history.goBack();
+    }
+
+    const onClickGuest = () => {
+        accountAction({type:"GUEST",value:"GUEST"});
         history.push("/");
     }
 
@@ -49,10 +54,8 @@ const funOnChange = (e) =>
 
         GetApiData(sql)
         .then((res) => {
-            // console.log(res)
             if (res[0] === "ERROR"){
-                // alert("Couldn't do the user athentication. Please try again after sometime");  
-                // toast.error("Login failed")  
+
                 accountAction({type:"ERROR"});
             }
             else if ( res.length === 0 )  {
@@ -89,11 +92,8 @@ const funOnChange = (e) =>
                 <div className="d-flex">
                     <Link to="/login" className="login">Login</Link>
                 </div>
-                
                 <form onSubmit={submitSignInForm}>
-                    
                     <div className="d-flex justify-content-center">
-                        
                         <div className="d-flex flex-column" >
                             {formFields.map ((item,i) =>
                                 <div className="form-group" key={i}>
@@ -109,31 +109,44 @@ const funOnChange = (e) =>
 
                     <div className="text-right mb-3 text-danger font-weight-bold small" >Forgot password?</div>
                     <div className="d-flex flex-column justify-content-center">
-                        <button className="btn btn-signin btn-inline-block m-auto" type="submit">Signin</button>
-                        <div className="text-center mt-4 mb-0 text-secondary font-weight-bold small" >Don't have an account yet?</div>
-                        <Link className="m-auto pt-2" to="/signup"><div className="text-center btn btn-danger btn-inline-block" type="submit">SignUp</div></Link>
+                        <button className="btn btn-signin btn-inline-block m-auto btn-sm" type="submit">Signin</button>
+                        <div className="text-center mt-3 mb-0 text-secondary font-weight-bold small" >Don't have an account yet?</div>
+                        <Link className="m-auto pt-1" to="/signup"><div className="text-center btn btn-danger btn-inline-block btn-sm" type="submit">SignUp</div></Link>
+                        <div className="text-center mt-4 font-weight-bold">OR</div>
+                        <div className="text-center mt-1">
+                        <div className="btn btn-sm btn-success" onClick={onClickGuest}>Guest</div>
+                    </div>
                     </div>
                 </form>
             </div>
             :
             <div>
                   
-                        <p className="text-center font-weight-bold text-danger">{`${accountInfo.firstname} ${accountInfo.lastname}`} 
-                        {accountInfo.type === "admin" &&
-                            <Link to="/admin" className="settings"><fiIcons.FiSettings className="settings-icon"/></Link>
-                        }
+                { accountInfo.loginType === "GUEST" ?
+                        <div className="d-flex justify-content-center mt-2 flex-column">
+                        <h2 className="text-center font-weight-bold text-danger">Guest</h2> 
+                        <div className="btn btn-sm m-auto" style={{background:"var(--amzonChime)"}} onClick={() => history.push("/")}>HOME</div>
+                   </div>
+                  :
+                <>
+                    <p className="text-center font-weight-bold text-danger">{`${accountInfo.firstname} ${accountInfo.lastname}`} 
+                    {accountInfo.type === "admin" &&
+                        <Link to="/admin" className="settings"><fiIcons.FiSettings className="settings-icon"/></Link>
+                    }
                     </p>
                     
                     <div className="d-flex justify-content-center mb-4">
                         <div className="btn btn-signout text-weight font-weight-bold" onClick={handleSignout}> Signout </div>
                     </div>
-                <div className="d-flex justify-content-center">
 
-                    <Link to="/address" className="btn" style={{background:"var(--amzonChime)"}}> Address </Link>
-                    <Link to="/orders" className="btn" style={{background:"var(--amzonChime)"}}> My Orders </Link>
-                    {/* <Link to="/feedback" className="btn btn-info"> Feedback </Link> */}
+                    <div className="d-flex justify-content-center">
 
-                </div>
+                        <Link to="/address" className="btn" style={{background:"var(--amzonChime)"}}> Address </Link>
+                        <Link to="/orders" className="btn" style={{background:"var(--amzonChime)"}}> My Orders </Link>
+                        {/* <Link to="/feedback" className="btn btn-info"> Feedback </Link> */}
+                    </div>
+                </>
+                }    
             </div>
             }
         </SigninContainer>
@@ -166,6 +179,8 @@ padding:2rem;
     color: var(--amzonChime);
     font-weight:bold;
     border-bottom: 3px solid var(--bsDark); 
+    border-radius:1rem; 
+    padding:0 1rem 0 1rem;
     margin:auto;
     margin-bottom:2rem;
 }
