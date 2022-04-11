@@ -6,9 +6,10 @@ export default function SignIn() {
     const history = useHistory();
     return(
             <SigninContainer className="container" >
-                <div className="d-flex justify-content-center">
-                    <Link to="/addProduct" className="btn" style={{background:"var(--amzonChime)"}}> Add Product </Link>
-                    <Link to="/orders" className="btn btn-dark">Show Products </Link>
+                <div className="d-flex justify-content-center flex-wrap">
+                    <Link to="/addProduct" className="btn tabs" style={{background:"var(--amzonChime)"}}> Add Product </Link>
+                    <Link to="/products" className="btn btn-dark tabs"> Products </Link>
+                    <Link to="/allorders" className="btn btn-dark tabs"> All Orders </Link>
                 </div>
 
                 <div className="d-flex justify-content-center">
@@ -74,5 +75,11 @@ padding:2rem;
     .form-control{
         width:15rem;
     } 
+    .tabs {
+        font-size:0.8rem;
+    }
+    .btn{
+        font-size:0.8rem;
+    }
 }
 `

@@ -6,6 +6,7 @@ import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
 import {accountsContext} from '../contexts/accountsContext'
 import {config} from '../components/reactConfig'
+import * as fasIcons from 'react-icons/fa'
 
 export default function Addproducts() {
 
@@ -95,10 +96,10 @@ export default function Addproducts() {
                             )}
                         </div>
     
-                        <div className="d-flex flex-column justify-content-center mb-3">
-                            <button className="btn btn-warning btn-inline-block m-auto" type="submit" >ADD</button>
+                        <div className="d-flex justify-content-center mb-3">
+                            <button className="btn btn-sm back-btn" type="submit" >ADD</button>
+                            <div className="btn btn-sm back-btn" onClick={() => history.goBack()}>BACK <fasIcons.FaBackward className="icons" /> </div> 
                         </div>
-                      <Link className="m-auto pt-2" to="/account"><div className="text-center mt-2 mb-0 text-success font-weight-bold small" >Already have an account?</div></Link>
                     </form>
                 </SigninContainer>
             }
@@ -142,6 +143,20 @@ margin-bottom:10rem;
 .label{
     color: var(--amxonChine); 
     font-weight:bold;
+}
+.btn{
+    margin:0 0 1rem 0;
+    // width:5rem;
+}
+.back-btn{
+    background:var(--bsYellow);
+    color:black;
+    text-align:center;
+    margin-right:1rem;
+}
+.icons{
+    font-size:1.5rem;
+    margin-left:1rem;
 }
 @media (max-width:798px){
     width:21rem;

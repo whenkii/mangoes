@@ -3,7 +3,7 @@ const oracledb = require('oracledb');
 
 try {
   oracledb.initOracleClient(
-    {libDir: '/Users/venkateshthammichetti/react/dailycart/webserver/instantclient_19_8'}
+    // {libDir: '/Users/venkateshthammichetti/react/dailycart/webserver/instantclient_19_8'}
     );
 } catch (err) {
   console.error('Whoops!');

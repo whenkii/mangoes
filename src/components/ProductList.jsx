@@ -16,7 +16,7 @@ export default function ProductList() {
 const [productsState,productAction,,productCountReducer] = useContext(productContext);
 const productNames = {Alphanso:["ఆల్పాన్సా/ఖాదర్","अल्फांसो","அல்பான்சோ","ಅಲ್ಫ್ನಸೋ"],
                       AlphansoJumbo:["ఆల్పాన్సా/ఖాదర్","अल्फांसो Jumbo","அல்பான்சோ Jumbo","ಅಲ್ಫ್ನಸೋ Jumbo"],
-                      Kesar:["Kesar"],
+                      Kesar:["Kesar","केसर","కేసర్"],
                       Banginapalli:["బంగినపల్లి/బేనీషా","बादाम","பங்கினப்பள்ளி","ಬಂಗಿನಾಂಪಲ್ಲಿ"],
                       Mallika:["మల్లికా","मल्लिका","மல்லிகா","ಮಲ್ಲಿಕಾ"],
                       Neelam:["నీలం","नीलम","நீலம்","ನೀಲಂ"],
@@ -38,61 +38,61 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
                     <div className="d-flex flex-column text-center">
                             {/* <div className="prodName">{item.NAME}</div> */}
                         <ProdContainer className="d-flex flex-column bg-white mt-0">
-                                {/* <Link to={`/aboutProduct/${item.NAME}`} className="text-decoration-none" >
-                                    <RiInformationLine className="about"/> 
-                                </Link> */}
-                                {item.INSTOCK === "Y" ?
-                                 <div className="price"> 
-                                    <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:item.OFFERPRICE ? "line-through":"none"}}>S${item.PRICE}</span> 
-                                    <div className="priceValue"> ${item.OFFERPRICE}</div>
-                                </div> 
-                                 :
-                                 <div className="price text-muted"> ${item.OFFERPRICE}</div> 
+                            {/* <Link to={`/aboutProduct/${item.NAME}`} className="text-decoration-none" >
+                                <RiInformationLine className="about"/> 
+                            </Link> */}
+                            {item.INSTOCK === "Y" ?
+                                <div className="price"> 
+                                <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:item.OFFERPRICE ? "line-through":"none"}}>S${item.PRICE}</span> 
+                                <div className="priceValue"> ${item.OFFERPRICE}</div>
+                            </div> 
+                                :
+                                <div className="price text-muted"> ${item.OFFERPRICE}</div> 
+                            }
+                            <div className="d-flex ">
+                                {item.NAME === 'Banginapalli' &&
+                                <div className="d-flex card-image m-auto">
+                                    <img className="align-self-center prod-image" src={banginapalli_prod} alt="Logo" /> 
+                                </div>
                                 }
-                                <div className="d-flex ">
-                                    {item.NAME === 'Banginapalli' &&
+                                {item.NAME === 'Mallika' &&
                                     <div className="d-flex card-image m-auto">
-                                        <img className="align-self-center prod-image" src={banginapalli_prod} alt="Logo" /> 
+                                        <img className="align-self-center prod-image" src={mallika_prod} alt="Logo" /> 
                                     </div>
-                                    }
-                                   {item.NAME === 'Mallika' &&
-                                        <div className="d-flex card-image m-auto">
-                                            <img className="align-self-center prod-image" src={mallika_prod} alt="Logo" /> 
-                                        </div>
-                                    }
-                                    {item.NAME === 'Neelam' &&
-                                        <div className="d-flex card-image m-auto">
-                                            <img className="align-self-center prod-image" src={neelam_prod} alt="Logo" /> 
-                                        </div>
-                                    }
-                                     {item.NAME === 'Kesar' &&
-                                        <div className="d-flex card-image m-auto">
-                                            <img className="align-self-center prod-image" src={Kesar_prod} alt="Logo" /> 
-                                        </div>
-                                    }
-                                    { (item.NAME === 'Alphanso' || item.NAME === 'AlphansoJumbo')  &&
-                                        <div className="d-flex card-image m-auto">
-                                            <img className="align-self-center prod-image" src={Alphanso_prod} alt="Logo" /> 
-                                        </div>
-                                    }
-                                    {  ['Banginapalli','Mallika','Kesar',"Alphanso","AlphansoJumbo"].indexOf(item.NAME) < 0  &&
-                                        <div className="d-flex card-image m-auto">
-                                            <img className="align-self-center prod-image" src={all_prod} alt="Logo" /> 
-                                        </div>
-                                    }
-                                    
-                                {/* Prod Name */}
-                                    <div className="mainProdName">{item.NAME}
-                                    <p className="prodWeight">({item.UNITS}/Box)</p>
+                                }
+                                {item.NAME === 'Neelam' &&
+                                    <div className="d-flex card-image m-auto">
+                                        <img className="align-self-center prod-image" src={neelam_prod} alt="Logo" /> 
                                     </div>
-                                <div className="d-flex flex-column justify-content-center border-left m-auto">
-                                        {productNames[item.NAME].sort(() => (Math.random() > .5) ? 1 : -1).map((item,i) => 
-                                        <div key={i} className={`prod-name-list ml-3 text-${productColors[i]}`}>{item}</div>
-                                        )
-                                        }
+                                }
+                                    {item.NAME === 'Kesar' &&
+                                    <div className="d-flex card-image m-auto">
+                                        <img className="align-self-center prod-image" src={Kesar_prod} alt="Logo" /> 
+                                    </div>
+                                }
+                                { (item.NAME === 'Alphanso' || item.NAME === 'AlphansoJumbo')  &&
+                                    <div className="d-flex card-image m-auto">
+                                        <img className="align-self-center prod-image" src={Alphanso_prod} alt="Logo" /> 
+                                    </div>
+                                }
+                                {  ['Banginapalli','Mallika','Kesar',"Alphanso","AlphansoJumbo"].indexOf(item.NAME) < 0  &&
+                                    <div className="d-flex card-image m-auto">
+                                        <img className="align-self-center prod-image" src={all_prod} alt="Logo" /> 
+                                    </div>
+                                }
+                                
+                            {/* Prod Name */}
+                                <div className="mainProdName">{item.NAME}
+                                <p className="prodWeight">({item.UNITS}/Box)</p>
                                 </div>
+                            <div className="d-flex flex-column justify-content-center border-left m-auto">
+                                    {productNames[item.NAME].sort(() => (Math.random() > .5) ? 1 : -1).map((item,i) => 
+                                    <div key={i} className={`prod-name-list ml-3 text-${productColors[i]}`}>{item}</div>
+                                    )
+                                    }
+                            </div>
 
-                                </div>
+                            </div>
                                 <div className="mt-1">
                                 {item.INSTOCK === "Y" ?
                                     <div className="CartAddtions">
@@ -294,48 +294,4 @@ transition:0.7s all;
     font-weight:bold;
     margin:0 0 0.1rem 0;
    }
-// @media (max-width: 390px) {
-//     width:10rem;
-//     height:9rem;
-//     border-radius:2rem;
-//     margin: 0.5rem 0.5rem 1rem 1.2rem;
-//     .prod-image{
-//         height: 4rem;
-//         width: 4rem;
-//     }
-//     .price{
-//         font-size:0.7rem;
-//     }
-//     .btn{
-//         margin:2.5rem 0.5rem 0 0;
-//         font-size:1rem;
-//         width:1.5rem;
-//         padding:0;
-//         border-radius:0.5rem;
-//         :focus{
-//             border-shadow:none;
-//         }
-//     }
-//     .CartAddtions{
-//         bottom:0;
-//         left:12%;
-//         font-size:4rem;
-//     }
-//     .innerBasket{
-//         bottom:6%;
-//         right:5%;
-//     }
-//     .basketSize{
-//         font-size:1.5rem;
-//     }
-//     .cartValues{
-//         bottom:18%;
-//         width:0.9rem;
-//         height:0.9rem;
-//         font-size:0.6rem;
-//     }
-//     .about{
-//         font-size:1.7rem;
-//     }
-//   }
 `

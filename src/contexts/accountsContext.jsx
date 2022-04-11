@@ -1,4 +1,4 @@
-import React,{createContext,useReducer} from 'react'
+import React,{createContext,useReducer,useState} from 'react'
 import { ToastContainer,toast } from 'react-toastify';
 
 export const accountsContext = createContext(); 
@@ -39,9 +39,10 @@ const accountReducer = (state,action) => {
 
 export function AccountsProvider(props) {
 const [accountInfo,accountAction] = useReducer(accountReducer,false);
+const [forceRender,setRender] = useState(false)
     return (
         <>
-        <accountsContext.Provider value={[accountInfo,accountAction]}>
+        <accountsContext.Provider value={[accountInfo,accountAction,forceRender,setRender]}>
             {props.children}
         </accountsContext.Provider>
         <ToastContainer position="top-center" autoClose="1000"/>

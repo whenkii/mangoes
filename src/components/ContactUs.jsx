@@ -1,16 +1,19 @@
 import React from 'react'
+import {useHistory} from 'react-router-dom'
 // import {accountsContext} from '../contexts/accountsContext'
 import styled from 'styled-components'
 import * as fasIcons from 'react-icons/fa'
 
 export default function ContactUs() {
+    var history = useHistory();
   return (
     <Maincontainer className="container card">
+         <h4 className="text-dark text-center">Garden Roots Pte Ltd</h4>
         <div className="card-header">CONTACTUS</div>
        
-            <div className="text-center mt-2">
+            <div className="text-center mt-2 mb-4">
                     <div className="d-flex justify-content-center mt-1 row"> 
-                        <p className="col text-success"> <fasIcons.FaWhatsapp className="whatsapp" /> WhatsApp  </p>
+                        <p className="col text-success font-weight-bold"> <fasIcons.FaWhatsapp className="whatsapp" /> WhatsApp  </p>
                         <p className="col text-danger" > (+65) 81601289 </p> 
                     </div>
 
@@ -19,6 +22,9 @@ export default function ContactUs() {
                         <p className="col text-danger" > help@gardenroots.com </p> 
                     </div>
             </div>
+
+            <div className="btn btn-sm back-btn m-auto" onClick={() => history.push("/")}>HOME </div> 
+
     </Maincontainer>
   )
 }
@@ -75,6 +81,10 @@ color:white;
 @media (max-width:798px){
     .form-check-label{
         font-size:0.8rem;
+    }
+    .card-header{
+        padding:0.3rem;
+        font-size:0.8rem
     }
 }
 `

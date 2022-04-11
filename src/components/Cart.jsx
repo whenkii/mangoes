@@ -11,23 +11,12 @@ const {shipMode,location} = deliveryState[0];
 // const [accountInfo] = useContext(accountsContext);
 const inCartItems = productsState.filter(a => a.QTY > 0);
 const isCartEmpty = inCartItems.length === 0 ? true : false;
-const cartReduce = inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0);
-// const createOrder = () => {
-                    
-//                 if ( accountInfo.email && accountInfo.isLoggedIn ) {
-//                             productAction({type:"CREATE_ORDER",accountInfo:accountInfo})
-//                             productAction({type:"CLEAR"})
-//                             // if ( isCartEmpty ) { 
-//                                 history.push("/orderconfirmation") 
-//                             // }
-//                             }
-//                 else {
-//                     alert("User not logged in. Pls login/Signup")
-//                     history.push("/Signin")
-//                 }
-//                     }
-                    
-// productAction({type:"CREATE_ORDER"}
+const cartReduce = inCartItems.reduce((prev,{OFFERPRICE,QTY}) => prev+OFFERPRICE*QTY,0);
+const cartReducePrice = inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0);
+const cartReduceOfferPrice = inCartItems.reduce((prev,{OFFERPRICE,QTY}) => prev+OFFERPRICE*QTY,0);
+var deliveryCharges = (productCountAll < 5 && shipMode === "delivery" ? (location === "Other" ? 6 : 4) : 0);
+// const cartReduce = inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0);
+
     return (
         <CartContainer className="container">
                 <div className="text-center">
@@ -41,24 +30,26 @@ const cartReduce = inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0);
                         <div className="col-4 headers">NAME</div>
                         <div className="col headers">PRICE</div>    
                         <div className="col headers">QTY</div>    
-                        <div className="col headers">Total</div> 
-                        <div className="col headers"></div> 
+                        <div className="col-3 headers">Total</div> 
+                        {/* <div className="col headers"></div>  */}
                     </div>
                 }
-                {inCartItems.map(({ID,NAME,PRICE,QTY}) => 
-                    <div key={ID}className="card-body text-left">
+                {inCartItems.map(({ID,NAME,OFFERPRICE,QTY,PRICE}) => 
+                    <div key={ID}className="card-body text-center">
                         <div className="row ">
                             <div className="cart-values col-4 font-weight-bold">{NAME}</div>
-                            <div className="cart-values col text-danger font-weight-bold">{`$${PRICE}`}</div>
+                            <div className="cart-values col text-danger font-weight-bold">
+                            <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:OFFERPRICE ? "line-through":"none"}}>S${PRICE}</span> 
+                            {`$${OFFERPRICE}`}</div>
                             <div className="cart-values col">{QTY}</div>
-                            <div className="cart-values col text-danger font-weight-bold">${QTY*PRICE}</div>                
-                            <div className="d-flex cart-update-container col-1 align-items-center justify-content-center">
+                            <div className="cart-values col text-danger font-weight-bold">${QTY*OFFERPRICE}</div>                
+                        </div>
+                        <div className="d-flex cart-update-container col-1 align-items-center justify-content-center ml-4">
                                 <span className="cart-btn btn btn-danger" onClick={() => productAction({type:"REMOVE",prodid:ID})}>-</span>
                                 {/* <span className="cart-delete" onClick={() => productAction({type:"DELETE",prodid:ID})}>
                                     <FontAwesomeIcon className="trashbin text-warning font-weight-bold" icon={faTrashAlt}/></span> */}
                                 <span className="cart-btn btn btn-success" onClick={() => productAction({type:"ADD",prodid:ID})}>+</span>
                             </div>
-                        </div>
                     </div>
                 )
                 }
@@ -69,17 +60,21 @@ const cartReduce = inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0);
                     <div className="cartTotal">
                         <div className="d-flex justify-content-between font-weight-bold mt-2">
                             <div className="cartSummaryHeaders">{`Total`}</div>
-                            <div className="cartSummaryHeaders text-danger ">{`$${inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0)}`}</div>
+                            <div className="cartSummaryHeaders text-danger ">{`$${inCartItems.reduce((prev,{OFFERPRICE,QTY}) => prev+OFFERPRICE*QTY,0)}`}</div>
                         </div>
                         <div className="d-flex justify-content-between">
-                            <div className="cartSummaryHeaders mb-1">Delivery</div>
-                            <div className="cartSummaryHeaders text-danger"> {productCountAll < 5 && shipMode === "delivery" ? (location === "Other" ? "$6" : "$4") : "FREE" }</div>
+                            <div className="cartSummaryHeaders">Delivery</div>
+                            <div className="cartSummaryHeaders text-danger"> {productCountAll < 5 && shipMode === "delivery" ? (location === "Other" ? "$6" : "$4") : "Free" }</div>
+                        </div>
+                        <div className="d-flex justify-content-between">
+                            <div className="cartSummaryHeaders text-danger  small mb-1">Savings</div>
+                            <div className="cartSummaryHeaders text-danger small"> ${cartReducePrice - cartReduceOfferPrice}</div>
                         </div>
                     </div>
 
                     <div className="d-flex justify-content-center font-weight-bold mt-2 cartSummaryHeaders">
                             {/* <div className="text-danger">{`Total: `}</div> */}
-                            <div className="text-danger">{`$${inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0) + (productCountAll < 5 && shipMode === "delivery" ? (location === "Other" ? 6 : 4) : 0)}`}</div>
+                            <div className="text-danger">{`$${cartReduceOfferPrice + deliveryCharges}`}</div>
                     </div>
                     {/* <div className="d-flex justify-content-center">
                         <div className="btn btn-danger cart-nav-btns" onClick={() => productAction({type:"CLEAR"})}>Clear Cart</div>
@@ -147,6 +142,10 @@ padding:2rem;
     font-size:1rem;
     border-bottom: 2px solid var(--amzonChime);
 }
+.priceValue{
+    font-size:0.6rem;
+    margin-right:0.2rem;
+}
 .cart-nav-btns {
     font-weight:bold;
     margin:0.5rem;
@@ -186,6 +185,12 @@ padding:2rem;
     .cart-nav-btns {
         font-size:0.6rem;
     }
+}
+ @media (max-width: 798px) {
+.cartSummaryHeaders{
+    font-size:0.7rem;
+    font-weight:bold;
+}
 }
 // @media (max-width: 390px) {
 //     .cart{

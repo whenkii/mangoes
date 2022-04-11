@@ -11,7 +11,8 @@ import { CSVLink } from "react-csv";
 export default function DisplayTableData({state,comp}) {
 
 let stateVarInitial = state;
-let hyperLinks = {comp:"ORDERS",attr:"ORDER_ID",link:"/orderdetails"}
+let hyperLinks = {attr:"ORDER_ID",link:"/orderdetails"}
+// [{comp:"ORDERS",attr:"ORDER_ID",link:"/orderdetails"},{comp:"ALLORDERS",attr:"ORDER_ID",link:"/orderdetails"}]
 
 const [stateVar,setOrderDetails]= useState(stateVarInitial);
 const [sort,setSort]= useState({propertyName:"",mode:'ASC'});
@@ -91,7 +92,9 @@ useEffect(() => {
                             <tr key={index}> 
                                 {Object.keys(state[0]).map( (attrName,index) =>
                                     <th key={index} scope="row" className={`border tdata ${attrName === "PRICE" ? "text-danger":"text-white"}`}> 
-                                    { attrName === hyperLinks.attr && comp === hyperLinks.comp ?  
+                                    { attrName === hyperLinks.attr 
+                                    // && comp === hyperLinks.comp 
+                                    ?  
                                     <Link className="text-danger col" to={`${hyperLinks.link}/${dataArray[attrName]}`}>{dataArray[attrName]}</Link> : dataArray[attrName]}
                                     </th>
                                 )}
@@ -127,7 +130,7 @@ const TableContainer = styled.div`
 .bod{
     margin-top:1rem;
 }
-@media (max-width:390px){
+@media (max-width:798px){
 .csv-exporter{
     font-size:0.6rem;
 }

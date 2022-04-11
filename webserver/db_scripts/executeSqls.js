@@ -153,7 +153,7 @@ async function adhocSqlsViaBody(req, res, next) {
                                  p_price         : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
                                  p_offerprice    : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
                                  p_inStock       : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
-                                p_out            : {type: oracledb.STRING,dir: oracledb.BIND_OUT,maxSize: 500 }
+                                 p_out            : {type: oracledb.STRING,dir: oracledb.BIND_OUT,maxSize: 500 }
                     }}
     // const options = {};
     const binds = [{p_name:p_name,
@@ -286,8 +286,9 @@ async function executeProc_log_order(req, res, next) {
       console.log("Successfully got the order SEQ_ID - executeProc");
     }
   
+  let conn = await oracledb.getConnection();
   try {
-  let script = `call create_order(${seq},:EMAIL,:PRODID,:QTY,:PRICE,:p_out)`;
+  let script = `call create_order(${seq},:EMAIL,:PRODID,:QTY,:PRICE,:DELMODE,:ADDRESS,:LOCATION,:DELIVERYCHARGES,:p_out)`;
   
   // console.log("STATE",req.body);
 
@@ -295,12 +296,15 @@ async function executeProc_log_order(req, res, next) {
                               PRODID         : {type: oracledb.NUMBER,dir: oracledb.BIND_IN},
                               QTY            : {type: oracledb.NUMBER,dir: oracledb.BIND_IN},
                               PRICE          : {type: oracledb.NUMBER,dir: oracledb.BIND_IN},
+                              DELMODE        : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
+                              ADDRESS        : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
+                              LOCATION       : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
+                              DELIVERYCHARGES : {type: oracledb.NUMBER,dir: oracledb.BIND_IN},
                               p_out          : {type: oracledb.STRING,dir: oracledb.BIND_OUT,maxSize: 500 }
                   }}
 
   const binds = req.body;
 
-  let conn = await oracledb.getConnection();
   const result = await conn.executeMany(script, binds, options);
   // console.log(result)
   let {outBinds} = result;
@@ -329,7 +333,7 @@ async function executeProc_log_order(req, res, next) {
   }
   finally {
     console.log("END","executeProc_log_order");
-    // await conn.close();
+    await conn.close();
   }
 }
 

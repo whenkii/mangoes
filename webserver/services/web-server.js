@@ -7,10 +7,36 @@ const webServerConfig = require("../config/web-server.js");
 
 let httpServer;
 
+// var   fs = require("fs");
+// const path = require("path");
+
+// var privateKey = fs.readFileSync(path.join(__dirname,'../certs','6b7d09109d01c6d5.pem'));
+// var certificate = fs.readFileSync(path.join(__dirname,'../certs','6b7d09109d01c6d5.crt'));
+
+// const privateKey= fs.readFileSync('./key.pem', 'utf8');
+// const certificate = fs.readFileSync('./server.crt', 'utf8');
+
+// var certificate = fs.readFileSync('certs/6b7d09109d01c6d5.crt');
+// const ca = fs.readFileSync('certs/gd_bundle-g2-g1.crt');
+
+
+// var credentials = {key: privateKey, cert: certificate};
+const credentials = {
+  // key: privateKey,
+  // cert: certificate,
+  // ca: ca
+};
+
+// var server = http.createServer(credentials,function (req, res) {
+//   res.writeHead(200, {'Content-Type': 'text/plain'});
+//   res.end('Hello World\n');
+// });
+
 function initialize() {
   return new Promise((resolve, reject) => {
     const app = express();
-    httpServer = http.createServer(app);
+    // httpServer = https.createServer(app);
+    const httpServer = http.createServer(credentials, app);
 
     // web server logging
     app.use(morgan("combined"));

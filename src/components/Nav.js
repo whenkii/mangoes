@@ -15,11 +15,10 @@ export default function Nav() {
 const [productsState] = useContext(productContext);
 const cartReducer = productsState.reduce((prev,curr) => prev + curr.QTY,0) ;
 // const cartReducer = useState()
-// console.log(cartReducer)
+// console.log(productsState)
     return (
         <>
         <MainContainer >
-
             <div className="header d-flex align-items-center  justify-content-around mb-2">
                     <Link to="/" className="menu-items"> <fasIcons.FaHome className="menu-icons"/></Link>
                     {/* <Link to="/products"  className="menu-items"><GiIcons.GiPlantWatering/></Link> */}
@@ -37,16 +36,10 @@ const cartReducer = productsState.reduce((prev,curr) => prev + curr.QTY,0) ;
             </Link>
             </div>
 
-            {/* <Link className="text-decoration-none " to="/">
-                <div className="navbar d-flex justify-content-center">
-                    <div className="d-flex">
-                        <h2 className="heading m-auto">Garden Roots</h2>
-                         <img className="navImage mx-2" src={gardenroots_logo} alt="Logo" />  
-                    </div>
-                </div>
-                
-            </Link>  */
-            }
+   
+                {/* <div className="navfooter d-flex justify-content-center m-auto text-white">
+                        <div className="">GardenRoots Pte Ltd</div>
+                </div> */}
 
         </MainContainer>
         </>
@@ -127,11 +120,24 @@ box-shadow: 0 0 0.5rem 0.15rem rgba(0,0,0,0.25);
     font-size:3rem; 
 }
 .navbar{
+    position:bottom;
     height:3.5rem;
     background:var(--amzonChime);
     top:5%;
     width:100vw;
     font-family: 'Brush Script MT', cursive;
+}
+.navfooter{
+    z-index:-1;
+    position:fixed;
+    bottom:0;
+    border-top:0.2rem solid white;
+    padding:1rem;
+    background:var(--amzonChime);
+    border-radius:1rem;
+    font-size:1rem;
+    left: 0;
+    right: 0;
 }
 .heading{
     color:white;

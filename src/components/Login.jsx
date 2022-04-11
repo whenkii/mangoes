@@ -107,14 +107,15 @@ const funOnChange = (e) =>
                         </div>
                     </div>
 
-                    <div className="text-right mb-3 text-danger font-weight-bold small" >Forgot password?</div>
-                    <div className="d-flex flex-column justify-content-center">
+                    {/* <div className="text-right mb-3 text-danger font-weight-bold small" >Forgot password?</div> */}
+                    <div className="d-flex flex-column justify-content-center mt-2">
                         <button className="btn btn-signin btn-inline-block m-auto btn-sm" type="submit">Signin</button>
                         <div className="text-center mt-3 mb-0 text-secondary font-weight-bold small" >Don't have an account yet?</div>
                         <Link className="m-auto pt-1" to="/signup"><div className="text-center btn btn-danger btn-inline-block btn-sm" type="submit">SignUp</div></Link>
-                        <div className="text-center mt-4 font-weight-bold">OR</div>
+
+                        <div className="text-danger text-center mt-3 font-weight-bold">OR</div>
                         <div className="text-center mt-1">
-                        <div className="btn btn-sm btn-success" onClick={onClickGuest}>Guest</div>
+                        <div className="btn btn-sm btn-success" onClick={onClickGuest}>Continue as Guest</div>
                     </div>
                     </div>
                 </form>
@@ -141,7 +142,7 @@ const funOnChange = (e) =>
 
                     <div className="d-flex justify-content-center">
 
-                        <Link to="/address" className="btn" style={{background:"var(--amzonChime)"}}> Address </Link>
+                        {/* <Link to="/address" className="btn" style={{background:"var(--amzonChime)"}}> Address </Link> */}
                         <Link to="/orders" className="btn" style={{background:"var(--amzonChime)"}}> My Orders </Link>
                         {/* <Link to="/feedback" className="btn btn-info"> Feedback </Link> */}
                     </div>
@@ -211,5 +212,8 @@ padding:2rem;
     .form-control{
         width:15rem;
     } 
+    .btn{
+        font-size:0.8rem;
+    }
 }
 `

@@ -15,7 +15,7 @@ import SignUp from './components/SignUp'
 import NotFound from './components/NotFound'
 import OrderConfirmation from './components/OrderConfirmation'
 import ProductInfo from './components/ProductInfo'
-import {Orders,OrderDetails} from './components/Orders'
+import {Orders,OrderDetails,Products,AllOrders} from './components/Orders'
 import Checkout from './components/Checkout'
 import Payment from './components/Payment'
 import Admin from './components/Admin.js'
@@ -34,8 +34,10 @@ function App() {
             {/* <Route exact path="/order" component={Order} /> */}
             <Route exact path="/cart" component={Cart} />
             <Route exact path="/orderconfirmation" component={OrderConfirmation} />
-            <Route path="/orders/" component={Orders} />
+            <Route path="/orders" component={Orders} />
+            <Route path="/allorders" component={AllOrders} />
             <Route path="/orderdetails/:id" component={OrderDetails} />
+            <Route path="/products" component={Products} />
             <Route exact path="/products" component={ProductList} />
             <Route exact path="/account" component={Login} />
             <Route exact path="/signup" component={SignUp} />

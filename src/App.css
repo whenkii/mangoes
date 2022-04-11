@@ -29,6 +29,8 @@
 
 body{
   background-color:#212f3e !important;
+  /* clear: both; */
+  margin-bottom:10rem;
 }
 
 .btn{
