@@ -22,6 +22,7 @@ const [orderForm,setOrderForm] = useState({address1:"",address2:"",postalcode:""
 
 const funOnChange = (e) => {
     setOrderForm({...orderForm,[e.target.name]:e.target.value})
+    // console.log(e.target.value)
 }
 
 // const [orderCreated,setOrderCreated] = useState(false)
@@ -34,7 +35,8 @@ const createOrder = (e) => {
     //  }
     // else {
         if (orderForm.paymentMode) {
-        productAction({type:"CREATE_ORDER",accountInfo:accountInfo,deliveryDetails:deliveryState[0]});
+        
+        productAction({type:"CREATE_ORDER",accountInfo:accountInfo,deliveryDetails:{...deliveryState[0],paymentMode:orderForm.paymentMode}});
         productAction({type:"CLEAR"});
         history.push("/")
         }
@@ -84,22 +86,22 @@ const createOrder = (e) => {
   return (
     <Maincontainer className="container">
         <ToastContainer position="top-center" autoClose="1000"/>
-        <div className="cartTotal text-center text-danger font-weight-bold">
+        <div className="text-center text-danger font-weight-bold">
             <span className="ml-auto" style={{color:"var(--amzonChime)"}}>Total:</span> 
-            <span>{` $${inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0) + (productCountAll < 5 && shipMode === "delivery" ? (location === "Other" ? 6 : 4) : 0)}`}</span>
+            <span>{` $${inCartItems.reduce((prev,{OFFERPRICE,QTY}) => prev+OFFERPRICE*QTY,0) + (productCountAll < 5 && shipMode === "delivery" ? (location === "Other" ? 6 : 4) : 0)}`}</span>
         </div>
         <div className="card-header mt-1">PAYEMNT</div>
-        <div className="d-flex justify-content-center form-check"> 
+        <div className="d-flex justify-content-center paymentOptions"> 
                 <div className="form-check">               
                     <input className="form-check-input" type="radio" value="qrcode" name="paymentMode" 
                         checked={orderForm.paymentMode === "qrcode"} onChange={funOnChange} />
-                    <label className="form-check-label" htmlFor="qrcode">PayNow QRCODE</label>
+                    <label className="form-check-label" htmlFor="qrcode">PayNow</label>
                 </div>
 
                 <div className="form-check">               
                     <input className="form-check-input" type="radio" value="bank" name="paymentMode" 
                         checked={orderForm.paymentMode === "bank"} onChange={funOnChange} />
-                    <label className="form-check-label" htmlFor="bank">Bank Account</label>
+                    <label className="form-check-label" htmlFor="bank">Bank A/C</label>
                 </div>
 
                 <div className="form-check">               
@@ -110,7 +112,7 @@ const createOrder = (e) => {
         </div>
 
        
-            <div className="text-center">
+            <div className="text-center mt-4">
                 {orderForm.paymentMode === "qrcode" &&
                     <>
                         <p className="text-danger font-weight-bold mb-0"> UEN : 201713208M </p>
@@ -152,7 +154,7 @@ const createOrder = (e) => {
 const Maincontainer = styled.div`
 background:white;
 margin-top:7rem;
-padding:3rem;
+padding:1rem;
 border-radius:1rem;
 color:white;
 .card-header{
@@ -162,6 +164,12 @@ color:white;
     color:white;
     font-weight:bold;
     border-radius:1rem;
+}
+.paymentOptions{
+    margin-top:1rem;
+    border:0.1rem solid var(--amzonChime);
+    border-radius:1rem;
+    padding:0.2rem;
 }
 .form-check-label{
     color:var(--amzonChime);
@@ -217,6 +225,9 @@ color:white;
     }
     .btn{
         font-size:0.7rem;
+    }
+    .paymentOptions{
+        font-size:0.5rem;
     }
 }
 `

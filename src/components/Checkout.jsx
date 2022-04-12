@@ -5,6 +5,7 @@ import {productContext} from '../contexts/mangoesContext'
 import styled from 'styled-components'
 import { ToastContainer,toast} from 'react-toastify';
 import * as fasIcons from 'react-icons/fa'
+// import { RiContactsBookLine } from 'react-icons/ri';
 
 const selfAddress = {Punggol:["Venkat Vona", "Blk - 679A","Punggol","S-821679","Mobile: 81601289"],
                      Tampines:["Venky", "Blk - 929","Tampines","S-520929","Mobile: 98346177"],
@@ -37,7 +38,7 @@ const funOnChange = (props) => {
 // const [location, setlocation] = useState("Punggol");
 const onClickLocation = (props) => {
     deliveryAction({type:"ADDRESS",location: (location === props ? "":props),address: address + "|" + selfAddress[props]})
-    // console.log(address + selfAddress[props])
+    // console.log(address + "|" + selfAddress[props])
 }
 
 const funOnChangeForm = (e) =>
@@ -53,7 +54,7 @@ const funOnChangeForm = (e) =>
         if ( attrName === "Location") {
             var addressDetails = tempformAttributes.map( a => a.value)
             deliveryAction({type:"ADDRESS",location:tempformAttributes[idx].value,address:addressDetails})
-            console.log(addressDetails)
+            // console.log(addressDetails)
         }
         }
     }
@@ -69,7 +70,9 @@ const funOnChangeFormSelf = (e) =>
             setSelfForm([...tempformAttributes]);
             // if ( attrName === "Location") {
                 var addressDetails = tempformAttributes.map( a => a.value)
-                deliveryAction({type:"ADDRESS",location:tempformAttributes[idx].value,address:addressDetails})
+                deliveryAction({type:"ADDRESS",
+                // location:tempformAttributes[idx].value,
+                address:addressDetails})
             // }
             // console.log(deliveryState)
            
@@ -98,17 +101,22 @@ const handleClick = (e) => {
       // Check location and address is populated for self collection
     if ( shipMode === "self" ) {
 
+        // console.log(deliveryState[0])
+
         // console.log(tempSelfFormFields.filter ( a => a.errors !== "").length)
 
         if ( tempSelfFormFields.filter ( a => a.errors !== "").length !== 0 ){
             toast.error ("Errors in the form");
         }
         
-        else if ( location === "" || address === "") {
-            toast.error ("Choose Location");
-        }
         else {
+
+         if ( location === "" || address === "" || !location) {
+                toast.error ("Choose Location");
+         }
+         else {
             history.push("/payment");
+         }
         }
     }
     else {
@@ -226,7 +234,7 @@ const Maincontainer = styled.div`
 background:white;
 margin-top:1rem;
 // padding-bottom:2rem;
-// border-radius:1rem;
+// border-radius:2rem;
 width:22rem;
 color:white;
 .heading{

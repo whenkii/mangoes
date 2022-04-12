@@ -59,7 +59,9 @@ const CartReducerFun = (state,action) => {
                 ({EMAIL:accountInfo.email,PRODID:parseInt(i.ID,10),QTY:parseInt(i.QTY,10),PRICE:parseInt(i.OFFERPRICE,10),
                   DELMODE:deliveryDetails.shipMode,
                   ADDRESS:String(deliveryDetails.address),
-                  LOCATION:deliveryDetails.location,DELIVERYCHARGES:deliveryDetails.charge}));
+                  LOCATION:deliveryDetails.location,DELIVERYCHARGES:deliveryDetails.charge,
+                  PAYMENTMODE:deliveryDetails.paymentMode
+                }));
             //Get products that are in cart only
             newState = newState.filter(a => a.QTY > 0);
             // console.log(newState)
@@ -116,7 +118,7 @@ const deliveryReducer = (state,action) => {
 
 export function ProductsProvider(props) {
 // const [accountInfo] = useContext(accountsContext);
-const [productsState,productAction] = useReducer(CartReducerFun,[{ID:1,NAME:"Banginapalli",PRICE:"34",OFFERPRICE:32,UNITS:"5Kg",INSTOCK:"Y",INCART:false,QTY:0,}]);
+const [productsState,productAction] = useReducer(CartReducerFun,[{ID:1,NAME:"INIT",PRICE:"34",OFFERPRICE:32,UNITS:"5Kg",INSTOCK:"Y",INCART:false,QTY:0,}]);
 const [deliveryState,deliveryAction] = useReducer(deliveryReducer,[inItDelivery]);
 const cartReducer = 1;
 const productCountReducer = (props) => productsState.filter(a => a.ID === props && a.QTY > 0).reduce((prev,curr) => prev + curr.QTY,0);
@@ -124,7 +126,7 @@ const productCountAll = productsState.reduce((prev,curr) => prev + curr.QTY,0);
 const [orderCreated,setOrderCreated] = useState(false)
 
 useEffect( () => {
-    GetApiData("select * from products")
+    GetApiData("select a.NAME,a.ID,UNITS,PRICE,OFFERPRICE,CASE WHEN INSTOCK='Y' and STOCK - ORDERED <= 1 THEN 'N' ELSE  INSTOCK END INSTOCK from products a left outer join stock b on ( a.NAME=b.name)")
     .then((res) => {
         // console.log(res)
         if (res[0] === "ERROR"){

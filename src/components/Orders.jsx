@@ -87,7 +87,7 @@ export function OrderDetails(props) {
 export function AllOrders() {
     const [accountInfo] = useContext(accountsContext);
     const history = useHistory();
-    const query = `select id order_id,sum(price) Total_Price,count(*) quantity,to_char(max(ts),'DD-MON-YY') time,max(status) status from orders group by id order by id desc`;
+    const query = `with ordersall as (select id order_id,sum(price) Total_Price,sum(qty) quantity,to_char(max(ts + interval '8' hour ),'DD-MON-YY HH24:MI') time,max(status) status from orders group by id order by id desc) select a.order_id,total_price,quantity,time,status,address,del_mode,location,details,paymode from ordersall a,deliveries b where a.order_id=b.order_id`;
     const [orderDetails,setOrderDetails]= useState([]);
 
     //Mount - Get Orders details
@@ -127,7 +127,7 @@ export function AllOrders() {
 export function Products() {
     const [accountInfo] = useContext(accountsContext);
     const history = useHistory();
-    const query = `select NAME,UNITS,PRICE,OFFERPRICE,TO_CHAR(CREATED,'DD-Mon-YY HH24:MI') created from products`;
+    const query = `select a.NAME,UNITS,PRICE,OFFERPRICE,stock,ordered,TO_CHAR(CREATED,'DD-Mon-YY HH24:MI') created from products a,stock b where a.name=b.name`;
     const [orderDetails,setOrderDetails]= useState([]);
 
     //Mount - Get Orders details

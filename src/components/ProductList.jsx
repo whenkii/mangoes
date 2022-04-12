@@ -10,6 +10,7 @@ import neelam_prod from '../images/neelam_prod.jpeg';
 import Kesar_prod from '../images/Kesar_prod.jpeg';
 import Alphanso_prod from '../images/Alphanso_prod.jpeg';
 import all_prod from '../images/all_prod.png';
+import {AllSpinners} from './Spinners';
 // import { ToastContainer } from 'react-toastify';
 
 export default function ProductList() {
@@ -33,87 +34,92 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
             <div className="d-flex justify-content-center mt-2">
                 <div className="d-flex align-items-center justify-content-center flex-wrap">
                     {productsState.length > 0 &&
-                    productsState.filter(a => ["Banginapalli","Neelam","Mallika","Alphanso","AlphansoJumbo","Kesar"].includes(a.NAME)).map((item,i) => 
-                    <div className="d-flex" key={i}>
-                    <div className="d-flex flex-column text-center">
-                            {/* <div className="prodName">{item.NAME}</div> */}
-                        <ProdContainer className="d-flex flex-column bg-white mt-0">
-                            {/* <Link to={`/aboutProduct/${item.NAME}`} className="text-decoration-none" >
-                                <RiInformationLine className="about"/> 
-                            </Link> */}
-                            {item.INSTOCK === "Y" ?
-                                <div className="price"> 
-                                <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:item.OFFERPRICE ? "line-through":"none"}}>S${item.PRICE}</span> 
-                                <div className="priceValue"> ${item.OFFERPRICE}</div>
-                            </div> 
-                                :
-                                <div className="price text-muted"> ${item.OFFERPRICE}</div> 
-                            }
-                            <div className="d-flex ">
-                                {item.NAME === 'Banginapalli' &&
-                                <div className="d-flex card-image m-auto">
-                                    <img className="align-self-center prod-image" src={banginapalli_prod} alt="Logo" /> 
-                                </div>
-                                }
-                                {item.NAME === 'Mallika' &&
-                                    <div className="d-flex card-image m-auto">
-                                        <img className="align-self-center prod-image" src={mallika_prod} alt="Logo" /> 
-                                    </div>
-                                }
-                                {item.NAME === 'Neelam' &&
-                                    <div className="d-flex card-image m-auto">
-                                        <img className="align-self-center prod-image" src={neelam_prod} alt="Logo" /> 
-                                    </div>
-                                }
-                                    {item.NAME === 'Kesar' &&
-                                    <div className="d-flex card-image m-auto">
-                                        <img className="align-self-center prod-image" src={Kesar_prod} alt="Logo" /> 
-                                    </div>
-                                }
-                                { (item.NAME === 'Alphanso' || item.NAME === 'AlphansoJumbo')  &&
-                                    <div className="d-flex card-image m-auto">
-                                        <img className="align-self-center prod-image" src={Alphanso_prod} alt="Logo" /> 
-                                    </div>
-                                }
-                                {  ['Banginapalli','Mallika','Kesar',"Alphanso","AlphansoJumbo"].indexOf(item.NAME) < 0  &&
-                                    <div className="d-flex card-image m-auto">
-                                        <img className="align-self-center prod-image" src={all_prod} alt="Logo" /> 
-                                    </div>
-                                }
-                                
-                            {/* Prod Name */}
-                                <div className="mainProdName">{item.NAME}
-                                <p className="prodWeight">({item.UNITS}/Box)</p>
-                                </div>
-                            <div className="d-flex flex-column justify-content-center border-left m-auto">
-                                    {productNames[item.NAME].sort(() => (Math.random() > .5) ? 1 : -1).map((item,i) => 
-                                    <div key={i} className={`prod-name-list ml-3 text-${productColors[i]}`}>{item}</div>
-                                    )
-                                    }
-                            </div>
-
-                            </div>
-                                <div className="mt-1">
+                    productsState.filter(a => ["Banginapalli","Neelam","Mallika","Alphanso","AlphansoJumbo","Kesar","INIT"].includes(a.NAME)).map((item,i) => 
+                        <div className="d-flex" key={i}>
+                            {/* {console.log(item.NAME)} */}
+                         {item.NAME === "INIT" ? 
+                         <AllSpinners />
+                         :
+                        <div className="d-flex flex-column text-center">
+                                {/* <div className="prodName">{item.NAME}</div> */}
+                            <ProdContainer className="d-flex flex-column bg-white mt-0">
+                                {/* <Link to={`/aboutProduct/${item.NAME}`} className="text-decoration-none" >
+                                    <RiInformationLine className="about"/> 
+                                </Link> */}
                                 {item.INSTOCK === "Y" ?
-                                    <div className="CartAddtions">
-                                        <button className="btn text-success" onClick={() => productAction({type:"ADD",prodid:item.ID})}>+</button>
-                                        <button className="btn text-danger"onClick={() => productAction({type:"REMOVE",prodid:item.ID})}>-</button>
-                                    </div>
+                                    <div className="price"> 
+                                    <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:item.OFFERPRICE ? "line-through":"none"}}>S${item.PRICE}</span> 
+                                    <div className="priceValue"> ${item.OFFERPRICE}</div>
+                                </div> 
                                     :
-                                    <div className="CartAddtions">
-                                        <p className="text-danger">Out Of Stock</p>
-                                    </div>
+                                    <div className="price text-muted"> ${item.OFFERPRICE}</div> 
                                 }
-                                    {isProductExistsInCart(item.ID).length > 0 &&
-                                        <div className="cartValues" style={{backgroundColor:"var(--bsRed)",color:"white"}}>{productCountReducer(item.ID)}</div> }
-                                        <div className="innerBasket">
-                                            <div className="innerBasket1" style={{color:"var(--amazonChime)"}} >
-                                                <RiShoppingBasketLine className="basketSize" style={{transform: isProductExistsInCart(item.ID).length > 0 ? "rotate(0deg) scaleX(1)":null}}/>
-                                            </div>
+                                <div className="d-flex ">
+                                    {item.NAME === 'Banginapalli' &&
+                                    <div className="d-flex card-image m-auto">
+                                        <img className="align-self-center prod-image" src={banginapalli_prod} alt="Logo" /> 
+                                    </div>
+                                    }
+                                    {item.NAME === 'Mallika' &&
+                                        <div className="d-flex card-image m-auto">
+                                            <img className="align-self-center prod-image" src={mallika_prod} alt="Logo" /> 
                                         </div>
+                                    }
+                                    {item.NAME === 'Neelam' &&
+                                        <div className="d-flex card-image m-auto">
+                                            <img className="align-self-center prod-image" src={neelam_prod} alt="Logo" /> 
+                                        </div>
+                                    }
+                                        {item.NAME === 'Kesar' &&
+                                        <div className="d-flex card-image m-auto">
+                                            <img className="align-self-center prod-image" src={Kesar_prod} alt="Logo" /> 
+                                        </div>
+                                    }
+                                    { (item.NAME === 'Alphanso' || item.NAME === 'AlphansoJumbo')  &&
+                                        <div className="d-flex card-image m-auto">
+                                            <img className="align-self-center prod-image" src={Alphanso_prod} alt="Logo" /> 
+                                        </div>
+                                    }
+                                    {  ['Banginapalli','Mallika','Kesar',"Alphanso","AlphansoJumbo"].indexOf(item.NAME) < 0  &&
+                                        <div className="d-flex card-image m-auto">
+                                            <img className="align-self-center prod-image" src={all_prod} alt="Logo" /> 
+                                        </div>
+                                    }
+                                    
+                                {/* Prod Name */}
+                                    <div className="mainProdName">{item.NAME}
+                                    <p className="prodWeight">({item.UNITS}/Box)</p>
+                                    </div>
+                                <div className="d-flex flex-column justify-content-center border-left m-auto">
+                                        {productNames[item.NAME].sort(() => (Math.random() > .5) ? 1 : -1).map((item,i) => 
+                                        <div key={i} className={`prod-name-list ml-3 text-${productColors[i]}`}>{item}</div>
+                                        )
+                                        }
                                 </div>
-                        </ProdContainer>
-                    </div>
+
+                                </div>
+                                    <div className="mt-1">
+                                    {item.INSTOCK === "Y" ?
+                                        <div className="CartAddtions">
+                                            <button className="btn text-success" onClick={() => productAction({type:"ADD",prodid:item.ID})}>+</button>
+                                            <button className="btn text-danger"onClick={() => productAction({type:"REMOVE",prodid:item.ID})}>-</button>
+                                        </div>
+                                        :
+                                        <div className="CartAddtions">
+                                            <p className="text-danger">Out Of Stock</p>
+                                        </div>
+                                    }
+                                        {isProductExistsInCart(item.ID).length > 0 &&
+                                            <div className="cartValues" style={{backgroundColor:"var(--bsRed)",color:"white"}}>{productCountReducer(item.ID)}</div> }
+                                            <div className="innerBasket">
+                                                <div className="innerBasket1" style={{color:"var(--amazonChime)"}} >
+                                                    <RiShoppingBasketLine className="basketSize" style={{transform: isProductExistsInCart(item.ID).length > 0 ? "rotate(0deg) scaleX(1)":null}}/>
+                                                </div>
+                                            </div>
+                                    </div>
+                            </ProdContainer>
+                        </div>
+                    }
                     </div>
                     )
                     }

@@ -288,7 +288,7 @@ async function executeProc_log_order(req, res, next) {
   
   let conn = await oracledb.getConnection();
   try {
-  let script = `call create_order(${seq},:EMAIL,:PRODID,:QTY,:PRICE,:DELMODE,:ADDRESS,:LOCATION,:DELIVERYCHARGES,:p_out)`;
+  let script = `call create_order(${seq},:EMAIL,:PRODID,:QTY,:PRICE,:DELMODE,:ADDRESS,:LOCATION,:DELIVERYCHARGES,:PAYMENTMODE,:p_out)`;
   
   // console.log("STATE",req.body);
 
@@ -300,6 +300,7 @@ async function executeProc_log_order(req, res, next) {
                               ADDRESS        : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
                               LOCATION       : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
                               DELIVERYCHARGES : {type: oracledb.NUMBER,dir: oracledb.BIND_IN},
+                              PAYMENTMODE     : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
                               p_out          : {type: oracledb.STRING,dir: oracledb.BIND_OUT,maxSize: 500 }
                   }}
 
