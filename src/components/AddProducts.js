@@ -97,8 +97,8 @@ export default function Addproducts() {
                         </div>
     
                         <div className="d-flex justify-content-center mb-3">
-                            <button className="btn btn-sm back-btn" type="submit" >ADD</button>
                             <div className="btn btn-sm back-btn" onClick={() => history.goBack()}>BACK <fasIcons.FaBackward className="icons" /> </div> 
+                            <button className="btn btn-sm forward-btn" type="submit" >ADD</button>
                         </div>
                     </form>
                 </SigninContainer>
@@ -116,6 +116,7 @@ padding:2rem;
 font-style:italic;
 margin-top:6rem;
 margin-bottom:10rem;
+font-family: 'Courier New', monospace;
 .navImage{
     height: 4rem;
     width:  4rem;
@@ -133,9 +134,9 @@ margin-bottom:10rem;
 }
 .login{
     font-size:2rem;
-    font-family: 'Brush Script MT', cursive;
+    // font-family: 'Brush Script MT', cursive;
     color: var(--amzonChime);
-    // font-weight:bold;
+    font-weight:bold;
     border-bottom: 3px solid var(--amzonChime); 
     margin:auto;
     margin-bottom:2rem;
@@ -143,16 +144,24 @@ margin-bottom:10rem;
 .label{
     color: var(--amxonChine); 
     font-weight:bold;
+    text-transform:capitalize;
 }
 .btn{
     margin:0 0 1rem 0;
     // width:5rem;
 }
 .back-btn{
-    background:var(--bsYellow);
-    color:black;
+    background:var(--bsRed);
+    color:white;
     text-align:center;
     margin-right:1rem;
+}
+.forward-btn{
+        background:var(--amzonChime);
+        color:white;
+        text-align:center;
+        margin-right:1rem;
+    }
 }
 .icons{
     font-size:1.5rem;

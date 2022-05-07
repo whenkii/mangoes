@@ -8,7 +8,7 @@ export default function ContactUs() {
     var history = useHistory();
   return (
     <Maincontainer className="container card">
-         <h4 className="text-dark text-center">Garden Roots Pte Ltd</h4>
+         <h4 className="text-dark text-center font-weight-bold">Garden Roots Pte Ltd</h4>
         <div className="card-header">CONTACTUS</div>
        
             <div className="text-center mt-2 mb-4">
@@ -23,7 +23,7 @@ export default function ContactUs() {
                     </div>
             </div>
 
-            <div className="btn btn-sm back-btn m-auto" onClick={() => history.push("/")}>HOME </div> 
+            <div className="btn btn-sm back-btn m-auto" onClick={() => history.push("/")}> HOME </div> 
 
     </Maincontainer>
   )
@@ -35,6 +35,8 @@ margin-top:7rem;
 padding:3rem;
 border-radius:1rem;
 color:white;
+font-family: 'Courier New', monospace;
+font-weight:bold;
 .card-header{
     background:var(--amzonChime);
     text-align:center;
@@ -56,7 +58,8 @@ color:white;
 }
 .btn{
     margin:0 0 1rem 0;
-    width:50%;
+    width:25%;
+    font-weight:bold;
 }
 .navImage{
     height: 14rem;

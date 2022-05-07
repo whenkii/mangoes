@@ -18,7 +18,7 @@ export function AllSpinners(props) {
 }
 
 const Waiting = styled.div`
-height:100vh;
+height:60vh;
 .spinner-grow {
     width: 2rem; 
     height:2rem;

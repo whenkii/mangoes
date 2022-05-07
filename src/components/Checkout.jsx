@@ -7,9 +7,9 @@ import { ToastContainer,toast} from 'react-toastify';
 import * as fasIcons from 'react-icons/fa'
 // import { RiContactsBookLine } from 'react-icons/ri';
 
-const selfAddress = {Punggol:["Venkat Vona", "Blk - 679A","Punggol","S-821679","Mobile: 81601289"],
-                     Tampines:["Venky", "Blk - 929","Tampines","S-520929","Mobile: 98346177"],
-                     Sengkang:["Venkat Vona", "Blk - 325A","Sengkang East Way","Sengkang","S-541325","Mobile: 81601289"]}
+const selfAddress = {Punggol:["Venkat Vona", "Blk - 679A","Punggol Drive","S-821679","Mobile: 81601289"],
+                     Tampines:["Venky", "Blk - 929","Tampines St 91 (Tampines East MRT)","S-520929","Mobile: 98346177"],
+                     Sengkang:["Venkat Vona", "Blk - 325A","Sengkang East Way","S-541325","Mobile: 81601289"]}
 const areas = ["Tampines", "Sengkang","Punggol"]
 
 export default function Checkout() {
@@ -147,7 +147,7 @@ const handleClick = (e) => {
             </div>
 
         {shipMode === "delivery" &&
-        <div>
+        <div className="delivery">
             <div className="card-header">Address</div>
             <div className="card-body">
                 <form>
@@ -158,7 +158,7 @@ const handleClick = (e) => {
                                  {item.type === 'list' ?
                                     <div className="d-flex row">
                                         <label className="col label align-self-center mr-1 text-left" htmlFor="Location">Location</label>
-                                        <div className="d-flex row flex-column">       
+                                        <div className=" col d-flex row flex-column">       
                                             <select className="col form-control" name="Location" onChange={funOnChangeForm}>
                                                 {item.listValues.map ((item,i) =>
                                                     <option className="list" key={i} value={item}>{item}</option>
@@ -169,10 +169,10 @@ const handleClick = (e) => {
                                     </div>
                                 :
                                     <div className="row">
-                                        <label className="col label align-self-center mr-1 text-left" htmlFor={item.name}>{item.name}</label>
-                                        <div className="d-flex row flex-column">
-                                            <input type={item.type} className="col form-control w-75" name={item.name}  placeholder={item.placeholder} value={item.value} onChange={funOnChangeForm}/>
-                                            <small className="col text-danger align-self-center">{item.errors}</small>
+                                        <label className="col label align-self-center text-left" htmlFor={item.name}>{item.name}</label>
+                                        <div className="col d-flex flex-column">
+                                            <input type={item.type} className="form-control" name={item.name}  placeholder={item.placeholder} value={item.value} onChange={funOnChangeForm}/>
+                                            <small className="text-danger align-self-center">{item.errors}</small>
                                         </div>
                                     </div>
                                  }
@@ -187,8 +187,8 @@ const handleClick = (e) => {
         }
 
         { shipMode === "self" &&
-        <>
-            <div className="d-flex flex-wrap flex-row">
+        <div className="selfSection">
+            <div className="d-flex flex-wrap flex-row justify-content-center">
                     {selfForm.map ( (item,i) => 
                     <div className="row my-2" key={i}>
                         <label className="col label align-self-center mr-1 text-left" htmlFor={item.name}>{item.name}</label>
@@ -199,13 +199,17 @@ const handleClick = (e) => {
                     </div>
                     )}
             </div>
-            <div className="font-weight-bold">
-                <div className="text-dark text-center mt-2">Choose pickup location</div>
+            <div className="card-header mt-2">Choose pickup location</div>
+            <div className="font-weight-bold mt-3">
                 <div className="d-flex" >
-                {areas.map((item,i) =>
-                            <button className="btn btn-sized-sm m-1 p-0 btn-secondary text-white" style={{background: (deliveryState[0].location === item ? "var(--amzonChime)":null)}}  key={i} onClick={() => onClickLocation(item)}>{item}</button>
-                )}
-            </div>
+                    {areas.map((item,i) =>
+                        <button className="btn btn-sized-sm m-1 p-0 btn-secondary text-white" 
+                                style={{background: (deliveryState[0].location === item ? "var(--amzonChime)":null)}}  key={i} 
+                                onClick={() => onClickLocation(item)}>
+                        {item}
+                        </button>
+                    )}
+               </div>
             </div>
             { location &&
             <div className="m-auto">
@@ -218,7 +222,7 @@ const handleClick = (e) => {
             </div>
 
             }
-            </>
+        </div>
         }
 
         <div className="d-flex justify-content-center mt-2">
@@ -235,7 +239,7 @@ background:white;
 margin-top:1rem;
 // padding-bottom:2rem;
 // border-radius:2rem;
-width:22rem;
+// width:22rem;
 color:white;
 .heading{
     padding:0.5rem;
@@ -266,7 +270,11 @@ color:white;
 }
 .label{
     color:var(--amzonChime);
+    font-size:0.6rem;
 }
+// .form-control{
+//     font-size:1rem;
+// }
 .form-check{
     margin:0.5rem;
 }
@@ -282,7 +290,7 @@ color:white;
     background:var(--bsRed);
     color:white;
     text-align:center;
-    margin-right:2rem;
+    margin-right:1rem;
 }
 .proceed-btn{
     background:var(--amzonChime);
@@ -291,13 +299,30 @@ color:white;
     margin-left:2rem;
 }
 .icons{
-    font-size:1.5rem;
+    font-size:1.4rem;
     margin-left:1rem;
 }
-// .list{
-//     width:20rem;;
-// }
+.paymentOptions{
+    margin-top:1rem;
+    border:0.1rem solid var(--amzonChime);
+    border-radius:1rem;
+    padding:0.2rem;
+}
+.locationHeader{
+    margin-top:1rem;
+    color:var(--bsRed);
+    font-weight:bold;
+    font-size:0.9rem;
+    text-align:center;
+}
+.selfSection{
+    margin-bottom:2rem;
+}
+
 @media (max-width:798px){
+    .delivery{
+        font-size:1rem;
+    }
     .card-header{
         padding:0.4rem;
         font-size:0.8rem;
@@ -306,9 +331,12 @@ color:white;
         font-size:0.7rem;
     }
     .icons{
-        font-size:1.2rem;
-        margin-left:0.8rem;
+        font-size:0.5rem;
+        margin-left:0.4rem;
     }
-
+    .btn {
+        font-size:0.5rem;
+        padding:0.3rem;
+    }
 }
 `

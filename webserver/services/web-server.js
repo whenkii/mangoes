@@ -10,8 +10,8 @@ let httpServer;
 // var   fs = require("fs");
 // const path = require("path");
 
-// var privateKey = fs.readFileSync(path.join(__dirname,'../certs','6b7d09109d01c6d5.pem'));
-// var certificate = fs.readFileSync(path.join(__dirname,'../certs','6b7d09109d01c6d5.crt'));
+// var privateKey = fs.readFileSync(path.join(__dirname,'../certs','generated-private-key.txt'), 'utf8');
+// var certificate = fs.readFileSync(path.join(__dirname,'../certs','6b7d09109d01c6d5.pem'), 'utf8');
 
 // const privateKey= fs.readFileSync('./key.pem', 'utf8');
 // const certificate = fs.readFileSync('./server.crt', 'utf8');
@@ -24,7 +24,12 @@ let httpServer;
 const credentials = {
   // key: privateKey,
   // cert: certificate,
-  // ca: ca
+  // ca: [
+  //         // fs.readFileSync(path.join(__dirname,'../certs','gdig2_bundle.crt'), 'utf8')
+  //         fs.readFileSync(path.join(__dirname,'../certs','gdig2_bundle.crt'), 'utf8'), 
+  //         // fs.readFileSync(path.join(__dirname,'../certs','gd2.crt'), 'utf8'),
+  //   //    fs.readFileSync(path.join(__dirname,'../certs','gd3.crt'), 'utf8')
+  //      ]
 };
 
 // var server = http.createServer(credentials,function (req, res) {

@@ -10,7 +10,7 @@ export default function SignIn() {
     const [accountInfo,accountAction] = useContext(accountsContext);
 
     const [formFields,setFormFields] = useState([{name:"Email",type:"text",value:"",required:"Y"},
-                                                 {name:"Password",type:"text",value:"",required:"Y"}]);
+                                                 {name:"Password",type:"password",value:"",required:"Y"}]);
 
 const funOnChange = (e) =>
 {
@@ -89,6 +89,9 @@ const funOnChange = (e) =>
         <SigninContainer className="container">
             {!accountInfo.isLoggedIn ?
             <div>
+                 <div className="text-right ml-auto">
+                          <div className="btn btn-success" onClick={onClickGuest}>Continue as Guest</div>
+                </div>
                 <div className="d-flex">
                     <Link to="/login" className="login">Login</Link>
                 </div>
@@ -113,10 +116,6 @@ const funOnChange = (e) =>
                         <div className="text-center mt-3 mb-0 text-secondary font-weight-bold small" >Don't have an account yet?</div>
                         <Link className="m-auto pt-1" to="/signup"><div className="text-center btn btn-danger btn-inline-block btn-sm" type="submit">SignUp</div></Link>
 
-                        <div className="text-danger text-center mt-3 font-weight-bold">OR</div>
-                        <div className="text-center mt-1">
-                        <div className="btn btn-sm btn-success" onClick={onClickGuest}>Continue as Guest</div>
-                    </div>
                     </div>
                 </form>
             </div>
@@ -170,7 +169,10 @@ padding:2rem;
     color:var(--amzonChime);
     font-weight:bold;
 }
-.btn  {width:10rem;}
+.btn  {width:10rem;
+      font-weight:bold;  
+      font-size:0.7rem;
+      }
 .form-group {
     text-align:center;
 }
@@ -209,11 +211,15 @@ padding:2rem;
 }
 @media (max-width:798px){
     width:20rem;
+    .login {
+        font-size:1.7rem;
+    }
     .form-control{
         width:15rem;
     } 
     .btn{
-        font-size:0.8rem;
+        width:7rem;
+        font-size:0.5rem;
     }
 }
 `

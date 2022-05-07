@@ -27,7 +27,7 @@ var deliveryCharges = (productCountAll < 5 && shipMode === "delivery" ? (locatio
                 </div>
                 {cartReduce === 0 ? null :
                     <div className="text-center font-weight-bold mt-4 row">
-                        <div className="col-4 headers">NAME</div>
+                        <div className="col-3 headers">NAME</div>
                         <div className="col headers">PRICE</div>    
                         <div className="col headers">QTY</div>    
                         <div className="col-3 headers">Total</div> 
@@ -37,7 +37,7 @@ var deliveryCharges = (productCountAll < 5 && shipMode === "delivery" ? (locatio
                 {inCartItems.map(({ID,NAME,OFFERPRICE,QTY,PRICE}) => 
                     <div key={ID}className="card-body text-center">
                         <div className="row ">
-                            <div className="cart-values col-4 font-weight-bold">{NAME}</div>
+                            <div className="cart-values col-3 font-weight-bold">{NAME}</div>
                             <div className="cart-values col text-danger font-weight-bold">
                             <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:OFFERPRICE ? "line-through":"none"}}>S${PRICE}</span> 
                             {`$${OFFERPRICE}`}</div>
@@ -74,7 +74,7 @@ var deliveryCharges = (productCountAll < 5 && shipMode === "delivery" ? (locatio
 
                     <div className="d-flex justify-content-center font-weight-bold mt-2 cartSummaryHeaders">
                             {/* <div className="text-danger">{`Total: `}</div> */}
-                            <div className="text-danger">{`$${cartReduceOfferPrice + deliveryCharges}`}</div>
+                            <div className="cartTotal text-danger">{`$${cartReduceOfferPrice + deliveryCharges}`}</div>
                     </div>
                     {/* <div className="d-flex justify-content-center">
                         <div className="btn btn-danger cart-nav-btns" onClick={() => productAction({type:"CLEAR"})}>Clear Cart</div>
@@ -101,6 +101,8 @@ const CartContainer = styled.div`
 background:white;
 margin-top: 6rem;
 padding:2rem;
+width:75%;
+border-radius:1rem;;
 .cart-values{
     color:var(--bsRed);
     align-self: center !important;
@@ -113,6 +115,8 @@ padding:2rem;
 }
 .cart-heading{
     // background-color:var(--amzonChime);
+    font-family: 'Courier New', monospace;
+    font-weight:bold;
     border-bottom: 3px solid var(--bsDark); 
     color:var(--amzonChime);
     width:11rem;
@@ -121,7 +125,7 @@ padding:2rem;
 .card{
     transition: 0.5s all;
     margin-top:5rem !important;
-    :hover{
+  :hover{
     box-shadow:0 0 0.5rem #5bccf6;
      }
 }
@@ -140,7 +144,8 @@ padding:2rem;
 }
 .cartTotal{
     font-size:1rem;
-    border-bottom: 2px solid var(--amzonChime);
+    // border-bottom: 2px solid var(--amzonChime);
+    box-shadow: 0rem 0.2rem var(--amzonChime);
 }
 .priceValue{
     font-size:0.6rem;
@@ -186,18 +191,24 @@ padding:2rem;
         font-size:0.6rem;
     }
 }
- @media (max-width: 798px) {
+@media (max-width: 798px) {
 .cartSummaryHeaders{
     font-size:0.7rem;
     font-weight:bold;
-}
+  }
+.headers {
+            font-size:0.6rem;
+        }
+.cart-values{
+                    font-size:0.5rem !important;
+                }
 }
 // @media (max-width: 390px) {
 //     .cart{
 //         font-size:1.5rem;    
 //     }
 //     .headers {
-//         font-size:0.8rem;
+//         font-size:0.7rem;
 //     }
 //     .cart-values{
 //         font-size:0.75rem !important;

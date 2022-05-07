@@ -113,7 +113,11 @@ const deliveryReducer = (state,action) => {
         tempState[0].location = location;
         tempState[0].address = address;
     }
+    else if ( action.type === "CLEAR") {
+        return [...inItDelivery]
+    }
     return [...tempState]
+   
 } 
 
 export function ProductsProvider(props) {

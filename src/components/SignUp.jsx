@@ -17,8 +17,8 @@ export default function SignUp() {
     const [formFields,setFormFields] = useState([{name:"FirstName",type:"text",value:"",required:"Y"},
                                                  {name:"LastName",type:"text",value:"",required:"Y"},
                                                  {name:"Email",type:"text",value:"",required:"Y"},
-                                                 {name:"Password",type:"text",value:"",required:"Y"},
-                                                 {name:"Confirm Password",type:"text",value:"",required:"Y"}
+                                                 {name:"Password",type:"password",value:"",required:"Y"},
+                                                 {name:"Confirm Password",type:"password",value:"",required:"Y"}
                                                 ]);
 
     const funOnChange = (e) =>

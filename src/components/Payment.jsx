@@ -13,7 +13,7 @@ import { ToastContainer } from 'react-toastify';
 export default function Payment() {
 var history = useHistory();
 // const [productsState,productAction]=useContext(productContext);
-const [productsState,productAction,,,productCountAll,deliveryState]=useContext(productContext);
+const [productsState,productAction,,,productCountAll,deliveryState,deliveryAction]=useContext(productContext);
 const {shipMode,location} = deliveryState[0];
 const inCartItems = productsState.filter(a => a.QTY > 0);
 const [accountInfo] = useContext(accountsContext);
@@ -38,6 +38,7 @@ const createOrder = (e) => {
         
         productAction({type:"CREATE_ORDER",accountInfo:accountInfo,deliveryDetails:{...deliveryState[0],paymentMode:orderForm.paymentMode}});
         productAction({type:"CLEAR"});
+        deliveryAction({type:"CLEAR"});
         history.push("/")
         }
         else {
@@ -136,7 +137,7 @@ const createOrder = (e) => {
                {
                     <p className="form-check-label"> 
                         <span className=" whatsapptext text-success"> <fasIcons.FaWhatsapp className="whatsapp" /> WhatsApp </span>
-                         Payment information to <span className=" whatsapptext text-danger" > (+65) 81601289 </span> 
+                         Payment confirmation to <span className=" whatsapptext text-danger" > (+65) 81601289 </span> 
                     </p>
                }
 

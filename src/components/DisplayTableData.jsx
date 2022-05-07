@@ -2,9 +2,9 @@ import React,{useState,useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import {AllSpinners} from './Spinners'
 import styled from 'styled-components'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faArrowUp} from '@fortawesome/free-solid-svg-icons';
-import {faArrowDown} from '@fortawesome/free-solid-svg-icons';
+// import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+// import {faArrowUp} from '@fortawesome/free-solid-svg-icons';
+// import {faArrowDown} from '@fortawesome/free-solid-svg-icons';
 import { CSVLink } from "react-csv";
 // import { GiConsoleController } from 'react-icons/gi';
 
@@ -69,9 +69,9 @@ useEffect(() => {
              {stateVar.length > 0 ?
              <div>
                 <div className="d-flex justify-content-end">
-                         <CSVLink className="font-weight-bold text-danger csv-exporter mb-1" data={stateVar}>Export CSV</CSVLink>
+                         <CSVLink className="text-danger csv-exporter mb-1" data={stateVar}>Export CSV</CSVLink>
                 </div>
-                <div className="table-responsive">
+                <div className="table-responsive bordered">
                     <table className="table text-center">
                         <thead className="thead">
                             <tr className="header">
@@ -79,8 +79,10 @@ useEffect(() => {
                                     <th key={index} className="border">
                                         <ButtonContainer onClick={() => orderbyAttribute(item)}>
                                             <div className="row">
-                                                <div className="col tab-headings">{item}</div>  
-                                                <span className="col">{sort.propertyName === item ? <FontAwesomeIcon className="text-white" icon={sort.mode === "ASC" ? faArrowUp : faArrowDown} /> :null}</span>
+                                                <div className={`col tab-headings ${sort.propertyName === item ? " text-danger":null}`} >{item}</div>  
+                                                <span className={`col ${sort.propertyName === item ? " text-danger":null}`}>
+                                                    {/* {sort.propertyName === item ? <FontAwesomeIcon className="text-dark" icon={sort.mode === "ASC" ? faArrowUp : faArrowDown} /> :null} */}
+                                                    </span>
                                             </div>
                                         </ButtonContainer>
                                     </th>
@@ -125,10 +127,17 @@ const TableContainer = styled.div`
     color:var(--csBlue);
     font-weight:none;
     padding:0;
-    border:none !important;
+    // border:none !important;
 }
 .bod{
     margin-top:1rem;
+}
+.col {
+    font-size:0.7rem;
+    font-weight:bold;
+    }
+.tdata{
+    font-size:0.6rem;
 }
 @media (max-width:798px){
 .csv-exporter{

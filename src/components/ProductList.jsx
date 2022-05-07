@@ -137,6 +137,7 @@ margin-right: auto;
 margin-left: auto;
 margin-top:7rem;
 margin-bottom:7rem;
+// font-family: 'Courier New', monospace;
 .priceCartDetails{
     background:whitesmoke;
 }

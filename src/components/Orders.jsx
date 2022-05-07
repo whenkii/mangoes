@@ -87,8 +87,12 @@ export function OrderDetails(props) {
 export function AllOrders() {
     const [accountInfo] = useContext(accountsContext);
     const history = useHistory();
-    const query = `with ordersall as (select id order_id,sum(price) Total_Price,sum(qty) quantity,to_char(max(ts + interval '8' hour ),'DD-MON-YY HH24:MI') time,max(status) status from orders group by id order by id desc) select a.order_id,total_price,quantity,time,status,address,del_mode,location,details,paymode from ordersall a,deliveries b where a.order_id=b.order_id`;
+    const query = `with ordersall as (select id order_id,sum(price) Total_Price,sum(qty) quantity,to_char(max(ts + interval '8' hour ),'DD-MON-YY HH24:MI') time,max(status) status from orders group by id order by id desc) select a.order_id,total_price price,decode(del_mode,'delivery',decode(location,'other',6,4)+total_price,total_price) total_price,quantity,time,status,del_mode,location,details,paymode,address from ordersall a,deliveries b where a.order_id=b.order_id`;
     const [orderDetails,setOrderDetails]= useState([]);
+    const orderTotal = orderDetails.reduce ( (prev,{QUANTITY}) => prev+QUANTITY,0);
+    const orderTotalPrice = orderDetails.reduce ( (prev,{TOTAL_PRICE}) => prev+TOTAL_PRICE,0);
+    // const cartReducePrice = inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0);
+    // console.log(orderTotal)
 
     //Mount - Get Orders details
     useEffect(() => {
@@ -110,6 +114,10 @@ export function AllOrders() {
             {accountInfo.isLoggedIn ?
             <>
             <DataHeader className="text-center p-1">ALL ORDERS</DataHeader>
+            <div className="d-flex flex-column justify-content-center text-center card">
+                <div className="text-dark font-weight-bold"> Total : <span className="text-danger">{orderTotal}</span></div>
+                <div className="text-dark font-weight-bold">Amount : <span className="text-danger">${orderTotalPrice}</span></div>
+            </div>
             {orderDetails.length > 0 ?
             <DisplayTableData state={orderDetails} comp="ALLORDERS"/>
             : 
@@ -175,7 +183,10 @@ margin-top:8rem;
 const DataHeader = styled.h1`
 background:white;
 font-size:2rem;
-font-family: 'Brush Script MT', cursive;
+// font-family: 'Brush Script MT', cursive;
+font-family: 'Courier New', monospace;
+font-weight:bold;
+font-family: 'Courier New', monospace;
 color:var(amazonChime);
 border-radius:0.25rem;
 box-shadow: 0 0 0.8rem 0.25rem rgba(0,0,0,1);
