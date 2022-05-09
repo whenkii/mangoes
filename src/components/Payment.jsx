@@ -1,12 +1,12 @@
-import React,{useState,useContext} from 'react'
+import React,{useState,useContext,useEffect} from 'react'
 import {useHistory} from 'react-router-dom'
 import {productContext} from '../contexts/mangoesContext'
 import {accountsContext} from '../contexts/accountsContext'
+import { GetApiData } from '../components/ApiCalls';
 import styled from 'styled-components'
 import qrcode from '../images/Venkat_Paynow.jpeg'
 import * as fasIcons from 'react-icons/fa'
-import { ToastContainer } from 'react-toastify';
-// import axios from 'axios'
+import { ToastContainer,toast } from 'react-toastify';
 // import {config} from '../components/reactConfig'
 // import * as biIcons from 'react-icons/bi' 
 
@@ -19,6 +19,7 @@ const inCartItems = productsState.filter(a => a.QTY > 0);
 const [accountInfo] = useContext(accountsContext);
 const bankDetails = ["GardenRoots Pte Ltd","OCBC Account# : 712177963001"];
 const [orderForm,setOrderForm] = useState({address1:"",address2:"",postalcode:"",mobile:"",paymentMode:""});
+const [orderId,setOrderID] = useState(null);
 
 const funOnChange = (e) => {
     setOrderForm({...orderForm,[e.target.name]:e.target.value})
@@ -36,7 +37,7 @@ const createOrder = (e) => {
     // else {
         if (orderForm.paymentMode) {
         
-        productAction({type:"CREATE_ORDER",accountInfo:accountInfo,deliveryDetails:{...deliveryState[0],paymentMode:orderForm.paymentMode}});
+        productAction({type:"CREATE_ORDER",accountInfo:accountInfo,orderid:orderId,deliveryDetails:{...deliveryState[0],paymentMode:orderForm.paymentMode}});
         productAction({type:"CLEAR"});
         deliveryAction({type:"CLEAR"});
         history.push("/")
@@ -47,43 +48,22 @@ const createOrder = (e) => {
     // }
   }
 
-//   useEffect( () => {
+const query = `select orders_seq.nextval seqid from dual`;
 
-//     console.log(orderCreated)
-//     if (orderCreated) {
-//         // productAction({type:"CREATE_ORDER",accountInfo:accountInfo});
-//         // var tempState = [...productsState]
-//         // //Extract necessary attributes from Cart/State
-//         // let newState = tempState.map(i => ({EMAIL:accountInfo.email,PRODID:parseInt(i.ID,10),QTY:parseInt(i.QTY,10),PRICE:parseInt(i.PRICE,10)}));
-//         // //Get products that are in cart only
-//         // newState = newState.filter(a => a.QTY > 0);
-
-//         // //Call Proc to save the order details in DB
-//         // axios.post(`${config.restAPIserver}:${config.restAPIHost}/api/executeProc_log_order`,newState)
-//         //     .then(({data,status}) => {
-//         //         if ( status && status !== 200 ) {
-//         //             // alert("Order creation failed error code - " + status);
-//         //             toast.error("Order creation failed")
-//         //         }
-//         //         else {
-//         //             toast.success("Order has been successfully created");
-//         //             // console.log(tempState);
-//         //             tempState = [...productsInit]
-//         //             console.log(tempState);
-//         //             //  console.log(tempState);
-//         //         }
-//         //                 })
-//         //     .catch((e) => {
-//         //             // console.log(e);
-//         //             toast.error(`Order creation failed`); 
-//         //             tempState = [...productsState]
-//         //         })       
-//         // // console.log(tempState)
-//         // return [...tempState]; 
-//             }
-//         setOrderCreated(false)
-//     },[orderCreated])
-
+    useEffect(() => {
+        GetApiData(query,"Payment")
+        .then((result) => {
+    //Set state once data is returned from AXIOS
+        // console.log(result[0].SEQID)
+        setOrderID(result[0].SEQID)
+                         })
+        .catch((e) => {
+                    //    alert( `Error\n ` + e);
+                       toast.error( `Error\n ` + e)  
+                        })
+    }, [query])
+  //Unmount
+  useEffect(() => () => {}, []) 
   return (
     <Maincontainer className="container">
         <ToastContainer position="top-center" autoClose="1000"/>
@@ -92,6 +72,9 @@ const createOrder = (e) => {
             <span>{` $${inCartItems.reduce((prev,{OFFERPRICE,QTY}) => prev+OFFERPRICE*QTY,0) + (productCountAll < 5 && shipMode === "delivery" ? (location === "Other" ? 6 : 4) : 0)}`}</span>
         </div>
         <div className="card-header mt-1">PAYEMNT</div>
+        {/* <div className="text-center mt-1 text-danger"> <span className="text-dark font-weight-bold">ORDERID </span> : <span className="font-weight-bold">GR-{orderId}</span></div> */}
+        <div className="text-center mt-1 text-dark"> Tracking Number <span className=" text-danger font-weight-bold">GR-{orderId} </span></div>
+        <div className="text-center text-danger"> <small>Please mention above tracking no while making payment</small></div>
         <div className="d-flex justify-content-center paymentOptions"> 
                 <div className="form-check">               
                     <input className="form-check-input" type="radio" value="qrcode" name="paymentMode" 

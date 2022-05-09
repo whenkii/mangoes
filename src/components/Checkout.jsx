@@ -147,10 +147,10 @@ const handleClick = (e) => {
             </div>
 
         {shipMode === "delivery" &&
-        <div className="delivery">
-            <div className="card-header">Address</div>
-            <div className="card-body">
-                <form>
+            <div className="delivery">
+              <div className="card-header">Address</div>
+               <div className="card-body">
+                    <form>
                     <div className="d-flex justify-content-center">         
                         <div>
                             {formFields.map ((item,i) =>
@@ -180,30 +180,29 @@ const handleClick = (e) => {
                             )
                             }
                              </div>
-                        </div>
+                    </div>
                 </form>
+                </div>
             </div>
-        </div>
         }
 
         { shipMode === "self" &&
         <div className="selfSection">
-            <div className="d-flex flex-wrap flex-row justify-content-center">
+           
                     {selfForm.map ( (item,i) => 
-                    <div className="row my-2" key={i}>
-                        <label className="col label align-self-center mr-1 text-left" htmlFor={item.name}>{item.name}</label>
+                    <div className="my-1" key={i}>
+                        <label className="col label align-self-center" htmlFor={item.name}>{item.name}</label>
                         <div className="d-flex row flex-column">
-                            <input type={item.type} className="col form-control w-75" name={item.name}  placeholder={item.placeholder} value={item.value} onChange={funOnChangeFormSelf}/>
+                            <input type={item.type} className="col form-control" name={item.name}  placeholder={item.placeholder} value={item.value} onChange={funOnChangeFormSelf}/>
                             <small className="col text-danger align-self-center">{item.errors}</small>
                         </div>
                     </div>
                     )}
-            </div>
-            <div className="card-header mt-2">Choose pickup location</div>
+            <div className="card-header mt-3">Choose pickup location</div>
             <div className="font-weight-bold mt-3">
-                <div className="d-flex" >
+                <div className="d-flex justify-content-center" >
                     {areas.map((item,i) =>
-                        <button className="btn btn-sized-sm m-1 p-0 btn-secondary text-white" 
+                        <button className="btn btn-sized-sm m-1 p-1 btn-secondary text-white font-weight-bold" 
                                 style={{background: (deliveryState[0].location === item ? "var(--amzonChime)":null)}}  key={i} 
                                 onClick={() => onClickLocation(item)}>
                         {item}
@@ -270,13 +269,13 @@ color:white;
 }
 .label{
     color:var(--amzonChime);
-    font-size:0.6rem;
+    font-size:1rem;
 }
-// .form-control{
-//     font-size:1rem;
-// }
+.form-control{
+    width:50%;
+}
 .form-check{
-    margin:0.5rem;
+    margin:0.2rem;
 }
 .form-check-input{
     font-size:3rem;
@@ -317,6 +316,8 @@ color:white;
 }
 .selfSection{
     margin-bottom:2rem;
+    // width:75%;
+    margin:auto;
 }
 
 @media (max-width:798px){
@@ -327,15 +328,27 @@ color:white;
         padding:0.4rem;
         font-size:0.8rem;
     }
+    .selfSection{
+        margin-bottom:2rem;
+        // width:60%;
+        margin:auto;
+    }
     .form-check-label{
         font-size:0.7rem;
+    }
+    .label{
+        font-size:0.8rem;
+    }
+    .form-control{
+        width:75%;
+        padding:0.3rem;
     }
     .icons{
         font-size:0.5rem;
         margin-left:0.4rem;
     }
     .btn {
-        font-size:0.5rem;
+        font-size:0.6rem;
         padding:0.3rem;
     }
 }

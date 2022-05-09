@@ -37,7 +37,7 @@ var deliveryCharges = (productCountAll < 5 && shipMode === "delivery" ? (locatio
                 {inCartItems.map(({ID,NAME,OFFERPRICE,QTY,PRICE}) => 
                     <div key={ID}className="card-body text-center">
                         <div className="row ">
-                            <div className="cart-values col-3 font-weight-bold">{NAME}</div>
+                            <div className="cart-values col-3 font-weight-bold p-0">{NAME}</div>
                             <div className="cart-values col text-danger font-weight-bold">
                             <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:OFFERPRICE ? "line-through":"none"}}>S${PRICE}</span> 
                             {`$${OFFERPRICE}`}</div>
@@ -67,8 +67,8 @@ var deliveryCharges = (productCountAll < 5 && shipMode === "delivery" ? (locatio
                             <div className="cartSummaryHeaders text-danger"> {productCountAll < 5 && shipMode === "delivery" ? (location === "Other" ? "$6" : "$4") : "Free" }</div>
                         </div>
                         <div className="d-flex justify-content-between">
-                            <div className="cartSummaryHeaders text-danger  small mb-1">Savings</div>
-                            <div className="cartSummaryHeaders text-danger small"> ${cartReducePrice - cartReduceOfferPrice}</div>
+                            <div className="cartSummaryHeaders small mb-1 text-success">Savings</div>
+                            <div className="cartSummaryHeaders text-success small"> ${cartReducePrice - cartReduceOfferPrice}</div>
                         </div>
                     </div>
 
@@ -105,7 +105,7 @@ width:75%;
 border-radius:1rem;;
 .cart-values{
     color:var(--bsRed);
-    align-self: center !important;
+    // align-self: center !important;
 
 }
 .cart-btn {
@@ -200,29 +200,7 @@ border-radius:1rem;;
             font-size:0.6rem;
         }
 .cart-values{
-                    font-size:0.5rem !important;
+                    font-size:0.6rem !important;
                 }
 }
-// @media (max-width: 390px) {
-//     .cart{
-//         font-size:1.5rem;    
-//     }
-//     .headers {
-//         font-size:0.7rem;
-//     }
-//     .cart-values{
-//         font-size:0.75rem !important;
-//     }
-//     .cart-btn {
-//         font-size:0.8rem;
-//         padding:0.1rem 0.3rem;
-//     }
-//     .cart-delete{
-//         font-size:1rem;
-//         padding:0.2rem;
-//     }
-//     .cart-nav-btns {
-//         font-size:0.5rem;
-//     }
-// }
 `

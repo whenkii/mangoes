@@ -17,6 +17,7 @@ export default function SignUp() {
     const [formFields,setFormFields] = useState([{name:"FirstName",type:"text",value:"",required:"Y"},
                                                  {name:"LastName",type:"text",value:"",required:"Y"},
                                                  {name:"Email",type:"text",value:"",required:"Y"},
+                                                 {name:"Mobile",type:"text",value:"",required:"Y"},
                                                  {name:"Password",type:"password",value:"",required:"Y"},
                                                  {name:"Confirm Password",type:"password",value:"",required:"Y"}
                                                 ]);
@@ -47,9 +48,15 @@ export default function SignUp() {
         const firstname = formFields[formFields.findIndex( a => a.name === "FirstName")].value;
         const lastname  = formFields[formFields.findIndex( a => a.name === "LastName")].value;
         const email  = formFields[formFields.findIndex( a => a.name === "Email")].value;
+        const mobile  = formFields[formFields.findIndex( a => a.name === "Mobile")].value;
         const password  = formFields[formFields.findIndex( a => a.name === "Password")].value;
 
-       axios.post(`${config.restAPIserver}:${config.restAPIHost}/api/createAccount`,{fileName:"SignUP form",vars:{p_firstname:firstname,p_lastname:lastname,p_email:email,p_password:password}})
+       const newState = [{p_in:{FIRSTNAME:firstname,LASTNAME:lastname,EMAIL:email,MOBILE:mobile,PASSWORD:password}}]
+       const finalState = { scriptName:"PKG_ACCOUNTS.CREATE_ACCOUNT",recName : "PKG_ACCOUNTS.ACCOUNT_REC",binds:newState}
+
+       axios.post(`${config.restAPIserver}:${config.restAPIHost}/api/execProcDynamic`,finalState)
+    //    axios.post(`${config.restAPIserver}:${config.restAPIHost}/api/createAccount`,{fileName:"SignUP form",
+    //                vars:{p_firstname:firstname,p_lastname:lastname,p_email:email,p_password:password}})
             .then (({data}) => {
                 // console.log(data)
                 
@@ -60,7 +67,8 @@ export default function SignUp() {
                 }
                 else  {
                     if ( data === "User already exists") {
-                        alert(data + ". SignIn");
+                        // alert(data + ". SignIn");
+                        toast.warning(data + ". SignIn")  
                         history.push("/account");
                     }
                     else {

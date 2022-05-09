@@ -9,7 +9,8 @@ import mallika_prod from '../images/mallika_prod.jpeg';
 import neelam_prod from '../images/neelam_prod.jpeg';
 import Kesar_prod from '../images/Kesar_prod.jpeg';
 import Alphanso_prod from '../images/Alphanso_prod.jpeg';
-import all_prod from '../images/all_prod.png';
+import chandura_prod from '../images/chandura_prod.jpeg'; 
+import all_prod from '../images/chandura_prod.jpeg';
 import {AllSpinners} from './Spinners';
 // import { ToastContainer } from 'react-toastify';
 
@@ -18,6 +19,7 @@ const [productsState,productAction,,productCountReducer] = useContext(productCon
 const productNames = {Alphanso:["ఆల్పాన్సా/ఖాదర్","अल्फांसो","அல்பான்சோ","ಅಲ್ಫ್ನಸೋ"],
                       AlphansoJumbo:["ఆల్పాన్సా/ఖాదర్","अल्फांसो Jumbo","அல்பான்சோ Jumbo","ಅಲ್ಫ್ನಸೋ Jumbo"],
                       Kesar:["Kesar","केसर","కేసర్"],
+                      Chandura:["Chandura","పుల్లూరా","चंदुरा"],
                       Banginapalli:["బంగినపల్లి/బేనీషా","बादाम","பங்கினப்பள்ளி","ಬಂಗಿನಾಂಪಲ್ಲಿ"],
                       Mallika:["మల్లికా","मल्लिका","மல்லிகா","ಮಲ್ಲಿಕಾ"],
                       Neelam:["నీలం","नीलम","நீலம்","ನೀಲಂ"],
@@ -34,7 +36,7 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
             <div className="d-flex justify-content-center mt-2">
                 <div className="d-flex align-items-center justify-content-center flex-wrap">
                     {productsState.length > 0 &&
-                    productsState.filter(a => ["Banginapalli","Neelam","Mallika","Alphanso","AlphansoJumbo","Kesar","INIT"].includes(a.NAME)).map((item,i) => 
+                    productsState.filter(a => ["Chandura","Banginapalli","Neelam","Mallika","Alphanso","AlphansoJumbo","Kesar","INIT"].includes(a.NAME)).map((item,i) => 
                         <div className="d-flex" key={i}>
                             {/* {console.log(item.NAME)} */}
                          {item.NAME === "INIT" ? 
@@ -68,6 +70,11 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
                                     {item.NAME === 'Neelam' &&
                                         <div className="d-flex card-image m-auto">
                                             <img className="align-self-center prod-image" src={neelam_prod} alt="Logo" /> 
+                                        </div>
+                                    }
+                                      {item.NAME === 'Neelam' &&
+                                        <div className="d-flex card-image m-auto">
+                                            <img className="align-self-center prod-image" src={chandura_prod} alt="Logo" /> 
                                         </div>
                                     }
                                         {item.NAME === 'Kesar' &&

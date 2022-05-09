@@ -32,6 +32,11 @@ const funOnChange = (e) =>
         history.push("/");
     }
 
+    const clearGuest = () => {
+        accountAction({type:"CLEAR"});
+        history.push("/signup")
+    }
+
     const submitSignInForm = (e) => {
         e.preventDefault();
         var tempFormFields = [...formFields];
@@ -125,7 +130,10 @@ const funOnChange = (e) =>
                 { accountInfo.loginType === "GUEST" ?
                         <div className="d-flex justify-content-center mt-2 flex-column">
                         <h2 className="text-center font-weight-bold text-danger">Guest</h2> 
-                        <div className="btn btn-sm m-auto" style={{background:"var(--amzonChime)"}} onClick={() => history.push("/")}>HOME</div>
+                        <div className="d-flex">
+                            <div className="btn btn-sm m-auto" style={{background:"var(--amzonChime)"}} onClick={() => history.push("/")}>HOME</div>
+                            <div className="btn btn-sm m-1 btn-danger" onClick={clearGuest}>SIGNUP</div>
+                        </div>
                    </div>
                   :
                 <>

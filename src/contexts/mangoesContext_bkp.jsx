@@ -17,7 +17,7 @@ export const productContext = createContext();
 
 const CartReducerFun = (state,action) => {
     var tempState     = [...state];
-    var {type,prodid,accountInfo,orderid} = action;
+    var {type,prodid,accountInfo} = action;
     var {deliveryDetails} = action;
     var idx           = tempState.findIndex( a => a.ID === prodid);
     switch (type) {
@@ -56,33 +56,25 @@ const CartReducerFun = (state,action) => {
             //Extract necessary attributes from Cart/State
             // console.log(deliveryDetails)
             let newState = state.map(i => 
-                ({ORDERID:orderid,
-                  EMAIL:accountInfo.email,
-                  PRODID:parseInt(i.ID,10),
-                  QTY:parseInt(i.QTY,10),
-                  PRICE:parseInt(i.OFFERPRICE,10),
+                ({EMAIL:accountInfo.email,PRODID:parseInt(i.ID,10),QTY:parseInt(i.QTY,10),PRICE:parseInt(i.OFFERPRICE,10),
                   DELMODE:deliveryDetails.shipMode,
                   ADDRESS:String(deliveryDetails.address),
-                  LOCATION:deliveryDetails.location,
-                  PAYMODE:deliveryDetails.paymentMode
+                  LOCATION:deliveryDetails.location,DELIVERYCHARGES:deliveryDetails.charge,
+                  PAYMENTMODE:deliveryDetails.paymentMode
                 }));
             //Get products that are in cart only
             newState = newState.filter(a => a.QTY > 0);
-            // For each record give attribute name as p_in as this is the naming convention in node.js code
-            newState = newState.map( a => ({p_in:a}));
-            const finalState = { scriptName:"PKG_ORDERS.CREATE_ORDER",recName : "PKG_ORDERS.createOrderRec",binds:newState}
-
             // console.log(newState)
+            // console.log(deliveryDetails)
 
-            // Call Proc to save the order details in DB
+            //Call Proc to save the order details in DB
             if (!deliveryDetails.DELMODE) {
             // axios.post(`${config.restAPIserver}:${config.restAPIHost}/api/executeProc_log_order`,newState)
-            axios.post(`${config.restAPIserver}:${config.restAPIHost}/api/execProcDynamic`,finalState)
+            axios.post(`${config.restAPIserver}:${config.restAPIHost}/api/executeProc_log_order`,newState)
                 .then(({data,status}) => {
-                    if ( ( status && status !== 200 ) || data !== "OK" ) {
+                    if ( status && status !== 200 ) {
                         // alert("Order creation failed error code - " + status);
-                        // toast.error("Order creation failed")
-                        toast.error(data)
+                        toast.error("Order creation failed")
                     }
                     else {
                         toast.success("Order has been successfully created");
@@ -98,9 +90,9 @@ const CartReducerFun = (state,action) => {
                         tempState = [...state]
                     })
                 }
-            else {
-                toast.error(`Choose Delivery mode`); 
-            }
+                else {
+                    toast.error(`Choose Delivery mode`); 
+                }
             // console.log(tempState)
             return [...tempState]; 
         case "CLEAR":
@@ -123,7 +115,7 @@ const deliveryReducer = (state,action) => {
         tempState[0].address = address;
     }
     else if ( action.type === "CLEAR") {
-        return [inItDelivery]
+        return [...inItDelivery]
     }
     return [...tempState]
    

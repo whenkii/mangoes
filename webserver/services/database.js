@@ -3,7 +3,7 @@ const oracledb = require('oracledb');
 
 try {
   oracledb.initOracleClient(
-    {libDir: '/Users/venkateshthammichetti/react/dailycart/webserver/instantclient_19_8'}
+    // {libDir: '/Users/venkateshthammichetti/react/dailycart/webserver/instantclient_19_8'}
     );
 } catch (err) {
   console.error('Whoops!');
@@ -47,15 +47,15 @@ function simpleExecute(statement, binds = [], opts = {}) {
     } catch (err) {
       reject(err);
     } finally {
-      if (conn) {
-        // conn assignment worked, need to close
-        try {
-          console.log(`\nEND - simpleExecute\n`)
-          await conn.close();
-        } catch (err) {
-          console.log("Failed - simpleExecute\n" + err);
+        if (conn) {
+          // conn assignment worked, need to close
+          try {
+            console.log(`\nEND - simpleExecute\n`)
+            await conn.close();
+          } catch (err) {
+            console.log("Failed - simpleExecute\n" + err);
+          }
         }
-      }
     }
   });
 }
@@ -73,13 +73,15 @@ function ExecuteMany_proc(statement, binds = [], opts = {}) {
 
     console.log(`Executing below SQL statement in ExecuteMany_proc .... \n`,statement)
 
-    try {
+  try {
       conn = await oracledb.getConnection();
       const result = await conn.executeMany(statement, binds, opts);
       resolve(result);
-    } catch (err) {
+     } 
+  catch (err) {
       reject(err);
-    } finally {
+    } 
+  finally {
       if (conn) {
         // conn assignment worked, need to close
         try {
@@ -94,6 +96,54 @@ function ExecuteMany_proc(statement, binds = [], opts = {}) {
 }
 
 module.exports.ExecuteMany_proc = ExecuteMany_proc;
+
+
+function ExecuteMany_Dyn(plsqlProc, binds = [],recName) {
+  return new Promise(async (resolve, reject) => {
+    console.log(`START - ExecuteMany_Dyn \n`)
+
+    console.log(`Executing below statement  .... \n`,plsqlProc)
+
+    let conn;
+    
+  try {
+      conn = await oracledb.getConnection();
+      const RectypeClass = await conn.getDbObjectClass(recName.toUpperCase());
+
+      const options = {bindDefs  : {p_in           : { type: RectypeClass },
+                                    p_out          : { type: oracledb.STRING,dir: oracledb.BIND_OUT,maxSize: 500 },
+                                    p_out_rec      : { type: RectypeClass, dir: oracledb.BIND_OUT },
+                                  }     
+                      };
+        options.outFormat = oracledb.OBJECT;
+        options.autoCommit = false;
+      
+      conn = await oracledb.getConnection();
+      const result = await conn.executeMany(plsqlProc, binds, options);
+      resolve(result);
+      console.log("Successful execution")
+     } 
+  catch (err) {
+      reject(err);
+    } 
+  finally {
+      if (conn) {
+        console.log("connection is active")
+        // conn assignment worked, need to close
+        try {
+            console.log(`Closing Connection after executing ExecuteMany_Dyn \n`)
+            await conn.close();
+            console.log(`Connection Closed !!! \n`)
+            } 
+        catch (err) {
+          console.log("Failed - ExecuteMany_Dyn\n" + err);
+        }
+      }
+    }
+  });
+}
+
+module.exports.ExecuteMany_Dyn  = ExecuteMany_Dyn;
 
 
 

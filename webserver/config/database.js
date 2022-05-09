@@ -16,12 +16,14 @@
 
 module.exports = {
   hrPool: {
-    user: "system",
-    password: "oracle",
-    connectString: "localhost:1521/xe",
+    // user: "system",
+    // password: "oracle",
+    user: "sggr",
+    password: "venki311083",
+    // connectString: "localhost:1521/xe",
     // user: "admin",
     // password: "tnrstore123",
-    // connectString: "tnr-datastore-v1.cusb9jdjhyrr.us-east-1.rds.amazonaws.com:1521/TNRSTORE",
+    connectString: "tnr-datastore-v1.cusb9jdjhyrr.us-east-1.rds.amazonaws.com:1521/TNRSTORE",
     poolMin: 20,
     poolMax: 20,
     poolIncrement: 0,

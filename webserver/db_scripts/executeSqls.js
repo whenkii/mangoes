@@ -64,6 +64,7 @@ async function adhocSqls(req, res, next) {
 }
 
 
+module.exports.adhocSqls = adhocSqls;
 
 async function adhocSqlsViaBody(req, res, next) {
   console.log("START","adhocsqlsViaBody\n");
@@ -124,15 +125,15 @@ async function adhocSqlsViaBody(req, res, next) {
     // console.log(binds)
   
     const result = await database.ExecuteMany_proc(query, binds,options);
-    // console.log(result.outBinds[0].p_out)
-                  res.status(200).json(result.outBinds[0].p_out);
+        res.status(200).json(result.outBinds[0].p_out);
+        console.log("Successfully executed - createAccount");
     } 
     catch (err) {
       next(err);
       res.status(400).end();
     }
     finally {
-      console.log("Successfully executed - createAccount");
+      console.log("Completed  - execProcDynamic");
     }
   }
   
@@ -211,7 +212,7 @@ async function adhocSqlsViaPost(req, res, next) {
 
 
 
-module.exports.adhocSqls = adhocSqls;
+module.exports.adhocSqlsViaPost = adhocSqlsViaPost;
 
 
 async function executeProc(req, res, next) {
@@ -288,7 +289,7 @@ async function executeProc_log_order(req, res, next) {
   
   let conn = await oracledb.getConnection();
   try {
-  let script = `call create_order(${seq},:EMAIL,:PRODID,:QTY,:PRICE,:DELMODE,:ADDRESS,:LOCATION,:DELIVERYCHARGES,:PAYMENTMODE,:p_out)`;
+  let script = `call create_order(${seq},:EMAIL,:PRODID,:QTY,:PRICE,:DELMODE,:ADDRESS,:LOCATION,:PAYMENTMODE,:p_out)`;
   
   // console.log("STATE",req.body);
 
@@ -299,7 +300,7 @@ async function executeProc_log_order(req, res, next) {
                               DELMODE        : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
                               ADDRESS        : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
                               LOCATION       : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
-                              DELIVERYCHARGES : {type: oracledb.NUMBER,dir: oracledb.BIND_IN},
+                              // DELIVERYCHARGES : {type: oracledb.NUMBER,dir: oracledb.BIND_IN},
                               PAYMENTMODE     : {type: oracledb.STRING,dir: oracledb.BIND_IN,maxSize: 500},
                               p_out          : {type: oracledb.STRING,dir: oracledb.BIND_OUT,maxSize: 500 }
                   }}
@@ -339,3 +340,29 @@ async function executeProc_log_order(req, res, next) {
 }
 
 module.exports.executeProc_log_order = executeProc_log_order;
+
+
+async function execProcDynamic(req, res, next) {
+  // return new Promise(async (resolve, reject) => {
+  console.log("START","execProcDynamic");
+
+// const {scriptName,recName} = req.body.dbValues;
+const {scriptName,recName,binds} = req.body;
+const plsqlProc = `CALL ${scriptName}(:p_in, :p_out,:p_out_rec)`;
+
+  try {
+      const result = await database.ExecuteMany_Dyn(plsqlProc, binds,recName);
+      // console.log(result);
+      res.status(200).json(result.outBinds[0].p_out);
+        console.log("Successfully executed - execProcDynamic");
+    } 
+  catch (err) {
+      next(err);
+      res.status(400).end();
+    }
+  finally {
+    console.log("Completed  - execProcDynamic");
+    }
+}
+
+module.exports.execProcDynamic = execProcDynamic;

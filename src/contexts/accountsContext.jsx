@@ -29,6 +29,9 @@ const accountReducer = (state,action) => {
         case "ERROR" :
             toast.error("Login Error!")  
             return {accountInfo:userInfo};
+        case "CLEAR" :
+            // toast.error("Login Error!")  
+            return {accountInfo:userInfo};
         case "OTHER" :
         toast.error(mess)  
         return {accountInfo:userInfo};

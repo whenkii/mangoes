@@ -10,7 +10,7 @@ export const GetSQLOutput = props => {
     .then(({data}) => {
             let {rows} = data;
             outPut = rows;
-            console.log(rows);
+            // console.log(rows);
                      })
     .catch((e) => {
                     console.log(e);

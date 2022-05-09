@@ -27,6 +27,10 @@ router
   .route("/addproduct")
   .post(executeSqls.addProduct);
 
+  router
+  .route("/execProcDynamic")
+  .post(executeSqls.execProcDynamic);
+
 // router
 //   .route("/insert_issue/:email?/:issue?")
 //   // .get(logissue.funInsert)
