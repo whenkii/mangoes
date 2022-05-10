@@ -8,18 +8,18 @@ import banginapalli_prod from '../images/banginapalli_prod.jpeg';
 import mallika_prod from '../images/mallika_prod.jpeg';
 import neelam_prod from '../images/neelam_prod.jpeg';
 import Kesar_prod from '../images/Kesar_prod.jpeg';
-import Alphanso_prod from '../images/Alphanso_prod.jpeg';
+import Alphonso_prod from '../images/Alphonso_prod.jpeg';
 import chandura_prod from '../images/chandura_prod.jpeg'; 
-import all_prod from '../images/chandura_prod.jpeg';
+import all_prod from '../images/all_prod.png';
 import {AllSpinners} from './Spinners';
 // import { ToastContainer } from 'react-toastify';
 
 export default function ProductList() {
 const [productsState,productAction,,productCountReducer] = useContext(productContext);
-const productNames = {Alphanso:["ఆల్పాన్సా/ఖాదర్","अल्फांसो","அல்பான்சோ","ಅಲ್ಫ್ನಸೋ"],
-                      AlphansoJumbo:["ఆల్పాన్సా/ఖాదర్","अल्फांसो Jumbo","அல்பான்சோ Jumbo","ಅಲ್ಫ್ನಸೋ Jumbo"],
+const productNames = {Alphonso:["ఆల్పాన్సా/ఖాదర్","अल्फांसो","அல்பான்சோ","ಅಲ್ಫ್ನಸೋ"],
                       Kesar:["Kesar","केसर","కేసర్"],
                       Chandura:["Chandura","పుల్లూరా","चंदुरा"],
+                      Mixed:["All 3 varieties mixed"],
                       Banginapalli:["బంగినపల్లి/బేనీషా","बादाम","பங்கினப்பள்ளி","ಬಂಗಿನಾಂಪಲ್ಲಿ"],
                       Mallika:["మల్లికా","मल्लिका","மல்லிகா","ಮಲ್ಲಿಕಾ"],
                       Neelam:["నీలం","नीलम","நீலம்","ನೀಲಂ"],
@@ -36,7 +36,7 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
             <div className="d-flex justify-content-center mt-2">
                 <div className="d-flex align-items-center justify-content-center flex-wrap">
                     {productsState.length > 0 &&
-                    productsState.filter(a => ["Chandura","Banginapalli","Neelam","Mallika","Alphanso","AlphansoJumbo","Kesar","INIT"].includes(a.NAME)).map((item,i) => 
+                    productsState.filter(a => ["Chandura","Banginapalli","Neelam","Mallika","Alphonso","AlphansoJumbo","Kesar","INIT","Mixed"].includes(a.NAME)).map((item,i) => 
                         <div className="d-flex" key={i}>
                             {/* {console.log(item.NAME)} */}
                          {item.NAME === "INIT" ? 
@@ -50,9 +50,9 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
                                 </Link> */}
                                 {item.INSTOCK === "Y" ?
                                     <div className="price"> 
-                                    <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:item.OFFERPRICE ? "line-through":"none"}}>S${item.PRICE}</span> 
-                                    <div className="priceValue"> ${item.OFFERPRICE}</div>
-                                </div> 
+                                        <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:item.OFFERPRICE ? "line-through":"none"}}>S${item.PRICE}</span> 
+                                        <div className="priceValue"> ${item.OFFERPRICE}</div>
+                                    </div> 
                                     :
                                     <div className="price text-muted"> ${item.OFFERPRICE}</div> 
                                 }
@@ -82,12 +82,18 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
                                             <img className="align-self-center prod-image" src={Kesar_prod} alt="Logo" /> 
                                         </div>
                                     }
-                                    { (item.NAME === 'Alphanso' || item.NAME === 'AlphansoJumbo')  &&
+                                    { (item.NAME === 'Alphonso' || item.NAME === 'AlphonsoJumbo')  &&
                                         <div className="d-flex card-image m-auto">
-                                            <img className="align-self-center prod-image" src={Alphanso_prod} alt="Logo" /> 
+                                            <img className="align-self-center prod-image" src={Alphonso_prod} alt="Logo" /> 
                                         </div>
                                     }
-                                    {  ['Banginapalli','Mallika','Kesar',"Alphanso","AlphansoJumbo"].indexOf(item.NAME) < 0  &&
+                                    { (item.NAME === 'Chandura' )  &&
+                                        <div className="d-flex card-image m-auto">
+                                            <img className="align-self-center prod-image" src={chandura_prod} alt="Logo" /> 
+                                        </div>
+                                    }
+                                    {/* If noone of the standard varities use Same pic for rest of varities*/} 
+                                    {  ['Banginapalli','Mallika','Kesar',"Alphonso","AlphansoJumbo","Chandura"].indexOf(item.NAME) < 0  &&
                                         <div className="d-flex card-image m-auto">
                                             <img className="align-self-center prod-image" src={all_prod} alt="Logo" /> 
                                         </div>
