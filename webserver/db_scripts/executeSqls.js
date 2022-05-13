@@ -66,8 +66,8 @@ async function adhocSqls(req, res, next) {
 
 module.exports.adhocSqls = adhocSqls;
 
-async function adhocSqlsViaBody(req, res, next) {
-  console.log("START","adhocsqlsViaBody\n");
+async function adhocSqlsViaBodyPost(req, res, next) {
+  console.log("START","adhocSqlsViaBodyPost\n");
   let query;
   console.log("req" ,req.body)
   try {
@@ -91,11 +91,11 @@ async function adhocSqlsViaBody(req, res, next) {
   res.status(400).end();
   }
   finally {
-  console.log("END - adhocSqlsViaBody");
+  console.log("END - adhocSqlsViaBodyPost");
   }
 }
 
-  module.exports.adhocSqlsViaBody= adhocSqlsViaBody;
+  module.exports.adhocSqlsViaBodyPost= adhocSqlsViaBodyPost;
 
 
 
@@ -348,6 +348,9 @@ async function execProcDynamic(req, res, next) {
 
 // const {scriptName,recName} = req.body.dbValues;
 const {scriptName,recName,binds} = req.body;
+
+console.log("Bind values",binds);
+
 const plsqlProc = `CALL ${scriptName}(:p_in, :p_out,:p_out_rec)`;
 
   try {

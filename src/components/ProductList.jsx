@@ -1,7 +1,7 @@
 import React,{useContext} from 'react'
 import styled from 'styled-components'
 import {RiShoppingBasketLine
-    // ,RiInformationLine
+    ,RiInformationLine
 } from 'react-icons/ri'
 import {productContext} from '../contexts/mangoesContext'
 import banginapalli_prod from '../images/banginapalli_prod.jpeg';
@@ -12,6 +12,9 @@ import Alphonso_prod from '../images/Alphonso_prod.jpeg';
 import chandura_prod from '../images/chandura_prod.jpeg'; 
 import all_prod from '../images/all_prod.png';
 import {AllSpinners} from './Spinners';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTruck } from '@fortawesome/free-solid-svg-icons'
+import * as fasIcons from 'react-icons/fa'
 // import { ToastContainer } from 'react-toastify';
 
 export default function ProductList() {
@@ -33,12 +36,28 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
         // style={{marginTop:"10rem",borderTop:"white 0.1rem solid" }}
         >
             <div className="heading text-center">Pick your Mangoes</div>
+            <div className="d-flex justify-content-center">
+
+         {productsState[0].NAME !== "INIT" &&
+            <div className="message-left">
+                    <div className="text-center mt-1">
+                        <FontAwesomeIcon icon={faTruck} className="truck"/>
+                    </div>
+                    <div className="deliveryMess text-center mt-4"> Next Delivery</div>
+                    <div className="deliveryMess text-center mt-4 text-warning"> 18th May (Tuesday)</div>
+                    <div className="mt-4 text-center"> 
+                        <div className="whatsapptext text-success"> <fasIcons.FaWhatsapp className="whatsapp" /> WhatsApp </div>
+                        <div className="whatsapptext text-white" > (+65) 81601289 </div> 
+                    </div>
+
+            </div>
+            }
+
             <div className="d-flex justify-content-center mt-2">
                 <div className="d-flex align-items-center justify-content-center flex-wrap">
                     {productsState.length > 0 &&
-                    productsState.filter(a => ["Chandura","Banginapalli","Neelam","Mallika","Alphonso","AlphansoJumbo","Kesar","INIT","Mixed"].includes(a.NAME)).map((item,i) => 
-                        <div className="d-flex" key={i}>
-                            {/* {console.log(item.NAME)} */}
+                     productsState.filter(a => ["Chandura","Banginapalli","Neelam","Mallika","Alphonso","AlphansoJumbo","Kesar","INIT","Mixed"].includes(a.NAME)).map((item,i) => 
+                        <div className="d-flex justify-content-center" key={i}>
                          {item.NAME === "INIT" ? 
                          <AllSpinners />
                          :
@@ -101,7 +120,7 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
                                     
                                 {/* Prod Name */}
                                     <div className="mainProdName">{item.NAME}
-                                    <p className="prodWeight">({item.UNITS}/Box)</p>
+                                    <p className="prodWeight">({item.UNITS})</p>
                                     </div>
                                 <div className="d-flex flex-column justify-content-center border-left m-auto">
                                         {productNames[item.NAME].sort(() => (Math.random() > .5) ? 1 : -1).map((item,i) => 
@@ -138,6 +157,23 @@ const isProductExistsInCart = (props) => productsState.filter(a => a.ID === prop
                     }
                 </div>
             </div>
+            {productsState[0].NAME !== "INIT" &&
+                <div className="message-right">
+                    <div className="text-center">
+                        <RiInformationLine className="about text-warning"/> 
+                    </div>
+                <div className="deliveryMess text-center mt-2 text-warning"> Why Chittoor Mangoes?</div>
+                    <div className="mt-4 ml-2 ">
+                            <li className="deliveryMess font-weight-bold">Tastier</li>
+                            <li className="deliveryMess font-weight-bold">Ideal climate for mangoes </li>
+                            <li className="deliveryMess font-weight-bold">Better Aroma</li>
+                            <li className="deliveryMess font-weight-bold">Lowest price in SG</li>
+                            <li className="deliveryMess font-weight-bold">Own farms</li>
+                    </div>
+                </div>
+            }
+            </div>
+             
         </MainContainer>
     )
 }
@@ -150,7 +186,6 @@ margin-right: auto;
 margin-left: auto;
 margin-top:7rem;
 margin-bottom:7rem;
-// font-family: 'Courier New', monospace;
 .priceCartDetails{
     background:whitesmoke;
 }
@@ -168,7 +203,6 @@ margin-bottom:7rem;
     font-size:3rem;
     font-family: 'Brush Script MT', cursive;
     color:white;
-    // background:linear-gradient(to left,orange,orange);
 }
 .mainProdName {
     position:absolute;
@@ -184,6 +218,50 @@ margin-bottom:7rem;
     font-size:1rem;
     text-align:center;
 }
+.message-left{
+    width:30rem;
+    margin-left:0.5rem;
+    background:white;
+    background:-webkit-linear-gradient(top,white -100%,var(--amzonChime) 100%);
+    height:20rem;
+    // display:flex;
+    // align-items:center;
+    border-radius:5px;
+    color:var(--amzonChime);
+    font-size:1.2rem;
+}
+.message-right{
+    width:30rem;
+    margin-left:0.5rem;
+    margin-right:0.5rem;
+    background:white;
+    background:-webkit-linear-gradient(top,white -100%,var(--amzonChime) 100%);
+    height:20rem;
+    border-radius:5px;
+    color:var(--amzonChime);
+    font-size:1.2rem;
+}
+.deliveryMess{
+    font-size:0.9rem;
+    color:white;
+    font-weight:bold;
+}
+.truck{
+    font-size:3rem;
+    color:var(--bsYellow);
+    margin: 2rem 1rem;
+}
+.about {
+    font-size:2.5rem;
+    margin-top:1rem;
+}
+.whatsapp{
+    color:var(--bsGreen);
+    font-size:1.2rem;
+}
+.whatsapptext{
+    font-size:0.8rem;
+}
 // removing Container for small screens
 @media (max-width: 798px) {
     padding:0;
@@ -197,6 +275,25 @@ margin-bottom:7rem;
     .prodName{
         font-size:0.9rem;
     }
+    .message-left, .message-right{
+        margin:0;
+    }
+    .truck{
+        font-size:1.5rem;
+        margin: 1rem 0.5rem;
+    }
+    .deliveryMess{
+        font-size:0.6rem;
+        color:white;
+        font-weight:bold;
+    }
+    .whatsapptext{
+        font-size:0.6rem;
+    }
+    .about {
+        font-size:1.5rem;
+        margin-top:1rem;
+    }
 }
 `
 const ProdContainer = styled.div`
@@ -209,7 +306,7 @@ overflow:hidden;
 width:20rem;
 height:20rem;
 border:0.5px solid;
-margin: 1rem 1rem 1.1rem 1.5rem;
+margin: 1rem 1rem 1rem 1rem;
 .card-image {
     text-align:left;
     margin-left:1rem;
@@ -274,18 +371,18 @@ transition:0.7s all;
     padding-bottom:2rem;
 }
 @media (max-width: 798px ) {
-    width:14rem;
+    width:12.5rem;
     height:12rem;
     border-radius:2rem;
     .priceValue{
-        font-size:0.8rem;
+        font-size:0.7rem;
     }
     .prod-image{
         height: 5rem;
         width: 4rem;
     }
     .prod-name-list {
-        font-size:0.8rem;
+        font-size:0.7rem;
     }
     .basketSize{
         font-size:2rem;

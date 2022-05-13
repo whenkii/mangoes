@@ -13,7 +13,7 @@ router
 
   router
   .route("/adhocSqlsViaBodyPost")
-  .post(executeSqls.adhocSqlsViaBody);
+  .post(executeSqls.adhocSqlsViaBodyPost);
 
   router
   .route("/createAccount")

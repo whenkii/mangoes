@@ -139,7 +139,7 @@ const productCountAll = productsState.reduce((prev,curr) => prev + curr.QTY,0);
 const [orderCreated,setOrderCreated] = useState(false)
 
 useEffect( () => {
-    GetApiData("select a.NAME,a.ID,UNITS,PRICE,OFFERPRICE,CASE WHEN INSTOCK='Y' and STOCK - ORDERED <= 1 THEN 'N' ELSE  INSTOCK END INSTOCK from products a left outer join stock b on ( a.NAME=b.name)")
+    GetApiData("select a.NAME,a.ID,UNITS,PRICE,OFFERPRICE,CASE WHEN INSTOCK='Y' and STOCK - ORDERED <= 1 THEN 'N' ELSE  INSTOCK END INSTOCK from sggr.products a left outer join sggr.stock b on ( a.NAME=b.name)")
     .then((res) => {
         // console.log(res)
         if (res[0] === "ERROR"){

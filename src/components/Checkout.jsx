@@ -10,7 +10,10 @@ import * as fasIcons from 'react-icons/fa'
 const selfAddress = {Punggol:["Venkat Vona", "Blk - 679A","Punggol Drive","S-821679","Mobile: 81601289"],
                      Tampines:["Venky", "Blk - 929","Tampines St 91 (Tampines East MRT)","S-520929","Mobile: 98346177"],
                      Sengkang:["Venkat Vona", "Blk - 325A","Sengkang East Way","S-541325","Mobile: 81601289"]}
-const areas = ["Tampines", "Sengkang","Punggol"]
+
+const areas = Object.keys(selfAddress);
+// console.log(areas);
+// ["Tampines", "Sengkang","Punggol"]
 
 export default function Checkout() {
 var history = useHistory();
@@ -146,18 +149,18 @@ const handleClick = (e) => {
                     </div>
             </div>
 
-        {shipMode === "delivery" &&
+        {(shipMode === "delivery" && shipMode) &&
             <div className="delivery">
               <div className="card-header">Address</div>
                <div className="card-body">
-                    <form>
+                    {/* <form> */}
                     <div className="d-flex justify-content-center">         
                         <div>
                             {formFields.map ((item,i) =>
                                 <div className="form-group" key={i}>
                                  {item.type === 'list' ?
                                     <div className="d-flex row">
-                                        <label className="col label align-self-center mr-1 text-left" htmlFor="Location">Location</label>
+                                        <label className="col-4 label align-self-center mr-1 text-left" htmlFor="Location">Location</label>
                                         <div className=" col d-flex row flex-column">       
                                             <select className="col form-control" name="Location" onChange={funOnChangeForm}>
                                                 {item.listValues.map ((item,i) =>
@@ -169,7 +172,7 @@ const handleClick = (e) => {
                                     </div>
                                 :
                                     <div className="row">
-                                        <label className="col label align-self-center text-left" htmlFor={item.name}>{item.name}</label>
+                                        <label className="col-3 label align-self-center text-left" htmlFor={item.name}>{item.name}</label>
                                         <div className="col d-flex flex-column">
                                             <input type={item.type} className="form-control" name={item.name}  placeholder={item.placeholder} value={item.value} onChange={funOnChangeForm}/>
                                             <small className="text-danger align-self-center">{item.errors}</small>
@@ -179,25 +182,32 @@ const handleClick = (e) => {
                                </div>  
                             )
                             }
-                             </div>
+                        </div>
                     </div>
-                </form>
+                {/* </form> */}
                 </div>
             </div>
         }
 
         { shipMode === "self" &&
         <div className="selfSection">
-           
+            {/* <div className="card-body"> */}
+            <div className="d-flex justify-content-center">
+            <div>
                     {selfForm.map ( (item,i) => 
-                    <div className="my-1" key={i}>
-                        <label className="col label align-self-center" htmlFor={item.name}>{item.name}</label>
-                        <div className="d-flex row flex-column">
-                            <input type={item.type} className="col form-control" name={item.name}  placeholder={item.placeholder} value={item.value} onChange={funOnChangeFormSelf}/>
-                            <small className="col text-danger align-self-center">{item.errors}</small>
+                    <div className="form-group" key={i}>
+                    <div className="row">
+                        <label className="label align-self-center col-3" htmlFor={item.name}>{item.name}</label>
+                        <div className="d-flex col flex-column">
+                            <input type={item.type} className="form-control" name={item.name}  placeholder={item.placeholder} value={item.value} onChange={funOnChangeFormSelf}/>
+                            <small className="text-danger">{item.errors}</small>
                         </div>
                     </div>
+                    </div>
                     )}
+            </div>
+            </div>
+            
             <div className="card-header mt-3">Choose pickup location</div>
             <div className="font-weight-bold mt-3">
                 <div className="d-flex justify-content-center" >
@@ -272,7 +282,7 @@ color:white;
     font-size:1rem;
 }
 .form-control{
-    width:50%;
+    width:70%;
 }
 .form-check{
     margin:0.2rem;
@@ -315,7 +325,7 @@ color:white;
     text-align:center;
 }
 .selfSection{
-    margin-bottom:2rem;
+    // margin-bottom:2rem;
     // width:75%;
     margin:auto;
 }
@@ -337,11 +347,11 @@ color:white;
         font-size:0.7rem;
     }
     .label{
-        font-size:0.8rem;
+        font-size:0.7rem;
     }
     .form-control{
         width:75%;
-        padding:0.3rem;
+        padding:0.2rem;
     }
     .icons{
         font-size:0.5rem;
@@ -349,7 +359,7 @@ color:white;
     }
     .btn {
         font-size:0.6rem;
-        padding:0.3rem;
+        padding:0.4rem;
     }
 }
 `

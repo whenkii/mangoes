@@ -49,7 +49,7 @@ const funOnChange = (e) =>
 
         const username = formFields[formFields.findIndex( a => a.name === "Email")].value;
         const password = formFields[formFields.findIndex( a => a.name === "Password")].value;
-        const sql = `select case when password = '${password}' then 1 else 0 end sqlResult,firstname,lastname,email,type from users where lower(email)=lower('${username}')`;
+        const sql = `select case when password = '${password}' then 1 else 0 end sqlResult,firstname,lastname,email,type from sggr.users where lower(email)=lower('${username}')`;
 
         if ( formFields.filter ( a => a.errors !== "").length !== 0 ) {
             accountAction({type:"FAILED",value:accountInfo.name});

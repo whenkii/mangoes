@@ -14,7 +14,7 @@ try {
 
 // *** Initialize conncetion pools ***
 async function initialize() {
-  const pool = await oracledb.createPool(dbConfig.hrPool);
+  await oracledb.createPool(dbConfig.hrPool);
 }
 
 module.exports.initialize = initialize;
@@ -42,6 +42,7 @@ function simpleExecute(statement, binds = [], opts = {}) {
 
     try {
       conn = await oracledb.getConnection();
+      // const result1 = await conn.execute("begin dbms_lock.sleep(10); end;");
       const result = await conn.execute(statement, binds, opts);
       resolve(result);
     } catch (err) {
@@ -110,6 +111,8 @@ function ExecuteMany_Dyn(plsqlProc, binds = [],recName) {
       conn = await oracledb.getConnection();
       const RectypeClass = await conn.getDbObjectClass(recName.toUpperCase());
 
+      // await conn.close();
+
       const options = {bindDefs  : {p_in           : { type: RectypeClass },
                                     p_out          : { type: oracledb.STRING,dir: oracledb.BIND_OUT,maxSize: 500 },
                                     p_out_rec      : { type: RectypeClass, dir: oracledb.BIND_OUT },
@@ -118,7 +121,7 @@ function ExecuteMany_Dyn(plsqlProc, binds = [],recName) {
         options.outFormat = oracledb.OBJECT;
         options.autoCommit = false;
       
-      conn = await oracledb.getConnection();
+      // conn = await oracledb.getConnection();
       const result = await conn.executeMany(plsqlProc, binds, options);
       resolve(result);
       console.log("Successful execution")

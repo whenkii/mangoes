@@ -16,10 +16,10 @@
 
 module.exports = {
   hrPool: {
-    // user: "system",
-    // password: "oracle",
-    user: "sggr",
-    password: "venki311083",
+    user: "system",
+    password: "tnr311083",
+    // user: "sggr",
+    // password: "venki311083",
     connectString: "localhost:1521/xe",
     // user: "admin",
     // password: "tnrstore123",
@@ -27,5 +27,6 @@ module.exports = {
     poolMin: 20,
     poolMax: 20,
     poolIncrement: 0,
+    queueMax:0
   },
 };

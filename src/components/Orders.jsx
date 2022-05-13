@@ -5,6 +5,7 @@ import DisplayTableData from './DisplayTableData'
 import styled from 'styled-components'
 import {accountsContext} from '../contexts/accountsContext'
 import {config} from './reactConfig'
+import {AllSpinners} from './Spinners';
 
 
 
@@ -13,6 +14,7 @@ export function Orders() {
     const history = useHistory();
     const query = `select id order_id,sum(price) Total_Price,to_char(max(ts),'DD-MON-YY') time,max(status) status from orders where email='${accountInfo.email}' group by id order by id desc`;
     const [orderDetails,setOrderDetails]= useState([]);
+    // const [isLoading,setIsLoading]= useState(false);
 
     //Mount - Get Orders details
     useEffect(() => {
@@ -87,8 +89,10 @@ export function OrderDetails(props) {
 export function AllOrders() {
     const [accountInfo] = useContext(accountsContext);
     const history = useHistory();
-    const query = `with ordersall as (select id order_id,sum(price*qty) order_price,sum(qty) quantity,to_char(max(ts),'DD-MON-YY HH24:MI') time,max(status) status from orders group by id order by id desc) select a.order_id,decode(del_mode,'delivery',(case when quantity >= 5 then 0 else decode(location, 'other', 6, 4 ) end) + order_price, order_price) total_price,quantity,time,status,del_mode,location,details,paymode,address from ordersall a,deliveries b where a.order_id=b.order_id`;
+    const query = `with ordersall as (select id order_id,sum(price*qty) order_price,sum(qty) quantity,to_char(max(ts),'DD-MON-YY HH24:MI') time,max(status) status,listagg(prodid||'('||qty||')',',') within group(order by prodid) prod_list from orders group by id order by id desc) select a.order_id,order_price,decode(del_mode,'delivery',(case when quantity >= 5 then 0 else decode(location, 'Other', 6, 4 ) end) + order_price, order_price) total_price,prod_list,quantity,time,status,del_mode,location,details,paymode,address from ordersall a,deliveries b where a.order_id=b.order_id`;
     const [orderDetails,setOrderDetails]= useState([]);
+    const [,setIsLoading]= useState(true);
+
     const orderTotal = orderDetails.reduce ( (prev,{QUANTITY}) => prev+QUANTITY,0);
     const orderTotalPrice = orderDetails.reduce ( (prev,{TOTAL_PRICE}) => prev+TOTAL_PRICE,0);
     // const cartReducePrice = inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0);
@@ -96,6 +100,7 @@ export function AllOrders() {
 
     //Mount - Get Orders details
     useEffect(() => {
+        setIsLoading(false)
         axios.get(`${config.restAPIserver}:${config.restAPIHost}/api/getSqlresult/${query}`)
         .then((result) => {
             let {data} = result;
@@ -135,39 +140,51 @@ export function AllOrders() {
 export function Products() {
     const [accountInfo] = useContext(accountsContext);
     const history = useHistory();
-    const query = `select a.NAME,UNITS,PRICE,OFFERPRICE,stock,ordered,TO_CHAR(a.ts,'DD-Mon-YY HH24:MI') created from products a,stock b where a.name=b.name`;
+    const query = `select a.NAME,UNITS,PRICE,OFFERPRICE,stock,ordered,TO_CHAR(a.ts,'DD-Mon-YY HH24:MI') created from sggr.products a,sggr.stock b where a.name=b.name`;
     const [orderDetails,setOrderDetails]= useState([]);
+    const [isLoading,setIsLoading]= useState(true);
+    const [loadingError,setIsLoadingError]= useState("Fetching data");
 
     //Mount - Get Orders details
     useEffect(() => {
         axios.get(`${config.restAPIserver}:${config.restAPIHost}/api/getSqlresult/${query}`)
         .then((result) => {
+            setIsLoading(false);
             let {data} = result;
             let {rows} = data;
             //Set state once data is returned from AXIOS
         setOrderDetails(rows);
                          })
         .catch((e) => {
-                       alert( `Couldn't get Products\n ` + e);
+            setIsLoading(false);
+            setIsLoadingError("Couldn't get data");
+            alert( `Couldn't get Products\n ` + e);    
                         })
     }, [query])
     //Unmount
     useEffect(() => () => {}, []) 
     return (
         <OrdersContainer className="container">
+            {!isLoading ?
+            <>
             {accountInfo.isLoggedIn ?
             <>
             <DataHeader className="text-center p-1">PRODUCTS</DataHeader>
             {orderDetails.length > 0 ?
-            <DisplayTableData state={orderDetails} comp="PRODUCTS"/>
+                <DisplayTableData state={orderDetails} comp="PRODUCTS"/>
             : 
-            <p className="text-white text-center">No Products available </p>}
+            <p className="text-danger text-center">{loadingError} </p>}
             </>
-            : <p className="text-white text-center"> Please <Link className="text-danger" to="/signin">Signin </Link> to see your Orders </p>}
+            : <p className="text-white text-center"> Please <Link className="text-danger" to="/signin">Signin </Link> to see your Orders </p>
+            }
             <div className="d-flex justify-content-center">
                 <div className="btn btn-warning btn-sized-md m-1" onClick={() => history.goBack()}>Go Back</div>
                 <div className="btn btn-success btn-sized-md m-1" onClick={() => history.push("/")}>Home</div>
             </div>
+            </>
+            :
+            <AllSpinners />}
+            
         </OrdersContainer>
     )
 }
