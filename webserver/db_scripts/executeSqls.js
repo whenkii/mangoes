@@ -50,6 +50,7 @@ async function adhocSqls(req, res, next) {
   }
 
   const result = await database.simpleExecute(query, binds);
+
   res.status(200).json(result);
   } 
   catch (err) {
@@ -81,6 +82,7 @@ async function adhocSqlsViaBodyPost(req, res, next) {
   logSQL(query);
   const result  = await database.simpleExecute (query, binds);
   console.log("Status : Successful");
+  // console.log(result)
   res.status(200).json(result);
 }
   catch (err) {

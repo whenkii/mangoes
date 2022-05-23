@@ -1,5 +1,5 @@
-import React,{useState,useEffect} from 'react'
-import {Link} from 'react-router-dom'
+import React,{useState,useEffect,useContext} from 'react'
+import {Link,useHistory} from 'react-router-dom'
 import {AllSpinners} from './Spinners'
 import styled from 'styled-components'
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -7,8 +7,14 @@ import styled from 'styled-components'
 // import {faArrowDown} from '@fortawesome/free-solid-svg-icons';
 import { CSVLink } from "react-csv";
 // import { GiConsoleController } from 'react-icons/gi';
+import { GetApiDataUpdate } from '../components/ApiCalls';
+import { ToastContainer,toast } from 'react-toastify';
+import {accountsContext} from '../contexts/accountsContext'
 
-export default function DisplayTableData({state,comp}) {
+export default function DisplayTableData({state,comp,id,bgClr}) {
+
+       const history = useHistory();
+const [accountInfo] = useContext(accountsContext);
 
 let stateVarInitial = state;
 let hyperLinks = {attr:"ORDER_ID",link:"/orderdetails"}
@@ -54,7 +60,34 @@ const orderbyAttribute = (props) => {
     // console.log(sort)
     let newOrders = stateVar.sort(propComparator(props,sort.mode));
     setOrderDetails(() => [...newOrders]);
-    }       
+    }      
+    
+const OrderAction = (props) => {
+    const sql = `update orders set status='${props}',modified_by='${accountInfo.email}' where id=${id}`;
+
+    if ( props === 'DELIVERED') {
+
+    }
+
+    else {
+
+    GetApiDataUpdate(sql)
+    .then((res) => {
+        // console.log(res)
+        if (res > 0 ){
+            toast.success("Order Updated");
+            history.goBack();
+        }
+        else {
+            toast.error( `Error !!!`) ;
+        }
+        }
+        )
+    .catch ( (e) => {
+            alert(e)
+            })
+            }
+}
 
 useEffect(() => {
     setOrderDetails(stateVarInitial);
@@ -66,11 +99,20 @@ useEffect(() => {
 
     return (
         <TableContainer>
+            <ToastContainer position="top-center" autoClose="1000"/>
              {stateVar.length > 0 ?
              <div>
+                 {comp === "ORDERDETAILS" &&
+                 <div className="d-flex justify-content-center">
+                     <div className="btn btn-success m-1" onClick={ () => OrderAction("DELIVERED")}>DELIVERED</div>
+                     <div className="btn btn-danger m-1" onClick={() => OrderAction("CANCELLED")}>CANCELLED</div>
+                     <div className="btn btn-warning m-1" onClick={() => OrderAction("NEW")}>NEW</div>
+                 </div>
+                 }
                 <div className="d-flex justify-content-end">
                          <CSVLink className="text-danger csv-exporter mb-1" data={stateVar}>Export CSV</CSVLink>
                 </div>
+
                 <div className="table-responsive bordered">
                     <table className="table text-center">
                         <thead className="thead">
@@ -89,7 +131,7 @@ useEffect(() => {
                                 )}
                             </tr>
                         </thead>
-                        <tbody className="bod">
+                        <tbody className={`bod  bg-${bgClr}`}>
                         {stateVar.map((dataArray,index) =>
                             <tr key={index}> 
                                 {Object.keys(state[0]).map( (attrName,index) =>
@@ -142,6 +184,10 @@ const TableContainer = styled.div`
 @media (max-width:798px){
 .csv-exporter{
     font-size:0.6rem;
+}
+.btn{
+    width:8rem;
+    font-size:0.8rem;
 }
 .col {
         font-size:0.6rem;

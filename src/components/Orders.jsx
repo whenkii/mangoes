@@ -75,7 +75,7 @@ export function OrderDetails(props) {
     return (
         <OrdeDetailsContainer className="container">
             <DataHeader className="text-center p-1">ORDER DETAILS</DataHeader>
-            <DisplayTableData state={orderDetails}/>
+            <DisplayTableData state={orderDetails} id={props.match.params.id} comp="ORDERDETAILS"/>
 
             <div className="d-flex justify-content-center">
                 <div className="btn btn-warning btn-sized-md m-1" onClick={() => history.goBack()}>Go Back</div>
@@ -89,7 +89,7 @@ export function OrderDetails(props) {
 export function AllOrders() {
     const [accountInfo] = useContext(accountsContext);
     const history = useHistory();
-    const query = `with ordersall as (select id order_id,sum(price*qty) order_price,sum(qty) quantity,to_char(max(ts),'DD-MON-YY HH24:MI') time,max(status) status,listagg(prodid||'('||qty||')',',') within group(order by prodid) prod_list from orders group by id order by id desc) select a.order_id,order_price,decode(del_mode,'delivery',(case when quantity >= 5 then 0 else decode(location, 'Other', 6, 4 ) end) + order_price, order_price) total_price,prod_list,quantity,time,status,del_mode,location,details,paymode,address from ordersall a,deliveries b where a.order_id=b.order_id`;
+    const query = `with ordersall as (select a.modified_by,a.id order_id,sum(a.price*qty) order_price,sum(qty) quantity,to_char(max(a.ts),'DD-MON-YY HH24:MI') time,max(status) status,listagg(substr(name,1,4)||'('||qty||')',',') within group(order by prodid) prod_list from orders a ,products b where b.id=a.prodid and a.status <> 'CANCELLED' group by a.id,modified_by order by a.id desc) select a.order_id,order_price,decode(del_mode,'delivery',(case when quantity >= 5 then 0 else decode(location, 'Other', 6, 4 ) end) + order_price, order_price) total_price,prod_list,quantity,time,status,del_mode,location,paymode,address,modified_by from ordersall a,deliveries b  where a.order_id=b.order_id `;
     const [orderDetails,setOrderDetails]= useState([]);
     const [,setIsLoading]= useState(true);
 
@@ -117,8 +117,12 @@ export function AllOrders() {
     return (
         <OrdersContainer className="container">
             {accountInfo.isLoggedIn ?
-            <>
+            <>  
             <DataHeader className="text-center p-1">ALL ORDERS</DataHeader>
+            <div className="d-flex justify-content-center">
+                <div className="btn btn-warning btn-sized-md m-1" onClick={() => history.goBack()}>Go Back</div>
+                <div className="btn btn-success btn-sized-md m-1" onClick={() => history.push("/")}>Home</div>
+            </div>
             <div className="d-flex flex-column justify-content-center text-center card">
                 <div className="text-dark font-weight-bold"> Total : <span className="text-danger">{orderTotal}</span></div>
                 <div className="text-dark font-weight-bold">Amount : <span className="text-danger">${orderTotalPrice}</span></div>
@@ -167,6 +171,7 @@ export function Products() {
         <OrdersContainer className="container">
             {!isLoading ?
             <>
+
             {accountInfo.isLoggedIn ?
             <>
             <DataHeader className="text-center p-1">PRODUCTS</DataHeader>

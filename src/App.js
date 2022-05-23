@@ -2,11 +2,8 @@
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import {Route,Switch} from 'react-router-dom'
-// import styled from "styled-components"
 import Nav from './components/Nav'
 import ProductList from './components/ProductList'
-// import Order from './components/Order'
-// import Order from './components/Order'
 import {ProductsProvider} from './contexts/mangoesContext'
 import {AccountsProvider} from './contexts/accountsContext'
 import Cart from './components/Cart.jsx'
@@ -21,19 +18,20 @@ import Payment from './components/Payment'
 import Admin from './components/Admin.js'
 import AddProducts from './components/AddProducts'
 import ContactUs from './components/ContactUs'
+// import IdleTimeCotainer from './components/IdleTimeCotainer' 
 
 
 function App() {
   return (
       <div className="App">
+        {/* <IdleTimeCotainer> */}
         <AccountsProvider>
         <ProductsProvider>
           <Nav/> 
           <Switch> 
             <Route exact path="/aboutProduct/:name" component={ProductInfo} />
-            {/* <Route exact path="/order" component={Order} /> */}
             <Route exact path="/cart" component={Cart} />
-            <Route exact path="/orderconfirmation" component={OrderConfirmation} />
+            <Route exact path="/orderconfirmation/:id" component={OrderConfirmation} />
             <Route path="/orders" component={Orders} />
             <Route path="/allorders" component={AllOrders} />
             <Route path="/orderdetails/:id" component={OrderDetails} />
@@ -52,6 +50,7 @@ function App() {
           </Switch>
         </ProductsProvider>
         </AccountsProvider>
+        {/* </IdleTimeCotainer> */}
       </div>
   );
 }

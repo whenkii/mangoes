@@ -10,7 +10,6 @@ import neelam_prod from '../images/neelam_prod.jpeg';
 import Kesar_prod from '../images/Kesar_prod.jpeg';
 import Alphonso_prod from '../images/Alphonso_prod.jpeg';
 import chandura_prod from '../images/chandura_prod.jpeg'; 
-import prod_imam from '../images/prod_imam.jpeg'; 
 import all_prod from '../images/all_prod.png';
 import {AllSpinners} from './Spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -20,7 +19,7 @@ import { useEffect } from 'react';
 // import { ToastContainer } from 'react-toastify';
 
 export default function ProductList() {
-const [productsState,productAction,,productCountReducer,,,,,,pageHome,setPageHome,,configState,currency] = useContext(productContext);
+const [productsState,productAction,,productCountReducer,,,,,,pageHome,setPageHome] = useContext(productContext);
 const productNames = {Alphonso:["ఆల్పాన్సా/ఖాదర్","अल्फांसो","அல்பான்சோ","ಅಲ್ಫ್ನಸೋ"],
                       Kesar:["Kesar","केसर","కేసర్"],
                       Chandura:["Chandura","పుల్లూరా","चंदुरा"],
@@ -32,15 +31,7 @@ const productNames = {Alphonso:["ఆల్పాన్సా/ఖాదర్","�
                       ImamPasand:["ఇమామ్ పసంద్","इमाम पसंद","இமாம் பஸ்சந்த்","ಇಮಾಮ ಪಸಂದ್"]};
 const productColors = ["secondary","warning","info","dark"];
 // const imageName = require('../images/banginapalli_prod.jpeg');
-
-const paymentDetails = configState[0].val ? JSON.parse(configState[0].val.filter( a => a.NAME === "PAYMENTINFO")[0].JSON_STRING).value:null;
-const {whatsappNo} = paymentDetails ? paymentDetails :123;
-// const delDateDetails = configState[0].val ? configState[0].val.filter( a => a.NAME === "DEL_DATE")[0].JSON_STRING.value:null;
-
-const delDate = configState[0].val ? JSON.parse(configState[0].val.filter( a => a.NAME === "DEL_DATE")[0].JSON_STRING).value:null;
-
 const isProductExistsInCart = (props) => productsState.filter(a => a.ID === props && a.QTY > 0);
-const currencySymb = currency === "SGD" ? "$" : "";
 
 useEffect( () => {
     setPageHome(true);
@@ -55,27 +46,27 @@ useEffect( () => {
         >
             <div className="heading text-center">Pick your Mangoes</div>
         { (pageHome || !pageHome) && 
-        <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-center">
 
-            {productsState[0].NAME !== "INIT" &&
-                <div className="message-left">
-                        <div className="text-center mt-1">
-                            <FontAwesomeIcon icon={faTruck} className="truck"/>
-                        </div>
-                        <div className="deliveryMess text-center mt-4"> Next Delivery</div>
-                        <div className="deliveryMess text-center mt-4 text-warning"> {delDate}</div>
-                        <div className="mt-4 text-center"> 
-                            <div className="whatsapptext text-success"> <fasIcons.FaWhatsapp className="whatsapp" /> WhatsApp </div>
-                            <div className="whatsapptext text-white" > {whatsappNo} </div> 
-                        </div>
+         {productsState[0].NAME !== "INIT" &&
+            <div className="message-left">
+                    <div className="text-center mt-1">
+                        <FontAwesomeIcon icon={faTruck} className="truck"/>
+                    </div>
+                    <div className="deliveryMess text-center mt-4"> Next Delivery</div>
+                    {/* <div className="deliveryMess text-center mt-4 text-warning"> 21st/22nd May (Sat/Sun)</div> */}
+                    <div className="mt-4 text-center"> 
+                        <div className="whatsapptext text-success"> <fasIcons.FaWhatsapp className="whatsapp" /> WhatsApp </div>
+                        <div className="whatsapptext text-white" > (+65) 81601289 </div> 
+                    </div>
 
-                </div>
+            </div>
             }
 
             <div className="d-flex justify-content-center mt-2">
                 <div className="d-flex align-items-center justify-content-center flex-wrap">
                     {productsState.length > 0 &&
-                     productsState.filter(a => ["Chandura","Banginapalli","Neelam","Mallika","Alphonso","AlphansoJumbo","Kesar","INIT","Mixed","ImamPasand"].includes(a.NAME)).map((item,i) => 
+                     productsState.filter(a => ["Chandura","Banginapalli","Neelam","Mallika","Alphonso","AlphansoJumbo","Kesar","INIT","Mixed"].includes(a.NAME)).map((item,i) => 
                         <div className="d-flex justify-content-center" key={i}>
                          {item.NAME === "INIT" ? 
                          <AllSpinners />
@@ -88,11 +79,11 @@ useEffect( () => {
                                 </Link> */}
                                 {item.INSTOCK === "Y" ?
                                     <div className="price"> 
-                                        <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:item.OFFERPRICE ? "line-through":"none"}}>{currencySymb}{item.PRICE}</span> 
-                                        <div className="priceValue"> {currencySymb}{item.OFFERPRICE}</div>
+                                        <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:item.OFFERPRICE ? "line-through":"none"}}>S${item.PRICE}</span> 
+                                        <div className="priceValue"> ${item.OFFERPRICE}</div>
                                     </div> 
                                     :
-                                    <div className="price text-muted"> {currencySymb}{item.OFFERPRICE}</div> 
+                                    <div className="price text-muted"> ${item.OFFERPRICE}</div> 
                                 }
                                 <div className="d-flex ">
                                     {item.NAME === 'Banginapalli' &&
@@ -130,13 +121,8 @@ useEffect( () => {
                                             <img className="align-self-center prod-image" src={chandura_prod} alt="Logo" /> 
                                         </div>
                                     }
-                                    { (item.NAME === 'ImamPasand' )  &&
-                                        <div className="d-flex card-image m-auto">
-                                            <img className="align-self-center prod-image" src={prod_imam} alt="Logo" /> 
-                                        </div>
-                                    }
                                     {/* If noone of the standard varities use Same pic for rest of varities*/} 
-                                    {  ['Banginapalli','Mallika','Kesar',"Alphonso","AlphansoJumbo","Chandura","ImamPasand"].indexOf(item.NAME) < 0  &&
+                                    {  ['Banginapalli','Mallika','Kesar',"Alphonso","AlphansoJumbo","Chandura"].indexOf(item.NAME) < 0  &&
                                         <div className="d-flex card-image m-auto">
                                             <img className="align-self-center prod-image" src={all_prod} alt="Logo" /> 
                                         </div>
@@ -179,7 +165,7 @@ useEffect( () => {
                     </div>
                     )
                     }
-            </div>
+                </div>
             </div>
             {productsState[0].NAME !== "INIT" &&
                 <div className="message-right">
@@ -188,16 +174,16 @@ useEffect( () => {
                     </div>
                 <div className="deliveryMess text-center mt-2 text-warning"> Why Chittoor Mangoes?</div>
                     <div className="mt-4 ml-2 ">
-                            <li className="deliveryMess font-weight-bold">Hot Water Treated(HWT) </li>
+                            <li className="deliveryMess font-weight-bold">Ideal climate for mangoes </li>
+                            <li className="deliveryMess font-weight-bold">Hot Water Treatment(HWT) </li>
                             <li className="deliveryMess font-weight-bold">Sweet</li>
                             <li className="deliveryMess font-weight-bold"> Aroma</li>
                             <li className="deliveryMess font-weight-bold">Lowest price in SG</li>
                             <li className="deliveryMess font-weight-bold">Own farms</li>
-                            <li className="deliveryMess font-weight-bold">Mangoes grown in weather that is ideal for Mangoes</li>
                     </div>
                 </div>
             }
-        </div>
+            </div>
         }
         </MainContainer>
     )
@@ -249,6 +235,8 @@ margin-bottom:7rem;
     background:white;
     background:-webkit-linear-gradient(top,white -100%,var(--amzonChime) 100%);
     height:20rem;
+    // display:flex;
+    // align-items:center;
     border-radius:5px;
     color:var(--amzonChime);
     font-size:1.2rem;
@@ -268,9 +256,6 @@ margin-bottom:7rem;
     font-size:0.9rem;
     color:white;
     font-weight:bold;
-    margin-top:1rem;
-    text-align:center;
-    list-style-type: none;
 }
 .truck{
     font-size:3rem;
@@ -296,8 +281,7 @@ margin-bottom:7rem;
         font-size:2rem;
     }
     .mainProdName {
-        font-size:0.7rem;
-        left:7%;
+        font-size:0.8rem;
     }
     .prodName{
         font-size:0.9rem;
@@ -310,7 +294,7 @@ margin-bottom:7rem;
         margin: 1rem 0.5rem;
     }
     .deliveryMess{
-        font-size:0.5rem;
+        font-size:0.6rem;
         color:white;
         font-weight:bold;
     }
@@ -333,7 +317,7 @@ overflow:hidden;
 width:20rem;
 height:20rem;
 border:0.5px solid;
-margin: 1rem 0.4rem;
+margin: 1rem 1rem 1rem 1rem;
 .card-image {
     text-align:left;
     margin-left:1rem;
@@ -398,11 +382,11 @@ transition:0.7s all;
     padding-bottom:2rem;
 }
 @media (max-width: 798px ) {
-    width:12rem;
+    width:12.5rem;
     height:12rem;
     border-radius:2rem;
     .priceValue{
-        font-size:0.65rem;
+        font-size:0.7rem;
     }
     .prod-image{
         height: 5rem;

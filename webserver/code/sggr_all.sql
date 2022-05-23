@@ -71,6 +71,9 @@ create table orders (id number NOT NULL,
                      constraint fk_prodid foreign key(prodid)references products(id),
                      constraint fk_email foreign key(email)references users(email));
 
+alter table orders
+add (modified_by varchar2(50));
+
 --drop table deliveries;
 
 create table deliveries (order_id number,
@@ -89,16 +92,19 @@ create table stock (Name varchar2(100),stock number,ordered number,  constraint 
 --where instock='Y';
 
 insert into  stock (name,stock,ordered)
-values('Banginapalli',170,0);
+values('Banginapalli',120,0);
 
 insert into  stock (name,stock,ordered)
-values('Alphonso',63,0);
+values('Alphonso',30,0);
 
 insert into  stock (name,stock,ordered)
-values('Chandura',29,0);
+values('Chandura',30,0);
 
 insert into  stock (name,stock,ordered)
-values('Mixed',10,0);
+values('Mixed',30,0);
+
+insert into  stock (name,stock,ordered)
+values('ImamPasand',65,0);
 
 
 --select * from stock;
@@ -138,7 +144,8 @@ create or replace package pkg_orders is
                                  DELMODE deliveries.del_mode%type,
                                  ADDRESS deliveries.address%type,
                                  LOCATION deliveries.location%type,
-                                 PAYMODE deliveries.paymode%type);
+                                 PAYMODE deliveries.paymode%type,
+                                 DELIVERYCHARGES deliveries.deliverycharges%type );
 
 procedure create_order (   p_in createOrderRec,
                            p_out out varchar2,
@@ -175,13 +182,11 @@ end if;
 
 insert into orders (id,email,prodid,qty,price,total_price)
 values(
-       p_in.ORDERID,
-       p_in.EMAIL,p_in.PRODID,p_in.QTY,p_in.PRICE,p_in.Qty*p_in.PRICE);
+       p_in.ORDERID,p_in.EMAIL,p_in.PRODID,p_in.QTY,p_in.PRICE,p_in.Qty*p_in.PRICE);
 
-insert into deliveries (order_id ,del_mode,address,details,location,paymode)
+insert into deliveries (order_id ,del_mode,address,location,paymode,deliverycharges)
 values(
-       p_in.ORDERID,
-       p_in.delmode,substr(p_in.address,instr(p_in.address,'|')+1),substr(p_in.address,1,instr(p_in.address,'|')-1) ,p_in.location,p_in.paymode);
+       p_in.ORDERID,p_in.delmode,p_in.address ,p_in.location,p_in.paymode,p_in.deliverycharges);
 
 delete from deliveries a
 where rowid < (select max(rowid) from deliveries b where a.order_id=b.order_id);

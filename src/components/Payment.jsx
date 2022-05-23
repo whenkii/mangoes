@@ -14,19 +14,22 @@ import {AllSpinners} from './Spinners';
 export default function Payment() {
 var history = useHistory();
 // const [productsState,productAction]=useContext(productContext);
-const [productsState,productAction,,,productCountAll,deliveryState,deliveryAction]=useContext(productContext);
-const {shipMode,location} = deliveryState[0];
+const [productsState,productAction,,,productCountAll,deliveryState,deliveryAction,,,,,deliveryCharges,configState,currency]=useContext(productContext);
+const {shipMode} = deliveryState[0];
 const inCartItems = productsState.filter(a => a.QTY > 0);
 const [accountInfo] = useContext(accountsContext);
-const bankDetails = ["GardenRoots Pte Ltd","OCBC Account# : 712177963001"];
 const [orderForm,setOrderForm] = useState({address1:"",address2:"",postalcode:"",mobile:"",paymentMode:""});
 const [orderId,setOrderID] = useState(null);
 const [isLoading,setIsLoading]= useState(true);
 const [status,setStatus]= useState();
+const currencySymb = currency === "SGD" ? "$" : "";
+
+const paymentDetails = JSON.parse(configState[0].val.filter( a => a.NAME === "PAYMENTINFO")[0].JSON_STRING).value;
+const {companyName,uniquePayID,bankDetails,whatsappNo,bankIfscSwiftCodeType,swiftIfscCodeValue,payemntOptions} = paymentDetails
+
 
 const funOnChange = (e) => {
     setOrderForm({...orderForm,[e.target.name]:e.target.value})
-    // console.log(e.target.value)
 }
 
 // const [orderCreated,setOrderCreated] = useState(false)
@@ -40,10 +43,10 @@ const createOrder = (e) => {
     // else {
         if (orderForm.paymentMode) {
         
-        productAction({type:"CREATE_ORDER",accountInfo:accountInfo,orderid:orderId,deliveryDetails:{...deliveryState[0],paymentMode:orderForm.paymentMode}});
+        productAction({type:"CREATE_ORDER",accountInfo:accountInfo,orderid:orderId,deliveryDetails:{...deliveryState[0],paymentMode:orderForm.paymentMode,deliveryCharges:deliveryCharges}});
         productAction({type:"CLEAR"});
         deliveryAction({type:"CLEAR"});
-        history.push("/")
+        history.push(`/orderconfirmation/${orderId}`)
         }
         else {
             productAction({type:"BLANK_PAYEMENT_MODE"});
@@ -58,7 +61,6 @@ const query = `select orders_seq.nextval seqid from dual`;
         .then((result) => {
         setIsLoading(false);
     //Set state once data is returned from AXIOS
-        // console.log(result)
        if (result[0] === "ERROR")
        {
         toast.error( `Error !!!`)  
@@ -88,20 +90,23 @@ const query = `select orders_seq.nextval seqid from dual`;
             <>
                 <div className="text-center text-danger font-weight-bold">
                     <span className="ml-auto" style={{color:"var(--amzonChime)"}}>Total:</span> 
-                    <span>{` $${inCartItems.reduce((prev,{OFFERPRICE,QTY}) => prev+OFFERPRICE*QTY,0) + (productCountAll < 5 && shipMode === "delivery" ? (location === "Other" ? 6 : 4) : 0)}`}</span>
+                    <span>{` ${currencySymb}${inCartItems.reduce((prev,{OFFERPRICE,QTY}) => prev+OFFERPRICE*QTY,0) + (productCountAll < 5 && shipMode === "delivery" ? deliveryCharges : 0)}`}</span>
                 </div>
                 <div className="card-header mt-1">PAYEMNT</div>
                 {/* <div className="text-center mt-1 text-danger"> <span className="text-dark font-weight-bold">ORDERID </span> : <span className="font-weight-bold">GR-{orderId}</span></div> */}
                 <div className="text-center mt-1 text-dark"> Tracking Number <span className=" text-danger font-weight-bold">GR-{orderId} </span></div>
-                <div className="text-center text-danger"> <small>Please mention above tracking no while making payment</small></div>
+                <div className="text-center text-danger"> <small>Please mention above tracking No# while making payment</small></div>
                 <div className="d-flex justify-content-center paymentOptions"> 
-                        <div className="form-check">               
-                            <input className="form-check-input" type="radio" value="qrcode" name="paymentMode" 
-                                checked={orderForm.paymentMode === "qrcode"} onChange={funOnChange} />
-                            <label className="form-check-label" htmlFor="qrcode">PayNow</label>
+                    {payemntOptions.map ((item,i) => 
+                        <div className="form-check" key={i}>               
+                            <input className="form-check-input" type="radio" value={item.value} name="paymentMode" 
+                                checked={orderForm.paymentMode === item.value} onChange={funOnChange} />
+                            <label className="form-check-label" htmlFor={item.value}>{item.type}</label>
                         </div>
+                    )}
+                        
 
-                        <div className="form-check">               
+                        {/* <div className="form-check">               
                             <input className="form-check-input" type="radio" value="bank" name="paymentMode" 
                                 checked={orderForm.paymentMode === "bank"} onChange={funOnChange} />
                             <label className="form-check-label" htmlFor="bank">Bank A/C</label>
@@ -111,15 +116,15 @@ const query = `select orders_seq.nextval seqid from dual`;
                             <input className="form-check-input" type="radio" value="later" name="paymentMode" 
                                 checked={orderForm.paymentMode === "later"} onChange={funOnChange} />
                             <label className="form-check-label" htmlFor="later">PayLater</label>
-                        </div>
+                        </div> */}
                 </div>
 
                 <div className="text-center mt-4">
                         {orderForm.paymentMode === "qrcode" &&
                             <>
-                                <p className="text-danger font-weight-bold mb-0"> UEN : 201713208M </p>
+                                <p className="text-danger font-weight-bold mb-0"> {uniquePayID} </p>
                                 {/* <p className="text-danger font-weight-bold m-0"> PayNow <span>: 81601289</span></p> */}
-                                <p className="font-weight-bold m-0 mb-2" style={{color:"var(--amzonChime)"}}> GARDEN ROOTS PTE. LTD</p>
+                                <p className="font-weight-bold m-0 mb-2" style={{color:"var(--amzonChime)"}}> {companyName}</p>
                                 <img className="navImage m-auto" src={qrcode} alt="Logo" /> 
                                 
                             </>
@@ -131,14 +136,17 @@ const query = `select orders_seq.nextval seqid from dual`;
 
                                 <p className="addressLines" key={i}>{item}</p>
                             )}
-                            <p className="form-check-label"> SWIFT CODE <span className="text-danger" >: 201713208M </span></p>
+                            <p className="form-check-label"> {bankIfscSwiftCodeType} <span className="text-danger" >{swiftIfscCodeValue} </span></p>
                         </div> 
                     }
 
                     {
-                            <p className="form-check-label"> 
-                                <span className=" whatsapptext text-success"> <fasIcons.FaWhatsapp className="whatsapp" /> WhatsApp </span>
-                                Payment confirmation to <span className=" whatsapptext text-danger" > (+65) 81601289 </span> 
+                           
+                           <p className="form-check-label"> 
+                                <a href={`https://wa.me/${whatsappNo}`}>
+                                    <span className=" whatsapptext text-success"> <fasIcons.FaWhatsapp className="whatsapp" /> WhatsApp </span>
+                                </a>
+                                Payment confirmation to <span className=" whatsapptext text-danger" > {whatsappNo} </span> 
                             </p>
                     }
 
@@ -146,7 +154,7 @@ const query = `select orders_seq.nextval seqid from dual`;
 
                 <div className="d-flex justify-content-center mt-3">
                         <div className="btn btn-sm back-btn" onClick={() => history.goBack()}>BACK <fasIcons.FaBackward className="icons" /> </div> 
-                        <div className="btn btn-sm proceed-btn" onClick={createOrder}>COMPLETE <fasIcons.FaForward className="icons" /> 
+                        <div className="btn btn-sm proceed-btn" onClick={createOrder}>CONFIRM ORDER <fasIcons.FaForward className="icons" /> 
                         </div>
                 </div>
             </>
@@ -193,7 +201,7 @@ color:white;
 }
 .btn{
     margin:0 0 1rem 0;
-    width:50%;
+    width:12rem;
 }
 .navImage{
     height: 14rem;
@@ -201,13 +209,13 @@ color:white;
     margin:1rem;
 }
 .back-btn{
-    background:var(--bsYellow);
-    color:black;
+    background:var(--bsDark);
+    color:white;
     text-align:center;
     margin-right:1rem;
 }
 .proceed-btn{
-    background:var(--amzonChime);
+    background:var(--bsGreen);
     color:white;
     text-align:center;
     margin-left:2rem;
@@ -233,6 +241,8 @@ color:white;
     }
     .btn{
         font-size:0.7rem;
+        padding:0.4rem;
+        width:10rem;
     }
     .paymentOptions{
         font-size:0.5rem;

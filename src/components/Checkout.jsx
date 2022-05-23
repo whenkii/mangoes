@@ -7,46 +7,62 @@ import { ToastContainer,toast} from 'react-toastify';
 import * as fasIcons from 'react-icons/fa'
 // import { RiContactsBookLine } from 'react-icons/ri';
 
-const selfAddress = {Punggol:["Venkat Vona", "Blk - 679A","Punggol Drive","S-821679","Mobile: 81601289"],
-                     Tampines:["Venky", "Blk - 929","Tampines St 91 (Tampines East MRT)","S-520929","Mobile: 98346177"],
-                     Sengkang:["Venkat Vona", "Blk - 325A","Sengkang East Way","S-541325","Mobile: 81601289"]}
+// const selfAddress = {Punggol :["Venkat Vona", "Blk - 679A","Punggol Drive","S-821679","Mobile: 81601289"],
+//                      Tampines:["Venky", "Blk - 929","Tampines St 91 (Tampines East MRT)","S-520929","Mobile: 98346177"],
+//                     //  Sengkang:["Venkat Vona", "Blk - 325A","Sengkang East Way","S-541325","Mobile: 81601289"]
+//                     }
 
-const areas = Object.keys(selfAddress);
-// console.log(areas);
-// ["Tampines", "Sengkang","Punggol"]
+// const areas = Object.keys(selfAddress);
 
 export default function Checkout() {
 var history = useHistory();
-const [,,,,,deliveryState,deliveryAction]=useContext(productContext);
+const [,,,,,deliveryState,deliveryAction,,,,,,configState]=useContext(productContext);
 const {shipMode,location,address} = deliveryState[0];
 
-const initSelfForm = [{name:"Name",type:"text",placeholder:"Your Name",value:"",required:"Y"},
-                      {name:"Mobile",type:"text",placeholder:"Mobile No",value:"",required:"Y"}]
+const getDBValue = (props) => {
+    return JSON.parse(configState[0].val.filter( a => a.NAME === props)[0].JSON_STRING).value
+}
+
+const initSelfForm = getDBValue("SELFFORM");
+const initFormFields = getDBValue("ADDRESSFORM"); 
+const selfAddress = getDBValue("SELF_LOCATIONS"); 
+const areas = selfAddress.map( a => a.name );
+
+// console.log(initFormFields)
+
+//const initSelfForm =  [{name:"Name",type:"text",placeholder:"Your Name",value:"",required:"Y",minLength:3},
+//                       {name:"Mobile",type:"text",placeholder:"Mobile No",value:"",required:"Y",minLength:8}];
 const [selfForm,setSelfForm] = useState(initSelfForm);
 
-const initFormFields = [{name:"Name",type:"text",placeholder:"Your Name",value:"",required:"Y"},
-                        {name:"Blk",type:"text",placeholder:"Ex:929",value:"",required:"Y"},
-                        {name:"Unit",type:"text",placeholder:"Ex: #13-234",value:"",required:"Y"},
-                        {name:"Street ",type:"text",placeholder:"Ex: Tampines Street 22",value:"",required:"Y"},
-                        {name:"PostalCode",type:"text",placeholder:"Ex: 520202",value:"",required:"Y"},
-                        {name:"Mobile",type:"text",placeholder:"Mobile",value:"",required:"Y"},
-                        {name:"Location",type:"list",placeholder:"Location",value:"",listValues:["","Tampines", "Sengkang","Punggol","Bedok","Simei","Other"],required:"Y"}];
+// const initFormFields = [{name:"Name",type:"text",placeholder:"Your Name",value:"",required:"Y",minLength:3},
+//                         {name:"Blk",type:"text",placeholder:"Ex:929",value:"",required:"Y",minLength:3},
+//                         {name:"Unit",type:"text",placeholder:"Ex: #13-234",value:"",required:"Y",minLength:3},
+//                         {name:"Street ",type:"text",placeholder:"Ex: Tampines Street 22",value:"",required:"Y",minLength:3},
+//                         {name:"PostalCode",type:"text",placeholder:"Ex: 520202",value:"",required:"Y",minLength:3},
+//                         {name:"Mobile",type:"text",placeholder:"Mobile",value:"",required:"Y",minLength:3},
+//                         {name:"Location",type:"list",placeholder:"Location",value:"",listValues:["","Tampines", "Sengkang","Punggol","Bedok","Simei","Other"],required:"Y"}];
+
+// console.log(JSON.stringify(initFormFields))
+
 const [formFields,setFormFields] = useState(initFormFields);
 
-
 const funOnChange = (props) => {
+
+    if (deliveryState[0].shipMode !== props){
+        deliveryAction({type:"ADDRESS",location:""});    
+    }
     deliveryAction({type:"SHIPMENT_MODE",shipMode:props});
 }
 
 // const [location, setlocation] = useState("Punggol");
 const onClickLocation = (props) => {
-    deliveryAction({type:"ADDRESS",location: (location === props ? "":props),address: address + "|" + selfAddress[props]})
-    // console.log(address + "|" + selfAddress[props])
+    deliveryAction({type:"ADDRESS",location: (location === props ? "":props),address: address })
+    // console.log(address)
 }
 
 const funOnChangeForm = (e) =>
 {
- // Do valdations only when shipMode is Delivery 
+ // Do validations only when shipMode is Delivery
     if ( shipMode !== "self") {
         const tempformAttributes = [...formFields];
         const attr= [e.target.name];
@@ -57,7 +73,6 @@ const funOnChangeForm = (e) =>
         if ( attrName === "Location") {
             var addressDetails = tempformAttributes.map( a => a.value)
             deliveryAction({type:"ADDRESS",location:tempformAttributes[idx].value,address:addressDetails})
-            // console.log(addressDetails)
         }
         }
     }
@@ -72,10 +87,10 @@ const funOnChangeFormSelf = (e) =>
             tempformAttributes[idx] = {...tempformAttributes[idx],value: e.target.value,errors:""};
             setSelfForm([...tempformAttributes]);
             // if ( attrName === "Location") {
-                var addressDetails = tempformAttributes.map( a => a.value)
-                deliveryAction({type:"ADDRESS",
-                // location:tempformAttributes[idx].value,
-                address:addressDetails})
+            var addressDetails = tempformAttributes.map( a => a.value)
+            deliveryAction({type:"ADDRESS",
+            // location:tempformAttributes[idx].value,
+            address:addressDetails})
             // }
             // console.log(deliveryState)
            
@@ -84,12 +99,22 @@ const funOnChangeFormSelf = (e) =>
 const handleClick = (e) => {
     // e.preventDefault();
     // Do form validations only when shipmode is Delivery or no Self collection
+    // console.log(deliveryState[0].address)
     if ( shipMode === "self") {
 
         var tempSelfFormFields = [...selfForm];
         tempSelfFormFields.forEach  ( a => {
            const idx = selfForm.findIndex( b => a.name === b.name);
-           tempSelfFormFields[idx] = {...tempSelfFormFields[idx],errors:tempSelfFormFields[idx].required === "Y" && !tempSelfFormFields[idx].value ? `${tempSelfFormFields[idx].name} is Required` :"" }
+           let errors = "";
+           if ( tempSelfFormFields[idx].required === "Y" && !tempSelfFormFields[idx].value) {
+           errors =  `${tempSelfFormFields[idx].name} is Required`;
+           }
+           else if ( tempSelfFormFields[idx].value.length < tempSelfFormFields[idx].minLength) {
+            errors =  `${tempSelfFormFields[idx].name} value is invalid`;
+            }
+           
+
+           tempSelfFormFields[idx] = {...tempSelfFormFields[idx],errors: errors}
        })
        setSelfForm (tempSelfFormFields)
     }
@@ -97,7 +122,14 @@ const handleClick = (e) => {
     var tempFormFields = [...formFields];
     tempFormFields.forEach  ( a => {
         const idx = formFields.findIndex( b => a.name === b.name);
-        tempFormFields[idx] = {...tempFormFields[idx],errors:tempFormFields[idx].required === "Y" && !tempFormFields[idx].value ? `${tempFormFields[idx].name} is Required` :"" }
+        let errors = "";
+        if ( tempFormFields[idx].required === "Y" && !tempFormFields[idx].value) {
+        errors =  `${tempFormFields[idx].name} is Required`;
+        }
+        else if ( tempFormFields[idx].value.length < tempFormFields[idx].minLength) {
+         errors =  `${tempFormFields[idx].name} value is invalid`;
+        }
+        tempFormFields[idx] = {...tempFormFields[idx],errors:errors}
     })
     setFormFields([...tempFormFields]);
      }
@@ -134,6 +166,8 @@ const handleClick = (e) => {
   return (
     <Maincontainer className="container">
         <ToastContainer position="bottom-center" autoClose="1000"/>
+        {configState[0].val.state !== "INIT" &&
+        <>
             <div className="card-header">Delivery</div>
             <div className="d-flex justify-content-center form-check"> 
                     <div className="form-check">               
@@ -220,11 +254,11 @@ const handleClick = (e) => {
                     )}
                </div>
             </div>
+            {/* {console.log(location,selfAddress.filter( a => a.name === location)[0].details)} */}
             { location &&
             <div className="m-auto">
-                <div className="card-body text-center">
-                    {/* {console.log("location",location)} */}
-                    {location && location !== "Other" && selfAddress[location]  && selfAddress[location].map((item,i) =>  
+                <div className="card-body text-center address-details ">
+                    {location && selfAddress.filter( a => a.name === location)[0].details.map((item,i) =>  
                             <p className={`addressLines ${i === 0 ? "text-danger" :null}`} key={i}>{item}</p>
                     )}
                 </div>     
@@ -239,6 +273,8 @@ const handleClick = (e) => {
             <div className={`btn btn-sm back-btn`} onClick={() => history.goBack()}>BACK <fasIcons.FaBackward className="icons" /> </div>
             <div className={`btn btn-sm proceed-btn`} onClick={handleClick}>PAYMENT <fasIcons.FaForward className="icons" /> </div>
         </div>
+    </>
+    }
     </Maincontainer>
   )
 }
@@ -273,6 +309,12 @@ color:white;
 }
 .card-body{
     font-size:0.8rem;
+    margin:1rem;
+}
+.address-details{
+    border-radius:1rem;
+    border:solid 0.1rem var(--amzonChime);
+    
 }
 .form-check-label{
     color:var(--bsRed);
@@ -294,6 +336,10 @@ color:white;
     color:var(--amzonChime);
     margin:0;
     font-weight:bold;
+}
+.btn{
+    margin:0 0 1rem 0;
+    width:12rem;
 }
 .back-btn{
     background:var(--bsRed);
@@ -360,6 +406,7 @@ color:white;
     .btn {
         font-size:0.6rem;
         padding:0.4rem;
+        width:10rem;
     }
 }
 `

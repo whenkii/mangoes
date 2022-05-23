@@ -6,7 +6,7 @@ import {productContext} from '../contexts/mangoesContext'
 
 export default function Cart() {
 // const history = useHistory();
-const [productsState,productAction,,,productCountAll,deliveryState,,,,,,deliveryCharges,,currency]=useContext(productContext);
+const [productsState,productAction,,,productCountAll,deliveryState,,,,,,deliveryCharges,configState,currency]=useContext(productContext);
 const {shipMode} = deliveryState[0];
 // const [accountInfo] = useContext(accountsContext);
 const inCartItems = productsState.filter(a => a.QTY > 0);
@@ -14,9 +14,11 @@ const isCartEmpty = inCartItems.length === 0 ? true : false;
 const cartReduce = inCartItems.reduce((prev,{OFFERPRICE,QTY}) => prev+OFFERPRICE*QTY,0);
 const cartReducePrice = inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0);
 const cartReduceOfferPrice = inCartItems.reduce((prev,{OFFERPRICE,QTY}) => prev+OFFERPRICE*QTY,0);
+
+// const delDate = configState[0].val ? JSON.parse(configState[0].val.filter( a => a.NAME === "DEL_DATE")[0].JSON_STRING).value:null;
+// var deliveryCharges = (productCountAll < 5 && shipMode === "delivery" ? (location === "Other" ? 6 : 5) : 0);
 const currencySymb = currency === "SGD" ? "$" : "";
-// console.log(currency)
-// const currency ="SGD";
+
 // const cartReduce = inCartItems.reduce((prev,{PRICE,QTY}) => prev+PRICE*QTY,0);
 
     return (
@@ -47,13 +49,13 @@ const currencySymb = currency === "SGD" ? "$" : "";
                             </div>
                             <div className="d-flex justify-content-between"> 
                                 <div className="cartSummaryHeaders small mb-1 text-success">Savings</div>
-                                <div className="cartSummaryHeaders text-success small"> {currencySymb}{cartReducePrice - cartReduceOfferPrice}</div>
+                                <div className="cartSummaryHeaders text-success small"> ${cartReducePrice - cartReduceOfferPrice}</div>
                             </div>
                         
 
                         <div className="d-flex justify-content-center font-weight-bold mt-2 cartSummaryHeaders">
                                 {/* <div className="text-danger">{`Total: `}</div> */}
-                                <div className="total">{`${currencySymb} ${cartReduceOfferPrice + deliveryCharges}`}</div>
+                                <div className="total">{`${currencySymb}${cartReduceOfferPrice + deliveryCharges}`}</div>
                                 <small className="align-self-end ml-2 mb-1 font-weight-bold">{currency}</small>
                         </div>
                     </div>
@@ -73,10 +75,10 @@ const currencySymb = currency === "SGD" ? "$" : "";
                         <div className="row ">
                             <div className="cart-values col-3 font-weight-bold p-0">{NAME}</div>
                             <div className="cart-values col text-danger font-weight-bold">
-                            <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:OFFERPRICE ? "line-through":"none"}}>{currencySymb}{PRICE}</span> 
-                            {`${currencySymb}${OFFERPRICE}`}</div>
+                            <span className="priceValue" style={{color:"var(--bsRed)",textDecorationColor:"var(--amzonChime)",textDecoration:OFFERPRICE ? "line-through":"none"}}>S${PRICE}</span> 
+                            {`$${OFFERPRICE}`}</div>
                             <div className="cart-values col">{QTY}</div>
-                            <div className="cart-values col text-danger font-weight-bold">{currencySymb}{QTY*OFFERPRICE}</div>                
+                            <div className="cart-values col text-danger font-weight-bold">${QTY*OFFERPRICE}</div>                
                         </div>
                         <div className="d-flex cart-update-container col-1 align-items-center justify-content-center ml-4">
                                 <span className="cart-btn btn btn-danger" onClick={() => productAction({type:"REMOVE",prodid:ID})}>-</span>
@@ -88,25 +90,8 @@ const currencySymb = currency === "SGD" ? "$" : "";
                 )
                 }
                 </div>
-
-                    {/* <div className="d-flex justify-content-center">
-                        <div className="btn btn-danger cart-nav-btns" onClick={() => productAction({type:"CLEAR"})}>Clear Cart</div>
-                        <div className="btn btn-success cart-nav-btns" onClick={ () => history.push("/")}>Continue Shopping</div>
-                    </div> */}
-                    <Checkout />
                 </div>
                 }
-
-            {/* If Cart is empty include continue shopping */}
-                {isCartEmpty ?
-                    <div className="d-flex justify-content-center">
-                    <Link to="/" className="text-center">
-                        <div className="btn btn-success cart-nav-btns">Continue Shopping</div>
-                    </Link>
-                    </div>
-                    : null
-                 }
-
         </CartContainer>
     )
 }

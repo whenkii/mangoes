@@ -5,6 +5,8 @@ import { GetApiData } from '../components/ApiCalls';
 import { ToastContainer,toast } from 'react-toastify';
 import axios from 'axios'
 import {config} from '../components/reactConfig'
+// import { RiContactsBookLine } from 'react-icons/ri';
+// import { RiContactsBookLine } from 'react-icons/ri'; 
 
 
 let products = []
@@ -27,9 +29,18 @@ const CartReducerFun = (state,action) => {
             products = [...tempState];
             productsInit = [...tempState]
             return [...tempState];
+        case "GET_LATEST" :
+            tempState = [...action.state];
+            const existingStateValues = state.map(a => ({NAME:a.NAME,QTY:a.QTY,inCart:a.inCart}));
+            tempState.forEach  ( a => {
+                const idx = existingStateValues.findIndex( b => a.NAME === b.NAME);
+                const {QTY,inCart} = existingStateValues[idx];
+                tempState[idx] = {...tempState[idx],QTY:QTY,inCart:inCart}
+            })
+            return [...tempState];
         case "ADD" :
             tempState[idx] = {...tempState[idx],QTY:parseInt(tempState[idx].QTY ? tempState[idx].QTY : 0,10)+1,INCART:"Y"};
-            toast.success("Item has been added to Cart")
+            // toast.success("Item has been added to Cart")
             return [...tempState];
         case "REMOVE":
                 var QTYVar =  parseInt(tempState[idx].QTY,10)
@@ -49,7 +60,7 @@ const CartReducerFun = (state,action) => {
                 tempState[idx] = {...tempState[idx],QTY:0,INCART:"N"};
                 return [...tempState];
         case "BLANK_PAYEMENT_MODE":  
-        toast.error("Choose Payment mode")
+        toast.error("Choose Payment mode");
         return [...tempState];
         case "CREATE_ORDER":
             tempState = [...state]
@@ -64,7 +75,8 @@ const CartReducerFun = (state,action) => {
                   DELMODE:deliveryDetails.shipMode,
                   ADDRESS:String(deliveryDetails.address),
                   LOCATION:deliveryDetails.location,
-                  PAYMODE:deliveryDetails.paymentMode
+                  PAYMODE:deliveryDetails.paymentMode,
+                  DELIVERYCHARGES:deliveryDetails.deliveryCharges
                 }));
             //Get products that are in cart only
             newState = newState.filter(a => a.QTY > 0);
@@ -85,7 +97,7 @@ const CartReducerFun = (state,action) => {
                         toast.error(data)
                     }
                     else {
-                        toast.success("Order has been successfully created");
+                        // toast.success("Order has been successfully created");
                         // console.log(tempState);
                         tempState = [...productsInit]
                         // console.log(tempState);
@@ -113,10 +125,14 @@ const CartReducerFun = (state,action) => {
 
 const deliveryReducer = (state,action) => {
     var tempState     = [...state];
-    var {shipMode,location,address} = action;
+    var {shipMode,location,address,del_locations,del_date} = action;
 
     if (action.type === "SHIPMENT_MODE") {
     tempState[0].shipMode = shipMode;
+    }
+    else if (action.type === "INIT") {
+        tempState[0].locations = del_locations.locations;
+        tempState[0].del_date = del_date;
     }
     else if (action.type === "ADDRESS") {
         tempState[0].location = location;
@@ -125,34 +141,60 @@ const deliveryReducer = (state,action) => {
     else if ( action.type === "CLEAR") {
         return [inItDelivery]
     }
+    // console.log(tempState)
     return [...tempState]
    
 } 
 
+const configReducer = (state,action) => {
+        const tempState = [...state]
+
+        if (action.type === 'INIT') {
+
+            tempState[0].state = 'VAL';
+            tempState[0].val   = action.state;
+        }
+        return [...tempState]
+} 
+
+// const delCharges = ({productCountAll,shipMode,location}) => {
+    
+// }
+
 export function ProductsProvider(props) {
 // const [accountInfo] = useContext(accountsContext);
+const [configState,configAction] = useReducer(configReducer,[{state:"INIT"}]);
 const [productsState,productAction] = useReducer(CartReducerFun,[{ID:1,NAME:"INIT",PRICE:"34",OFFERPRICE:32,UNITS:"5Kg",INSTOCK:"Y",INCART:false,QTY:0,}]);
 const [deliveryState,deliveryAction] = useReducer(deliveryReducer,[inItDelivery]);
 const cartReducer = 1;
 const productCountReducer = (props) => productsState.filter(a => a.ID === props && a.QTY > 0).reduce((prev,curr) => prev + curr.QTY,0);
 const productCountAll = productsState.reduce((prev,curr) => prev + curr.QTY,0);
-const [orderCreated,setOrderCreated] = useState(false)
+const [orderCreated,setOrderCreated] = useState(false);
+const [pageHome,setPageHome]  = useState();
+// console.log(configState[0].val ? JSON.parse(configState[0].val.filter( a => a.NAME === "DEL_LOCATIONS")[0].JSON_STRING).value : null, deliveryState[0])
+// const deliveryCharges = 0;
+const deliveryCharges = (productCountAll < 5 && deliveryState[0].shipMode === "delivery" && deliveryState[0].location ? parseInt(JSON.parse(configState[0].val.filter( a => a.NAME === "DEL_LOCATIONS")[0].JSON_STRING).value.filter(a => a.name === deliveryState[0].location)[0].delCharge,10) : 0);
+const currency = configState[0].val ? JSON.parse(configState[0].val.filter( a => a.NAME === "CURRENCY")[0].JSON_STRING).value : "";
+// const selfAddress = JSON.parse(configState[0].val.filter( a => a.NAME === "DEL_LOCATIONS")[0].JSON_STRING).value;
+// const deliveryCharges1 = delCharges({productCountAll:productCountAll,shipMode:deliveryState[0].shipMode,location:deliveryState[0].location});
 
 useEffect( () => {
-    GetApiData("select a.NAME,a.ID,UNITS,PRICE,OFFERPRICE,CASE WHEN INSTOCK='Y' and STOCK - ORDERED <= 1 THEN 'N' ELSE  INSTOCK END INSTOCK from sggr.products a left outer join sggr.stock b on ( a.NAME=b.name)")
+    GetApiData("select a.NAME,a.ID,UNITS,PRICE,OFFERPRICE,CASE WHEN INSTOCK='Y' and STOCK - ORDERED <= 1 THEN 'N' ELSE  INSTOCK END INSTOCK from sggr.products a left outer join sggr.stock b on (a.NAME=b.name) order by INSTOCK desc,stock desc")
     .then((res) => {
         // console.log(res)
         if (res[0] === "ERROR"){
-            alert("Error while getting products details");    
+            alert("Error while getting Products details");    
         }
         else if ( res.length === 0 )  {
         alert("No Data found");
         }
         else if ( res.length > 0 ) {
-            // console.log(res)
-                // productAction({type:"INIT",state:res})
-
+            // if ( productsState[0].NAME === "INIT") {
                 productAction({type:"INIT",state:res})
+            // }
+            // else{
+            // productAction({type:"GET_LATEST",state:res});
+            // }
 
             }
         }
@@ -162,10 +204,38 @@ useEffect( () => {
     })
     },[])
 
+    useEffect( () => {
+        GetApiData("select * from react_config")
+        .then((res) => {
+            // console.log((res));
+            // console.log(res)
+            if (res[0] === "ERROR"){
+                alert("Error while getting data from DB");    
+            }
+            else if ( res.length === 0 )  {
+            alert("No Data found");
+            }
+            else if ( res.length > 0 ) {
+                // if ( productsState[0].NAME === "INIT") {
+                    configAction({type:"INIT",state:res})
+                // }
+                // else{
+                // productAction({type:"GET_LATEST",state:res});
+                // }
+    
+                }
+            }
+        )
+        .catch ( (e) => {
+            alert(e)
+        })
+        },[])
+
     return (
         <>
         <ToastContainer position="top-center" autoClose="1000"/>
-        <productContext.Provider value={[productsState,productAction,cartReducer,productCountReducer,productCountAll,deliveryState,deliveryAction,orderCreated,setOrderCreated]}>
+        {/* {configState[0].state !== "INIT" &&  */}
+        <productContext.Provider value={[productsState,productAction,cartReducer,productCountReducer,productCountAll,deliveryState,deliveryAction,orderCreated,setOrderCreated,pageHome,setPageHome,deliveryCharges,configState,currency]}>
             {props.children}
         </productContext.Provider>
         </>

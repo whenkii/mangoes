@@ -44,6 +44,7 @@ function simpleExecute(statement, binds = [], opts = {}) {
       conn = await oracledb.getConnection();
       // const result1 = await conn.execute("begin dbms_lock.sleep(10); end;");
       const result = await conn.execute(statement, binds, opts);
+      await conn.commit();
       resolve(result);
     } catch (err) {
       reject(err);

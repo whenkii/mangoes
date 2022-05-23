@@ -33,3 +33,19 @@ return result.data.rows;
 console.log(apiUrl)
 return ["ERROR"];
 })};
+
+
+export const GetApiDataUpdate = (sql, fileName) => {
+    const apiUrl = `${config.restAPIserver}:${config.restAPIHost}/api/adhocSqlsViaBodyPost`;
+    return axios.post(apiUrl,{sqltext:sql, fileName:fileName})
+    .then ((result) => {
+    // console.log(result.data.rowsAffected)
+    return result.data.rowsAffected;
+    })
+    .catch((e) => {
+    // console.log("SQL in GetApiData",sql);
+    // alert("Couldn't get data from Database")
+    // if error, return 0 rows
+    console.log(apiUrl)
+    return ["ERROR"];
+    })};
