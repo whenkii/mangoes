@@ -14,6 +14,8 @@ import OrderConfirmation from './components/OrderConfirmation'
 import ProductInfo from './components/ProductInfo'
 import {Orders,OrderDetails,Products,AllOrders} from './components/Orders'
 import Checkout from './components/Checkout'
+import AddComments from './components/AddComments'
+import AddstockComments from './components/AddstockComments'
 import Payment from './components/Payment'
 import Admin from './components/Admin.js'
 import AddProducts from './components/AddProducts'
@@ -31,10 +33,12 @@ function App() {
           <Switch> 
             <Route exact path="/aboutProduct/:name" component={ProductInfo} />
             <Route exact path="/cart" component={Cart} />
-            <Route exact path="/orderconfirmation/:id" component={OrderConfirmation} />
+            <Route exact path="/orderconfirmation/:id/:deliverycharges?" component={OrderConfirmation} />
             <Route path="/orders" component={Orders} />
             <Route path="/allorders" component={AllOrders} />
             <Route path="/orderdetails/:id" component={OrderDetails} />
+            <Route path="/addcomments/:id" component={AddComments} />
+            <Route path="/stock/:id" component={AddstockComments} />
             <Route path="/products" component={Products} />
             <Route exact path="/products" component={ProductList} />
             <Route exact path="/account" component={Login} />

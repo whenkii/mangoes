@@ -63,14 +63,16 @@ const orderbyAttribute = (props) => {
     }      
     
 const OrderAction = (props) => {
+
+
     const sql = `update orders set status='${props}',modified_by='${accountInfo.email}' where id=${id}`;
-
-    if ( props === 'DELIVERED') {
-
+    if ( props  === 'COMMENTS' ) {
+        history.push(`/addcomments/${id}`)
     }
-
+    else if ( props  === 'STOCK' ) {
+        history.push(`/STOCK/${id}`)
+    }
     else {
-
     GetApiDataUpdate(sql)
     .then((res) => {
         // console.log(res)
@@ -87,7 +89,7 @@ const OrderAction = (props) => {
             alert(e)
             })
             }
-}
+    }
 
 useEffect(() => {
     setOrderDetails(stateVarInitial);
@@ -107,6 +109,8 @@ useEffect(() => {
                      <div className="btn btn-success m-1" onClick={ () => OrderAction("DELIVERED")}>DELIVERED</div>
                      <div className="btn btn-danger m-1" onClick={() => OrderAction("CANCELLED")}>CANCELLED</div>
                      <div className="btn btn-warning m-1" onClick={() => OrderAction("NEW")}>NEW</div>
+                     <div className="btn btn-info m-1" onClick={() => OrderAction("COMMENTS")}>COMMENTS</div>
+                     <div className="btn btn-secondary m-1" onClick={() => OrderAction("STOCK")}>STOCK</div>
                  </div>
                  }
                 <div className="d-flex justify-content-end">

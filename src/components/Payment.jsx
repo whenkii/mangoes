@@ -46,7 +46,7 @@ const createOrder = (e) => {
         productAction({type:"CREATE_ORDER",accountInfo:accountInfo,orderid:orderId,deliveryDetails:{...deliveryState[0],paymentMode:orderForm.paymentMode,deliveryCharges:deliveryCharges}});
         productAction({type:"CLEAR"});
         deliveryAction({type:"CLEAR"});
-        history.push(`/orderconfirmation/${orderId}`)
+        history.push(`/orderconfirmation/${orderId}/${deliveryCharges}`)
         }
         else {
             productAction({type:"BLANK_PAYEMENT_MODE"});
@@ -88,9 +88,15 @@ const query = `select orders_seq.nextval seqid from dual`;
         <>
         {!isLoading ?
             <>
+            <div className="text-warning text-center mb-1 font-weight-bold">In-Progress</div>
+            <div class="progress mb-2">
+                <div class="progress-bar progress-bar-striped w-75 bg-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            
+
                 <div className="text-center text-danger font-weight-bold">
                     <span className="ml-auto" style={{color:"var(--amzonChime)"}}>Total:</span> 
-                    <span>{` ${currencySymb}${inCartItems.reduce((prev,{OFFERPRICE,QTY}) => prev+OFFERPRICE*QTY,0) + (productCountAll < 5 && shipMode === "delivery" ? deliveryCharges : 0)}`}</span>
+                    <span>{` ${currencySymb}${inCartItems.reduce((prev,{OFFERPRICE,QTY}) => prev+OFFERPRICE*QTY,0) + deliveryCharges}`}</span>
                 </div>
                 <div className="card-header mt-1">PAYEMNT</div>
                 {/* <div className="text-center mt-1 text-danger"> <span className="text-dark font-weight-bold">ORDERID </span> : <span className="font-weight-bold">GR-{orderId}</span></div> */}

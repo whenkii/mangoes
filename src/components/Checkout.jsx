@@ -5,14 +5,6 @@ import {productContext} from '../contexts/mangoesContext'
 import styled from 'styled-components'
 import { ToastContainer,toast} from 'react-toastify';
 import * as fasIcons from 'react-icons/fa'
-// import { RiContactsBookLine } from 'react-icons/ri';
-
-// const selfAddress = {Punggol :["Venkat Vona", "Blk - 679A","Punggol Drive","S-821679","Mobile: 81601289"],
-//                      Tampines:["Venky", "Blk - 929","Tampines St 91 (Tampines East MRT)","S-520929","Mobile: 98346177"],
-//                     //  Sengkang:["Venkat Vona", "Blk - 325A","Sengkang East Way","S-541325","Mobile: 81601289"]
-//                     }
-
-// const areas = Object.keys(selfAddress);
 
 export default function Checkout() {
 var history = useHistory();
@@ -28,22 +20,7 @@ const initFormFields = getDBValue("ADDRESSFORM");
 const selfAddress = getDBValue("SELF_LOCATIONS"); 
 const areas = selfAddress.map( a => a.name );
 
-// console.log(initFormFields)
-
-//const initSelfForm =  [{name:"Name",type:"text",placeholder:"Your Name",value:"",required:"Y",minLength:3},
-//                       {name:"Mobile",type:"text",placeholder:"Mobile No",value:"",required:"Y",minLength:8}];
 const [selfForm,setSelfForm] = useState(initSelfForm);
-
-// const initFormFields = [{name:"Name",type:"text",placeholder:"Your Name",value:"",required:"Y",minLength:3},
-//                         {name:"Blk",type:"text",placeholder:"Ex:929",value:"",required:"Y",minLength:3},
-//                         {name:"Unit",type:"text",placeholder:"Ex: #13-234",value:"",required:"Y",minLength:3},
-//                         {name:"Street ",type:"text",placeholder:"Ex: Tampines Street 22",value:"",required:"Y",minLength:3},
-//                         {name:"PostalCode",type:"text",placeholder:"Ex: 520202",value:"",required:"Y",minLength:3},
-//                         {name:"Mobile",type:"text",placeholder:"Mobile",value:"",required:"Y",minLength:3},
-//                         {name:"Location",type:"list",placeholder:"Location",value:"",listValues:["","Tampines", "Sengkang","Punggol","Bedok","Simei","Other"],required:"Y"}];
-
-// console.log(JSON.stringify(initFormFields))
-
 const [formFields,setFormFields] = useState(initFormFields);
 
 const funOnChange = (props) => {
@@ -244,7 +221,7 @@ const handleClick = (e) => {
             
             <div className="card-header mt-3">Choose pickup location</div>
             <div className="font-weight-bold mt-3">
-                <div className="d-flex justify-content-center" >
+                <div className="d-flex justify-content-center flex-wrap" >
                     {areas.map((item,i) =>
                         <button className="btn btn-sized-sm m-1 p-1 btn-secondary text-white font-weight-bold" 
                                 style={{background: (deliveryState[0].location === item ? "var(--amzonChime)":null)}}  key={i} 
@@ -256,13 +233,13 @@ const handleClick = (e) => {
             </div>
             {/* {console.log(location,selfAddress.filter( a => a.name === location)[0].details)} */}
             { location &&
-            <div className="m-auto">
-                <div className="card-body text-center address-details ">
-                    {location && selfAddress.filter( a => a.name === location)[0].details.map((item,i) =>  
-                            <p className={`addressLines ${i === 0 ? "text-danger" :null}`} key={i}>{item}</p>
-                    )}
-                </div>     
-            </div>
+                <div className="m-auto">
+                    <div className="card-body text-center address-details ">
+                        {location && selfAddress.filter( a => a.name === location)[0].details.map((item,i) =>  
+                                <p className={`addressLines ${i === 0 ? "text-danger" :null}`} key={i}>{item}</p>
+                        )}
+                    </div>     
+                </div>
 
             }
         </div>
@@ -404,7 +381,7 @@ color:white;
         margin-left:0.4rem;
     }
     .btn {
-        font-size:0.6rem;
+        font-size:0.5rem;
         padding:0.4rem;
         width:10rem;
     }

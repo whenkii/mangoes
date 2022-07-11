@@ -29,6 +29,8 @@ values ('Chandura','Mangoes','Approx 3.5kg/13+ pcs','34','29','Y');
 insert into products (name,category,units,price,offerprice,instock)
 values ('Mixed','Mangoes','Approx 4.5kg/12+ pcs','35','31','Y');
 
+insert into products (name,category,units,price,offerprice,instock)
+values ('Kalepadu','Mangoes','Approx 4.2kg/12+ pcs','35','32','Y');
 
 /*
 insert into products (name,category,units,price,offerprice,instock)
@@ -74,6 +76,12 @@ create table orders (id number NOT NULL,
 alter table orders
 add (modified_by varchar2(50));
 
+alter table orders
+add(actualprice number,comments varchar2(1000));
+
+alter table orders
+add (payment_upd_by varchar2(100));
+
 --drop table deliveries;
 
 create table deliveries (order_id number,
@@ -86,6 +94,8 @@ create table deliveries (order_id number,
 
 create table stock (Name varchar2(100),stock number,ordered number,  constraint fk_name foreign key(name)references products(name),ts timestamp default systimestamp at time zone 'Asia/Singapore',updated_ts timestamp default systimestamp at time zone 'Asia/Singapore');
 
+alter table deliveries
+add(stock_loc varchar2(100),stock_upd_by varchar2(100),comments varchar2(1000));
 --insert into  stock (name,stock,ordered)
 --select name,100,100
 --from products 
@@ -105,6 +115,10 @@ values('Mixed',30,0);
 
 insert into  stock (name,stock,ordered)
 values('ImamPasand',65,0);
+
+
+insert into  stock (name,stock,ordered)
+values('Kalepadu',20,0);
 
 
 --select * from stock;

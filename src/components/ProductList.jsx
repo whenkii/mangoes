@@ -24,7 +24,7 @@ const [productsState,productAction,,productCountReducer,,,,,,pageHome,setPageHom
 const productNames = {Alphonso:["ఆల్పాన్సా/ఖాదర్","अल्फांसो","அல்பான்சோ","ಅಲ್ಫ್ನಸೋ"],
                       Kesar:["Kesar","केसर","కేసర్"],
                       Chandura:["Chandura","పుల్లూరా","चंदुरा"],
-                      Mixed:["Mixed varieties mixed"],
+                      Mixed:["Mixed varieties","Banginapalli","Mallika"],
                       Banginapalli:["బంగినపల్లి/బేనీషా","बदामी","பங்கினப்பள்ளி","ಬಂಗಿನಾಂಪಲ್ಲಿ"],
                       Mallika:["మల్లికా","मल्लिका","மல்லிகா","ಮಲ್ಲಿಕಾ"],
                       Neelam:["నీలం","नीलम","நீலம்","ನೀಲಂ"],
@@ -75,7 +75,7 @@ useEffect( () => {
             <div className="d-flex justify-content-center mt-2">
                 <div className="d-flex align-items-center justify-content-center flex-wrap">
                     {productsState.length > 0 &&
-                     productsState.filter(a => ["Chandura","Banginapalli","Neelam","Mallika","Alphonso","AlphansoJumbo","Kesar","INIT","Mixed","ImamPasand"].includes(a.NAME)).map((item,i) => 
+                     productsState.filter(a => ["Chandura","Banginapalli","Neelam","Mallika","Alphonso","AlphansoJumbo","Kesar","INIT","Mixed","ImamPasand","Kalepadu"].includes(a.NAME)).map((item,i) => 
                         <div className="d-flex justify-content-center" key={i}>
                          {item.NAME === "INIT" ? 
                          <AllSpinners />

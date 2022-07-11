@@ -29,7 +29,10 @@ const currencySymb = currency === "SGD" ? "$" : "";
                 </>
                 :
                 <div className="cartBottom">
-                    
+                    <div className="text-warning text-center mb-1 font-weight-bold">In-Progress</div>
+                    <div class="progress mb-2">
+                        <div class="progress-bar progress-bar-striped w-25 bg-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
                     <div className="cartTotal">
                         <div className="text-center">
                         {/* <h1 className="cart text-center font-italic my-1 text-dark"> MyCart  */}

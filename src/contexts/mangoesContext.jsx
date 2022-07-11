@@ -39,7 +39,13 @@ const CartReducerFun = (state,action) => {
             })
             return [...tempState];
         case "ADD" :
+            if ( tempState[idx].QTY > 9 ) {
+                toast.error("Max limit per product is 10")
+            }
+            else
+            {
             tempState[idx] = {...tempState[idx],QTY:parseInt(tempState[idx].QTY ? tempState[idx].QTY : 0,10)+1,INCART:"Y"};
+            }
             // toast.success("Item has been added to Cart")
             return [...tempState];
         case "REMOVE":
